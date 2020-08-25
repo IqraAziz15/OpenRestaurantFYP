@@ -1,0 +1,4 @@
+{
+    "mongoURI" : "mongodb+srv://iqraazizkhan:lkjhgf@clusterfyp.xoiqz.mongodb.net/open_restaurant?retryWrites=true&w=majority",
+    "jwtSecret" : "or_myjwtsecretkey"
+}

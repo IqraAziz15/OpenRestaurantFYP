@@ -53,22 +53,26 @@ class ViewItems extends React.Component
     return(
       <div class="container mt-3">
         <div class = "d-flex w-50">
-          <h2 class="mb-1">MENU</h2>
-          <a href = "#" class="mb-1 ml-auto"><i class="material-icons">add</i></a>
+          <h2 class="mb-1">ITEMS MENU</h2>
+          {/* <a href = "#" class="mb-1 ml-auto"><i class="material-icons">add</i></a> */}
         </div>
         <hr></hr>
         <div class="list-group">
         {items.map(item =>
               <a href="#" class="list-group-item list-group-item-action">
-                <div class="d-flex w-50 justify-content-between">
-                <img src = {item.image} width="100" height="100" />
+                <div style={{alignContent: 'space-between' }} class="d-flex w-55 ">
+                <img src = {item.image} style={{marginRight: '40px' }} width="100" height="100" />
                 <div>
                     <h5 class="mb-1" key={item.name}>{item.name}</h5>
                     <p class="mb-1" key={item.price}>{item.price}</p>
                     <small key={item.description}>{item.description}</small>
                 </div>
-                <i class="material-icons" onClick={()=>this.setState({editItemModalShow: true, item_name:item.name, item_price:item.price, item_description:item.description, item_id: item._id})}>edit</i>
-                <i class="material-icons" onClick={()=>this.deleteitem(item._id)} >delete</i>
+                <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
+                  <i class="material-icons" style={{marginRight: '40px' }} onClick={()=>this.setState({editItemModalShow: true, item_name:item.name, item_price:item.price, item_description:item.description, item_id: item._id})}>edit</i>
+                  
+                  <i class="material-icons" onClick={()=>this.deleteitem(item._id)} >delete</i>
+                </div>
+                
                 <EditItem
                  show={this.state.editItemModalShow}
                  onHide={editItemModalClose}

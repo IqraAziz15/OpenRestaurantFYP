@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const API ='http://localhost:4000/restaurantadmin/edititem/';
+const API ='http://localhost:4000/restaurantadmin/editdeal/';
 
 
- export class EditItem extends Component{
+ export class EditDeal extends Component{
     constructor(props){
     super(props);
 
@@ -15,7 +15,7 @@ const API ='http://localhost:4000/restaurantadmin/edititem/';
    handleSubmit(id)
   {
       let name=this.refs.name.value;
-      let price=this.refs.price.value;
+      let total_bill=this.refs.total_bill.value;
       let description=this.refs.description.value;
       fetch(API+id, {
           method:'PUT',
@@ -24,13 +24,13 @@ const API ='http://localhost:4000/restaurantadmin/edititem/';
           },
           body:JSON.stringify({
             name,
-            price,
+            total_bill,
             description
           })
       })
       .then(function(response) {
         if (response.ok) {
-          alert('Item updated Successfully')
+          alert('Deal updated Successfully')
           window.location.reload(false);
           return true;
               } else {
@@ -63,18 +63,18 @@ const API ='http://localhost:4000/restaurantadmin/edititem/';
          <Form >
             <Form.Group controlId="formGroupname">
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="text" ref="name"  placeholder="Update or edit name here" size="sm" defaultValue={this.props.item_name}/>
+                <Form.Control type="text" ref="name"  placeholder="Update or edit name here" size="sm" defaultValue={this.props.deal_name}/>
             </Form.Group>
             <Form.Group controlId="formGroupLocation">
-                <Form.Label>Price</Form.Label>
-                <Form.Control type="text" ref="price" placeholder="Update or edit price here" size="sm" defaultValue={this.props.item_price}/>
+                <Form.Label>Total Bill</Form.Label>
+                <Form.Control type="text" ref="total_bill" placeholder="Update or edit total_bill here" size="sm" defaultValue={this.props.deal_total_bill}/>
             </Form.Group>
             <Form.Group controlId="formGroupname">
                 <Form.Label>Description</Form.Label>
-                <Form.Control type="text" ref="description" placeholder="Update or edit description here" size="sm" defaultValue={this.props.item_description}/>
+                <Form.Control type="text" ref="description" placeholder="Update or edit description here" size="sm" defaultValue={this.props.deal_description}/>
             </Form.Group>
             
-            <button className="butn" type="submit" onClick={()=>this.handleSubmit(this.props.item_id)}>Update Item</button>
+            <button className="butn" type="submit" onClick={()=>this.handleSubmit(this.props.deal_id)}>Update Deal</button>
 
         </Form>
          </center>

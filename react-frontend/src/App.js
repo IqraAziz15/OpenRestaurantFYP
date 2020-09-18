@@ -1,5 +1,6 @@
 import React from 'react';
 import RaLayout from './components/restaurantadminlayout';
+import SaLayout from './components/superadminlayout'
 
 // import { Provider } from 'react-redux';
 // import store from './flux/store';
@@ -28,6 +29,7 @@ class App extends React.Component{
   return (
     <div className="App">
       <RaLayout/>
+      {/* <SaLayout/> */}
       
       {/* <ViewItems/> */}
       

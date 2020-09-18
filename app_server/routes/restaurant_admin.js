@@ -17,6 +17,8 @@ var multer = require('multer');
 var Item = require('../models/item');
 var Deal = require('../models/deal');
 var Menu = require('../models/menu');
+var Staff = require('../models/staff');
+var Waiter = require('../models/waiter');
 
 // router.use(express.static(__dirname+'../uploads/'))
 
@@ -125,15 +127,37 @@ router.post('/additem', upload.single('image'), (req, res) => {
 //     });
 // });
 
-router.post('/adddeal', function(req, res, next) {
-    Deal.create(req.body)
-            .then((deal) => {
-            console.log('Deal has been Added ', deal);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(deal);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+// router.post('/adddeal', function(req, res, next) {
+//     Deal.create(req.body)
+//             .then((deal) => {
+//             console.log('Deal has been Added ', deal);
+//             res.statusCode = 200;
+//             res.setHeader('Content-Type', 'application/json');
+//             res.json(deal);
+//         }, (err) => next(err))
+//         .catch((err) => next(err));
+// });
+
+router.post('/adddeal', upload.single('image'), (req, res) => {
+    console.log(req.file);
+    // console.log(req.file.filename);
+    // var paths = 'http://localhost:4000/uploads/' + req.file.filename;
+    // console.log(paths);
+    
+    var d = new Deal;
+    d.name = req.body.name;
+    d.description = req.body.description;
+    d.total_bill = req.body.total_bill;
+    d.image = 'http://localhost:4000/uploads/' + req.file.filename;
+    d.save((err, result) => {
+        console.log(result)
+        if (err) {
+            console.log(`upload.single error: ${err}`);
+            return console.log(err)
+        }
+        console.log('saved to database')
+        res.send(d);
+    })
 });
 
 router.post('/addmenu', function(req, res, next) {
@@ -146,6 +170,24 @@ router.post('/addmenu', function(req, res, next) {
         }, (err) => next(err))
         .catch((err) => next(err));
 });
+
+router.post('/addstaff', function(req, res, next) {
+    Staff.create(req.body).then((staff)=>{
+        console.log('staff has been added', staff);
+        res.statusCode=200;
+        res.setHeader('content-type', 'application/json');
+        res.json(staff);
+      }, (err) => next(err)).catch((err)=>next(err));
+});
+
+router.post('/addwaiter', function(req, res, next) {
+    Waiter.create(req.body).then((waiter)=>{
+        console.log('waiter has been added', waiter);
+        res.statusCode=200;
+        res.setHeader('content-type', 'application/json');
+        res.json(waiter);
+      }, (err) => next(err)).catch((err)=>next(err));
+  });
 
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 
@@ -169,8 +211,28 @@ router.get('/viewitem', function(req, res, next) {
     });
 });
 
-router.get('/deal', function(req, res, next) {
+router.get('/viewdeal', function(req, res, next) {
     Deal.find().sort('name').exec(function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });
+});
+
+router.get('/viewstaff', function(req, res, next) {
+    Staff.find().sort('username').exec(function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });
+});
+
+router.get('/viewwaiter', function(req, res, next) {
+    Waiter.find().sort('username').exec(function(error, results) {
         if (error) {
             return next(error);
         }
@@ -201,6 +263,26 @@ router.delete('/removedeal/:id', function(req, res, next) {
     });
 });
 
+router.delete('/removestaff/:id', function(req, res, next) {
+    Staff.deleteOne({ _id: req.params.id }, function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });
+});
+
+router.delete('/removewaiter/:id', function(req, res, next) {
+    Waiter.deleteOne({ _id: req.params.id }, function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });
+});
+
 /////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
 
 // router.put('/edititem', function(req, res, next) {
@@ -221,15 +303,23 @@ router.put('/edititem/:eid', function(req, res, next) {
     });
 }); 
 
-router.put('/editdeal', function(req, res, next) {
-    Deal.findOneAndUpdate({_id:req.body._id},{item:req.body.item,description:req.body.description,total_bill:req.body.total_bill},function(error, results) {
-    if (error) {
-    return next(error);
-    }
-    // Respond with valid data
-    res.json(results);
+router.put('/editdeal/:did', function(req, res, next) {
+    Deal.findByIdAndUpdate({_id:req.params.did}, req.body).then(function() {
+        Deal.findOne({_id:req.params.did}).then(function(Item){
+             res.send(Item);
+         });
     });
-});
+}); 
+
+// router.put('/editdeal', function(req, res, next) {
+//     Deal.findOneAndUpdate({_id:req.body._id},{item:req.body.item,description:req.body.description,total_bill:req.body.total_bill},function(error, results) {
+//     if (error) {
+//     return next(error);
+//     }
+//     // Respond with valid data
+//     res.json(results);
+//     });
+// });
 
 
 module.exports = router;

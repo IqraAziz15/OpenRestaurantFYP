@@ -1,23 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var menuSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    items: [
+    submenus: [
         {
-            item: {
+            submenu: {
                 type: mongoose.Types.ObjectId,
-                ref: 'Item'
-            }
-        }
-    ],
-    deals: [
-        {
-            deal: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Deal'
+                ref: 'SubMenu'
             }
         }
     ],

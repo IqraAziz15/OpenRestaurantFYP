@@ -5,18 +5,20 @@ var dealSchema = new Schema({
         type: String,
         required: true
     },
-    items: [
-        {
-            item: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Item'
-            },
-            quantity: {
-                type: Number,
-                required: true
-            },
-        }
-    ],
+    image: {
+        type: String,
+    },
+    // items: [
+    //     {
+    //         item: {
+    //             type: mongoose.Types.ObjectId,
+    //             ref: 'Item'
+    //         },
+    //         quantity: {
+    //             type: Number,
+    //         },
+    //     }
+    // ],
 
     description: {
         type: String,

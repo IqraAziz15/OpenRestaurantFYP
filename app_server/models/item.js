@@ -16,7 +16,7 @@ var itemSchema = new Schema({
     },
     description: {
         type: String,
-        required: true 
+         
     },
     ratings: [
         {

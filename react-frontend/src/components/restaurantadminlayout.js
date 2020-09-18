@@ -10,6 +10,7 @@ import {
     DatabaseOutlined,
     AppstoreOutlined,
     ProfileOutlined,
+    LineChartOutlined,
     ContainerOutlined,
     AppstoreAddOutlined,
     FileAddOutlined,
@@ -18,6 +19,14 @@ import {
 import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import additem from './additems';
 import viewanddeleteitem from './viewanddeleteitem';
+import adddeal from './adddeals';
+import viewanddeletedeal from './viewanddeletedeal';
+import restaurantstatistics from './restaurantstatistics';
+import adminstatistics from './adminstatistics';
+import addstaff from './addstaff';
+import viewanddeletestaff from './viewanddeletestaff';
+import addwaiter from './addwaiter';
+import viewanddeletewaiter from './viewanddeletewaiter';
 import './restaurantadminlayout.css';
 import logo from '../assets/images/logo.png';
 import Title from 'antd/lib/skeleton/Title';
@@ -46,39 +55,74 @@ class RaLayout extends React.Component
                     
                 </Header>
                 <Router>
-                <Layout style={{ minHeight: '100vh' }}>
-                    <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                <Layout style={{ minHeight: '100vh' }} >
+                    <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <div className="logo" />
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
+                    <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
                         
                         <Menu.Item key="1" icon={<UserOutlined />}> User Profile</Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Restaurant Team">
-                            <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item>
-                            <Menu.Item key="3" icon={<UserOutlined />}>Staff</Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="sub3" icon={<FormOutlined />} title="Restaurant Work">
-                            <SubMenu key="sub4" title="Restaurant Menu" icon={<DatabaseOutlined />}>
-                                <Menu.Item key="4" icon={<FileAddOutlined />}><Link className="link" to="/additem">
-                                Add Menu
+                            {/* <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item> */}
+                            <SubMenu key="sub3" title="Manage Waiter" icon={<UserOutlined />}>
+                                <Menu.Item key="2" icon={<FileAddOutlined />}><Link className="link" to="/addwaiter">
+                                Add Waiters
                                 </Link>
                                 </Menu.Item>
-                                <Menu.Item key="5" icon={<ContainerOutlined />}><Link className="link" to="/viewanddeleteitem">
-                                View Menu
+                                {/* <Menu.Item key="3" icon={<ContainerOutlined />}><Link className="link" to="">
+                                Remove Waiters
+                                </Link>
+                                </Menu.Item> */}
+                                <Menu.Item key="4" icon={<ContainerOutlined />}><Link className="link" to="/viewanddeletewaiter">
+                                View Waiters
                                 </Link>
                                 </Menu.Item>
                             </SubMenu>
-                            {/* <SubMenu key="sub5" title="Restaurant Deals"  icon={<AppstoreOutlined />}>
-                                <Menu.Item key="6" icon={<AppstoreAddOutlined />}>
+                            <SubMenu key="sub4" title="Manage Staff" icon={<UserOutlined />}>
+                                <Menu.Item key="5" icon={<FileAddOutlined />}><Link className="link" to="/addstaff">
+                                Add Staff
+                                </Link>
+                                </Menu.Item>
+                                {/* <Menu.Item key="6" icon={<ContainerOutlined />}><Link className="link" to="">
+                                Remove Staff
+                                </Link>
+                                </Menu.Item> */}
+                                <Menu.Item key="7" icon={<ContainerOutlined />}><Link className="link" to="/viewanddeletestaff">
+                                View Staff
+                                </Link>
+                                </Menu.Item>
+                            </SubMenu>
+                            {/* <Menu.Item key="3" icon={<UserOutlined />}>Staff</Menu.Item> */}
+                        </SubMenu>
+                        <SubMenu key="sub5" icon={<FormOutlined />} title="Restaurant Work">
+                            <SubMenu key="sub6" title="Manage Items" icon={<DatabaseOutlined />}>
+                                <Menu.Item key="8" icon={<FileAddOutlined />}><Link className="link" to="/additem">
+                                Add Items
+                                </Link>
+                                </Menu.Item>
+                                <Menu.Item key="9" icon={<ContainerOutlined />}><Link className="link" to="/viewanddeleteitem">
+                                View Items
+                                </Link>
+                                </Menu.Item>
+                            </SubMenu>
+                            <SubMenu key="sub7" title="Manage Deals"  icon={<AppstoreOutlined />}>
+                                <Menu.Item key="10" icon={<AppstoreAddOutlined />}>
+                                <Link className="link" to="/adddeal">
                                 Add Deals
+                                </Link>
                                 </Menu.Item>
-                                <Menu.Item key="7" icon={<WindowsOutlined />}>
+                                <Menu.Item key="11" icon={<WindowsOutlined />}>
+                                <Link className="link" to="/viewanddeletedeal">
                                 View Deals
+                                </Link>
                                 </Menu.Item>
-                            </SubMenu> */}
+                            </SubMenu>
                         </SubMenu>
                         
-                        <Menu.Item key="8" icon={<SettingOutlined />}>Setting</Menu.Item>
-                        <Menu.Item key="9" icon={<LogoutOutlined />}>Logout</Menu.Item>
+                        <Menu.Item key="12" icon={<SettingOutlined />}>Setting</Menu.Item>
+                        <Menu.Item key="13" icon={<LineChartOutlined />}>
+                            <Link className="link" to="/adminstatistics" >Statistics</Link>
+                            </Menu.Item>
+                        <Menu.Item key="14" icon={<LogoutOutlined />}>Logout</Menu.Item>
                         
                         
                         
@@ -94,6 +138,20 @@ class RaLayout extends React.Component
                             <Route path="/additem" component={ additem }>
                             </Route>
                             <Route path="/viewanddeleteitem" component={ viewanddeleteitem }>
+                            </Route>
+                            <Route path="/adddeal" component={ adddeal }>
+                            </Route>
+                            <Route path="/viewanddeletedeal" component={ viewanddeletedeal }>
+                            </Route>
+                            <Route path="/adminstatistics" component={ adminstatistics }>
+                            </Route>
+                            <Route path="/addstaff" component={ addstaff }>
+                            </Route>
+                            <Route path="/viewanddeletestaff" component={ viewanddeletestaff }>
+                            </Route>
+                            <Route path="/addwaiter" component={ addwaiter }>
+                            </Route>
+                            <Route path="/viewanddeletewaiter" component={ viewanddeletewaiter }>
                             </Route>
                         </Switch>
                         

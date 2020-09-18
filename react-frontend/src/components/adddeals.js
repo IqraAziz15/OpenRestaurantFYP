@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-const API = 'http://localhost:4000/restaurantadmin/additem';
+const API = 'http://localhost:4000/restaurantadmin/adddeal';
 
-class additem extends React.Component {
+class adddeal extends React.Component {
 
     constructor(props) {
         super(props);
-        this.additem = this.additem.bind(this);
+        this.adddeal = this.adddeal.bind(this);
         this.refresh=this.refresh.bind(this);
         this.initialState = {
             name:'',
-            price:'',
+            total_bill:'',
             decription:'',
             image:'',
             counter:0
@@ -25,14 +25,14 @@ class additem extends React.Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
-    additem(e) {
+    adddeal(e) {
         e.preventDefault();
     
-        let { name, price, description, image } = this.state;
+        let { name, total_bill, description, image } = this.state;
     
         let data = {
           name,
-          price,
+          total_bill,
           description,
           image
         };
@@ -43,7 +43,7 @@ class additem extends React.Component {
             "Content-Type": "application/json"
         }}).then(function(response) {
           if (response.ok) {
-            alert('Item Added Successfully')    
+            alert('Deal Added Successfully')    
           } else {
             var error = new Error(response.statusText)
             error.response = response
@@ -56,19 +56,19 @@ class additem extends React.Component {
     render() {
         return (
             <div class="container mt-5">
-                <center><h2>Add New Item</h2></center>
-                <form name="addform" action="/additem" enctype="multipart/form-data">
+                <center><h2>Add New Deal</h2></center>
+                <form name="addform" action="/adddeal" enctype="multipart/form-data">
                     <div class = "form-group">
-                        <label for="name">Item Name</label>
+                        <label for="name">Deal Name</label>
                         <input class="form-control" type="text" ref="name" name="name" placeholder="Enter name" onChange={this.onChange} id="name"/>
                     </div>
 
                     <div class = "form-group">
-                        <label for="price">Item Price</label>
-                        <input class="form-control" type="text" ref="price" name="price" placeholder="Enter price" onChange={this.onChange} id="price"/>
+                        <label for="total_bill">Deal total_bill</label>
+                        <input class="form-control" type="text" ref="total_bill" name="total_bill" placeholder="Enter total_bill" onChange={this.onChange} id="total_bill"/>
                     </div>
                     <div class = "form-group">
-                        <label for="description">Item Description</label>
+                        <label for="description">Deal Description</label>
                         <input class="form-control" type="text" ref="description" name="description" placeholder="Enter description" onChange={this.onChange} id="description"/>
                     </div>
                     <br/>
@@ -79,7 +79,7 @@ class additem extends React.Component {
                     <br/> <br/> 
                     
                     <div class = "form-group">
-                    <button type="submit" class="btn btn-dark" onClick={this.additem}>Submit</button>
+                    <button type="submit" class="btn btn-dark" onClick={this.adddeal}>Submit</button>
                     </div>
                     {/* <input type="hidden" ref="hid" value={this.state.counter}></input> */}
                 </form>
@@ -88,4 +88,4 @@ class additem extends React.Component {
     }
 }
 
-export default additem;
+export default adddeal;

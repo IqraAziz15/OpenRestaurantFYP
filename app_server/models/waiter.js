@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var waiterSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
+    // name: {
+    //     type: String,
+    //     required: true
+    // },
     username: {
         type: String,
         required: true, 
@@ -15,21 +15,21 @@ var waiterSchema = new Schema({
         required: true, 
         unique: true
     },
-    phonenumber: {
-        type: Number,
-        required: true, 
-        unique: true
-    },
+    // phonenumber: {
+    //     type: Number,
+    //     required: true, 
+    //     unique: true
+    // },
     password: {
         type: String,
         required: true
     },
-    status: {
-        type: String,
-    },
-    picture: {
-        type: Buffer,
-    },
+    // status: {
+    //     type: String,
+    // },
+    // picture: {
+    //     type: Buffer,
+    // },
     register_date: {
         type: Date,
         default: Date.now

@@ -1,0 +1,21 @@
+var express = require('express');
+var router = express.Router();
+const itemController = require('../../controllers/restaurantAdmin/itemController');
+
+/////////////////////////////////////////////       POST OPERATIONS        //////////////////////////////////////////////
+
+router.post('/additem', itemController.addItem);
+
+/////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
+
+router.get('/viewitem', itemController.viewItem);
+
+///////////////////////////////////////////        DELETE OPERATIONS        //////////////////////////////////////////////
+
+router.delete('/removedeal/:id', itemController.removeItem);
+
+/////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
+
+router.put('/editdeal/:eid', itemController.editItem);
+
+module.exports = router;

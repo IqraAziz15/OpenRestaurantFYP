@@ -19,6 +19,7 @@ var Deal = require('../models/deal');
 var Menu = require('../models/menu');
 var Staff = require('../models/staff');
 var Waiter = require('../models/waiter');
+var Submenu = require('../models/submenu');
 
 // router.use(express.static(__dirname+'../uploads/'))
 
@@ -111,7 +112,49 @@ router.post('/additem', upload.single('image'), (req, res) => {
     })
 });
 
+router.post('/addsubmenu', function(req, res, next) {
+    Submenu.create(req.body).then((staff)=>{
+        console.log('Submenu has been added', staff);
+        res.statusCode=200;
+        res.setHeader('content-type', 'application/json');
+        res.json(staff);
+      }, (err) => next(err)).catch((err)=>next(err));
+});
 
+router.post('/additemtosubmenu', (req, res) => {
+    Submenu.findOneAndUpdate({ _id: req.body.cid }, {
+        "$push": {
+            "items": {
+                "item": req.body.rid
+            }
+        }
+    }, { new: true, upsert: false },
+    function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });   
+});
+
+
+router.post('/adddealstosubmenu', (req, res) => {
+    Submenu.findOneAndUpdate({ _id: req.params.cid }, {
+        "$push": {
+            "deals": {
+                "deal": req.params.rid
+            }
+        }
+    }, { new: true, upsert: false },
+    function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });   
+});
 
 // router.post('/additem', function(req, res, next) {
 //     i = new Item();
@@ -179,6 +222,7 @@ router.post('/addstaff', function(req, res, next) {
         res.json(staff);
       }, (err) => next(err)).catch((err)=>next(err));
 });
+
 
 router.post('/addwaiter', function(req, res, next) {
     Waiter.create(req.body).then((waiter)=>{
@@ -281,6 +325,23 @@ router.delete('/removewaiter/:id', function(req, res, next) {
         // Respond with valid data
         res.json(results);
     });
+});
+
+router.post('/removeitemfromsubmenu', (req, res) => {
+    Submenu.findOneAndUpdate({ _id: req.body.cid }, {
+        "$pull": {
+            "items": {
+                "item": req.body.rid
+            }
+        }
+    }, { new: true, upsert: false },
+    function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });   
 });
 
 /////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////

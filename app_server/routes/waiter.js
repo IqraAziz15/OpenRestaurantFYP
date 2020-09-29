@@ -3,7 +3,6 @@ var router = express.Router();
 var Waiter = require('../models/waiter');
 var Order = require('../models/order');
 var Restaurant = require('../models/restaurant');
-var Menu = require('../models/menu');
 var Review = require('../models/review');
 
 
@@ -11,15 +10,15 @@ router.get('/', function(req, res, next) {
     res.send('Waiter Dashboard');
 });
 //testing
-router.get('/view', function(req, res, next) {
-    Waiter.find().sort('name').exec(function(error, results) {
-        if (error) {
-            return next(error);
-        }
-        // Respond with valid data
-        res.json(results);
-    });
-});
+// router.get('/view', function(req, res, next) {
+//     Waiter.find().sort('name').exec(function(error, results) {
+//         if (error) {
+//             return next(error);
+//         }
+//         // Respond with valid data
+//         res.json(results);
+//     });
+// });
 
 router.get('/viewprofile/:id', function(req, res, next){
     console.log(req.params.id);
@@ -57,27 +56,17 @@ router.post('/order/:wid/acceptorder/:oid', function(req, res, next) {
         res.json(results);
     });
 });
-//testing
-router.post('/addwaiter', function(req, res, next) {
-    Waiter.create(req.body)
-            .then((waiter) => {
-            console.log('Waiter has been Added ', waiter);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(waiter);
-        }, (err) => next(err))
-        .catch((err) => next(err));
-});
-router.post('/addrest', function(req, res, next) {
-   Restaurant.create(req.body)
-            .then((waiter) => {
-            console.log('Restaurnat has been Added ', waiter);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(waiter);
-        }, (err) => next(err))
-        .catch((err) => next(err));
-});
+
+// router.post('/addrest', function(req, res, next) {
+//    Restaurant.create(req.body)
+//             .then((waiter) => {
+//             console.log('Restaurant has been Added ', waiter);
+//             res.statusCode = 200;
+//             res.setHeader('Content-Type', 'application/json');
+//             res.json(waiter);
+//         }, (err) => next(err))
+//         .catch((err) => next(err));
+// });
 router.post('/addreview', function(req, res, next) {
     Review.create(req.body)
              .then((waiter) => {
@@ -113,16 +102,6 @@ router.get('/rests', function(req, res, next) {
         // Respond with valid data
         res.json(results);
     });
-});
-router.post('/addmenu', function(req, res, next) {
-    Menu.create(req.body)
-            .then((waiter) => {
-            console.log('Menu has been Added ', waiter);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(waiter);
-        }, (err) => next(err))
-        .catch((err) => next(err));
 });
 
 router.put('/editprofile/:wid/editname/:name', function(req, res, next) {

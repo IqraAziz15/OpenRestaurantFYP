@@ -9,10 +9,19 @@ var cors = require('cors');
 var config = require('config');
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
-var waiterRouter = require('./app_server/routes/waiter');
-var userRouter = require('./app_server/routes/user');
-var restaurantAdminRouter = require('./app_server/routes/restaurant_admin');
-var superAdminRouter = require('./app_server/routes/super_admin');
+var waiterRouter = require('./app_server/routes/waiter/waiter');
+var waiterOrderRouter = require('./app_server/routes/waiter/order');
+var userWaiterRouter = require('./app_server/routes/userprofile/waiter');
+var restaurantAdminDealRouter = require('./app_server/routes/restaurantAdmin/deal');
+var restaurantAdminItemRouter = require('./app_server/routes/restaurantAdmin/item');
+var restaurantAdminMenuRouter = require('./app_server/routes/restaurantAdmin/menu');
+var restaurantAdminStaffRouter = require('./app_server/routes/restaurantAdmin/staff');
+var restaurantAdminSubmenuRouter = require('./app_server/routes/restaurantAdmin/submenu');
+var restaurantAdminWaiterRouter = require('./app_server/routes/restaurantAdmin/waiter');
+var superAdminRestaurantRouter = require('./app_server/routes/superadmin/restaurant');
+var superAdminRestaurantAdminRouter = require('./app_server/routes/superadmin/restaurantAdmin');
+var customerItemRouter = require('./app_server/routes/customer/item')
+var customerRestaurantRouter = require('./app_server/routes/customer/restaurant')
 
 var app = express();
 
@@ -43,9 +52,19 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/waiter', waiterRouter);
-app.use('/user', userRouter);
-app.use('/restaurantadmin', restaurantAdminRouter);
-app.use('/super_admin', superAdminRouter);
+app.use('/waiter/order', waiterOrderRouter);
+app.use('/userprofile/waiter', userWaiterRouter);
+app.use('/restaurantadmin/deal', restaurantAdminDealRouter);
+app.use('/restaurantadmin/item', restaurantAdminItemRouter);
+app.use('/restaurantadmin/menu', restaurantAdminMenuRouter);
+app.use('/restaurantadmin/staff', restaurantAdminStaffRouter);
+app.use('/restaurantadmin/submenu', restaurantAdminSubmenuRouter);
+app.use('/restaurantadmin/waiter', restaurantAdminWaiterRouter);
+app.use('/superadmin/restaurant', superAdminRestaurantRouter);
+app.use('/superadmin/restaurantadmin', superAdminRestaurantAdminRouter);
+app.use('/customer/item', customerItemRouter);
+app.use('/customer/restaurant', customerRestaurantRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

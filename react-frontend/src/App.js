@@ -1,6 +1,7 @@
 import React from 'react';
-import RaLayout from './components/restaurantadminlayout';
-import SaLayout from './components/superadminlayout'
+import RaLayout from './components/layouts/restaurantAdminLayout/restaurantadminlayout';
+import SaLayout from './components/layouts/superAdminLayout/superadminlayout';
+import CLayout from './components/layouts/customerLayout/customerlayout';
 
 // import { Provider } from 'react-redux';
 // import store from './flux/store';
@@ -28,6 +29,7 @@ class App extends React.Component{
   render() {
   return (
     <div className="App">
+      {/* <CLayout/> */}
       <RaLayout/>
       {/* <SaLayout/> */}
       

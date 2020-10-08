@@ -18,7 +18,7 @@ import {
 } from '@ant-design/icons';
 import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import additem from '../../restaurantAdmin/item/additems';
-import viewanddeleteitem from '../../restaurantAdmin/item/viewanddeleteitem';
+import ViewItems from '../../restaurantAdmin/item/viewanddeleteitem';
 import adddeal from '../../restaurantAdmin/deal/adddeals';
 import viewanddeletedeal from '../../restaurantAdmin/deal/viewanddeletedeal';
 import restaurantstatistics from '../../restaurantAdmin/restaurantStatistics/restaurantstatistics';
@@ -27,7 +27,11 @@ import addstaff from '../../restaurantAdmin/staff/addstaff';
 import viewanddeletestaff from '../../restaurantAdmin/staff/viewanddeletestaff';
 import addwaiter from '../../restaurantAdmin/waiter/addwaiter';
 import viewanddeletewaiter from '../../restaurantAdmin/waiter/viewanddeletewaiter';
+// import {findrestaurant} from '../../../fetch_requests/restaurant';
 import './restaurantadminlayout.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 // import logo from '../assets/images/logo.png';
 // import Title from 'antd/lib/skeleton/Title';
 const { Header, Content, Footer, Sider } = Layout;
@@ -38,22 +42,65 @@ class RaLayout extends React.Component
 {
     state = {
         collapsed: false,
+        isOpen : false,
+        user: this.props.user,
+        rest_id: '',
+        rest: '',
       };
+
+
+    static propTypes = {
+        auth : PropTypes.object.isRequired,
+        isAuthenticated : PropTypes.bool,
+        // error : PropTypes.object.isRequired
+    }
     
+
+    componentDidMount = async () => {
+        var body = JSON.stringify({rid : this.state.user.id});
+        const pointerToThis = this;
+        await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/",  {
+        method:'POST',
+        body,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(data => pointerToThis.setState({ rest: data}));
+
+
+    //     var body1 = JSON.stringify({id : this.state.rest_id});
+    //     const pointerToThis = this;
+    //     await fetch("http://localhost:4000/restaurantadmin/restaurant/getrestaurant/",  {
+    //     method:'POST',
+    //     body1,
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     }
+    //   })
+    //     .then(response => response.json())
+    //     .then(data => pointerToThis.setState({ rest: data}));
+        
+    }
+
       onCollapse = collapsed => {
         console.log(collapsed);
         this.setState({ collapsed });
+
+        
       };
     
       render() {
         return (
             <div>
-                <Header>
+                <Header> 
                 <h2 style={{color: 'white'}}>Open Restaurant</h2>
                 {/* <img src= { logo } height = "45" width = "45"></img> */}
-                   
-                    
+                {/* <h5>{this.state.user ? `Welcome ${this.state.user.name}  ${this.state.rest.name}` : ''}</h5>    */}
+                {/* <h3>{this.state.user ? `Welcome ${this.state.user.name} ${this.state.user.id}` : ''}</h3>     */}
                 </Header>
+                <div className="clear-div"></div>
                 <Router>
                 <Layout style={{ minHeight: '100vh' }} >
                     <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -137,7 +184,7 @@ class RaLayout extends React.Component
                         <Switch>
                             <Route path="/additem" component={ additem }>
                             </Route>
-                            <Route path="/viewanddeleteitem" component={ viewanddeleteitem }>
+                            <Route path="/viewanddeleteitem" render={(props) => ( <ViewItems {...props} rest={this.state.rest} />)}>
                             </Route>
                             <Route path="/adddeal" component={ adddeal }>
                             </Route>
@@ -172,4 +219,8 @@ class RaLayout extends React.Component
       }
 }
 
-export default RaLayout;
+const mapStateToProps = (state) => ({
+    auth: state.auth
+  });
+  
+  export default connect(mapStateToProps, null)(RaLayout);

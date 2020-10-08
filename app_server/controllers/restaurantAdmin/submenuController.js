@@ -14,9 +14,7 @@ exports.addSubmenu = (function(req, res, next) {
 exports.addItemsToSubmenu = ((req, res) => {
     Submenu.findOneAndUpdate({ _id: req.body.cid }, {
         "$push": {
-            "items": {
-                "item": req.body.rid
-            }
+            "items": req.body.rid
         }
     }, { new: true, upsert: false },
     function(error, results) {
@@ -29,11 +27,9 @@ exports.addItemsToSubmenu = ((req, res) => {
 });
 
 exports.addDealsToSubmenu = ((req, res) => {
-    Submenu.findOneAndUpdate({ _id: req.params.cid }, {
+    Submenu.findOneAndUpdate({ _id: req.body.sid }, {
         "$push": {
-            "deals": {
-                "deal": req.params.rid
-            }
+            "deals": req.body.did
         }
     }, { new: true, upsert: false },
     function(error, results) {
@@ -45,14 +41,22 @@ exports.addDealsToSubmenu = ((req, res) => {
     });   
 });
 
+exports.getSubmenuById = (function(req, res, next) {
+    Submenu.findOne({_id: req.body.id}).exec(function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });
+});
+
 ///////////////////////////////////////////        DELETE OPERATIONS        //////////////////////////////////////////////
 
 exports.removeItemFromSubmenu = ((req, res) => {
     Submenu.findOneAndUpdate({ _id: req.body.cid }, {
         "$pull": {
-            "items": {
-                "item": req.body.rid
-            }
+                "items": req.body.rid
         }
     }, { new: true, upsert: false },
     function(error, results) {

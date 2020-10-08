@@ -2,25 +2,26 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {EditItem} from './edititem'; 
 import 'material-design-icons/iconfont/material-icons.css';
-const API = 'http://localhost:4000/restaurantadmin/item/viewitem';
+import { ResponsiveEmbed } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+const API = 'http://localhost:4000/restaurantadmin/menu/viewmenu';
 const API1 = 'http://localhost:4000/restaurantadmin/item/removeitem/';
 
 
 class ViewItems extends React.Component
 {
-  constructor(props) {
-    super(props);
-
-    this.state = {
+  
+    state = {
+        rest: this.props.rest,
+        submenu: [],
         items: [],
         editItemModalShow: false
       };
-  }
 
-  componentDidMount() {
-    fetch(API)
-      .then(response => response.json())
-      .then(data => this.setState({ items: data }));
+
+  componentDidMount = () => {
+    console.log(this.state.rest);
+
   }
 
   deleteitem(id)
@@ -48,7 +49,7 @@ class ViewItems extends React.Component
 
   render()
   {
-    const { items, item_name, item_price, item_description, item_id } = this.state;
+    const {  item_name, item_price, item_description, item_id } = this.state;
     let editItemModalClose=()=> this.setState({editItemModalShow:false});
     return(
       <div class="container mt-3">
@@ -58,8 +59,11 @@ class ViewItems extends React.Component
         </div>
         <hr></hr>
         <div class="list-group">
-        {items.map(item =>
+        {this.state.rest.menu.submenus.map(submenu =>
+        
               <a href="#" class="list-group-item list-group-item-action">
+                <h4 key={submenu.name}>{submenu.name}</h4>
+                {submenu.items.map(item =>
                 <div style={{alignContent: 'space-between' }} class="d-flex w-55 ">
                 <img src = {item.image} style={{marginRight: '40px' }} width="100" height="100" />
                 <div>
@@ -82,8 +86,11 @@ class ViewItems extends React.Component
                  item_id={item_id}>
                 </EditItem>
                 </div>
+                )}
               </a>   
         )}
+
+        
         </div>
       </div>
     );

@@ -14,8 +14,8 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { register } from '../flux/actions/authActions';
-import { clearErrors } from '../flux/actions/errorActions';
+import { register } from '../../../flux/actions/waiter/authActions';
+import { clearErrors } from '../../../flux/actions/waiter/errorActions';
 
 class RegisterModal extends Component {
     state = {

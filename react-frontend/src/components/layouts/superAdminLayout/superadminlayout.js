@@ -1,7 +1,9 @@
 import React,{Component} from 'react';
-import addrestaurant from '../../superAdmin/restaurant/addrestaurant';
+import addrestaurant from '../../superAdmin/restaurant/addrestaurant'; 
+import Signupra from './restaurantadmin';
 // import addrestaurantadmin from './addrestaurantadmin';
 import viewanddeleterestaurant from '../../superAdmin/restaurant/viewanddeleterestaurant';
+import RegisterModal from '../../userProfile/restaurantAdmin/signup';
 // import logo1 from '../assets/images/logo1.png'; 
 import './superadminlayout.css'; 
 import { Layout, Menu,Button} from 'antd';
@@ -46,6 +48,8 @@ render(){
                         <Menu.Item key="1" ><Link className="link" to="/addrestaurant" >Add Restaurant</Link></Menu.Item>
                         
                         <Menu.Item key="2"><Link className="link" to="/viewanddeleterestaurant" >View Restaurants</Link></Menu.Item>
+                        <Menu.Item key="3"><Link className="link" to="/signup" >Sign Up RA</Link></Menu.Item>
+                    
                     {/*  <Menu.Item key="2"><Link className="link" to="/changerestaurantadmin" >Change Restaurant Admin</Link></Menu.Item> */}
  
                     </SubMenu>
@@ -70,6 +74,7 @@ render(){
                         <Switch>
                             <Route path="/addrestaurant" component={addrestaurant}/>
                             <Route path="/viewanddeleterestaurant" component={viewanddeleterestaurant}/>
+                            <Route exact path="/signup" component={Signupra}/>
                         </Switch>
                     </Content>
                 </Layout>
@@ -80,4 +85,4 @@ render(){
 
     }
 }
-export default SaLayout 
+export default SaLayout;

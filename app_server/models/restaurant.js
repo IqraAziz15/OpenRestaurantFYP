@@ -62,11 +62,19 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var restaurantSchema = new Schema({
+    ownername: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
     },
     location: {
+        type: String,
+        required: true
+    },
+    logo: {
         type: String,
         required: true
     },

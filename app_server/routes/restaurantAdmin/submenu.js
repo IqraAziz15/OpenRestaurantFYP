@@ -10,6 +10,8 @@ router.post('/additemtosubmenu', submenuController.addItemsToSubmenu);
 
 router.post('/adddealstosubmenu', submenuController.addDealsToSubmenu);
 
+router.post('/getsubmenu/', submenuController.getSubmenuById);
+
 ///////////////////////////////////////////        DELETE OPERATIONS        //////////////////////////////////////////////
 
 router.delete('/removeitemfromsubmenu', submenuController.removeItemFromSubmenu);

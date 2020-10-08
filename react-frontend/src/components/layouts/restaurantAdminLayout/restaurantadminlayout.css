@@ -30,3 +30,19 @@ h3 {
     padding-bottom: 8px;
     border-bottom: 2px solid var(--tomato);
 }
+
+Header > h5 {
+    float: right;
+    color: white;
+    font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    padding-top: 1em;
+}
+Header > h2 {
+    float: left;
+    padding-top: 0.5em;
+    font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+}
+
+.clear-div {
+    clear: both;
+}

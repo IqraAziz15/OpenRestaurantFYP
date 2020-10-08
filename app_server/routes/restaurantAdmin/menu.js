@@ -4,10 +4,14 @@ const menuController = require('../../controllers/restaurantAdmin/menuController
 
 /////////////////////////////////////////////       POST OPERATIONS        //////////////////////////////////////////////
 
-router.post('/additem', menuController.addMenu);
+router.post('/addmenu', menuController.addMenu);
+
+router.post('/addsubmenutomenu', menuController.addSubmenuToMenu);
+
+router.post('/viewmenu', menuController.viewMenu);
 
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 
-router.get('/viewitem', menuController.viewMenu);
+
 
 module.exports = router;

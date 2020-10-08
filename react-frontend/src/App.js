@@ -2,12 +2,14 @@ import React from 'react';
 import RaLayout from './components/layouts/restaurantAdminLayout/restaurantadminlayout';
 import SaLayout from './components/layouts/superAdminLayout/superadminlayout';
 import CLayout from './components/layouts/customerLayout/customerlayout';
+import MainPageLayout from './components/layouts/userProfileLayout/a';
 
-// import { Provider } from 'react-redux';
-// import store from './flux/store';
-// import { loadUser } from './flux/actions/authActions';
-
-// import AppNavbar from './components/appnavbar';
+import { Provider } from 'react-redux';
+import store from './flux/store/store_restaurant_admin';
+import { loadUser } from './flux/actions/restaurantAdmin/authActions';
+import Signupra from './components/layouts/superAdminLayout/restaurantadmin';
+import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
+import AppNavbar from './components/layouts/userProfileLayout/a';
 // import RestaurantAdmin from './components/restaurant_admin';
 // import AddItem from './components/additems';
 // import AddItem from './components/extra';
@@ -23,15 +25,15 @@ import CLayout from './components/layouts/customerLayout/customerlayout';
 
 class App extends React.Component{
   
-  // componentDidMount() {
-  //   store.dispatch(loadUser());
-  // }
+  componentDidMount() {
+    store.dispatch(loadUser());
+  }
   render() {
   return (
     <div className="App">
       {/* <CLayout/> */}
-      <RaLayout/>
-      {/* <SaLayout/> */}
+      {/* <RaLayout/> */}
+      
       
       {/* <ViewItems/> */}
       
@@ -53,17 +55,18 @@ class App extends React.Component{
         <Additem/>
       </div> */}
 
-      {/* <Provider store={store}>
+      <Provider store={store}>
         <div>
-          <AppNavbar/>
+        {/* <MainPageLayout/> */}
+        <SaLayout/>
         </div>
-      </Provider> */}
+      </Provider>
       
     </div>
    
    );
   
-    }
+    };
 
 }
 

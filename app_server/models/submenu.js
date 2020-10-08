@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongooseAutopopulate = require("mongoose-autopopulate")
 var Schema = mongoose.Schema;
 var subMenuSchema = new Schema({
     name: {
@@ -7,21 +8,19 @@ var subMenuSchema = new Schema({
     },
     items: [
         {
-            item: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Item'
-            }
+            type: mongoose.Types.ObjectId,
+            ref: 'Item',
+            autopopulate: true
         }
     ],
     deals: [
         {
-            deal: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Deal'
-            }
+            type: mongoose.Types.ObjectId,
+            ref: 'Deal',
+            autopopulate: true
         }
     ],
 
 });
-
+subMenuSchema.plugin(require('mongoose-autopopulate'));
 module.exports = mongoose.model('SubMenu', subMenuSchema)

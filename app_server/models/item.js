@@ -20,18 +20,14 @@ var itemSchema = new Schema({
     },
     ratings: [
         {
-            rating_id: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Rating'
-            }
+            type: mongoose.Types.ObjectId,
+            ref: 'Rating'
         }
     ],
     reviews: [
         {
-            review_id: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Review'
-            }
+            type: mongoose.Types.ObjectId,
+            ref: 'Review'
         }
     ],
 

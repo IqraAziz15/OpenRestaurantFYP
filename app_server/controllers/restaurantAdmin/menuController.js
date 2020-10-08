@@ -13,10 +13,23 @@ exports.addMenu = (function(req, res, next) {
         .catch((err) => next(err));
 });
 
-/////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
+exports.addSubmenuToMenu = ((req, res) => {
+    Menu.findOneAndUpdate({ _id: req.body.mid }, {
+        "$push": {
+            "submenus": req.body.sid
+        }
+    }, { new: true, upsert: false },
+    function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });   
+});
 
 exports.viewMenu = (function(req, res, next) {
-    Menu.find().sort('name').exec(function(error, results) {
+    Menu.findOne({_id:req.body._id}).exec(function(error, results) {
         if (error) {
             return next(error);
         }
@@ -24,3 +37,7 @@ exports.viewMenu = (function(req, res, next) {
         res.json(results);
     });
 });
+
+/////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
+
+

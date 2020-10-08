@@ -14,12 +14,12 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login } from '../../../flux/actions/waiter/authActions';
-import { clearErrors } from '../../../flux/actions/waiter/errorActions';
+import { login } from '../../../flux/actions/restaurantAdmin/authActions';
+import { clearErrors } from '../../../flux/actions/restaurantAdmin/errorActions';
 
 class LoginModal extends Component {
     state = {
-        modal : false,
+        modal : true,
         email : '',
         password : '',
         msg : null
@@ -81,9 +81,9 @@ class LoginModal extends Component {
   render(){
     return (
       <div>
-        <NavLink onClick={this.toggle} href="#">
+        {/* <NavLink onClick={this.toggle} href="#">
           Login
-        </NavLink>
+        </NavLink> */}
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Login</ModalHeader>
           <ModalBody>
@@ -128,4 +128,4 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { login, clearErrors }
-)(LoginModal);
+)(LoginModal); 

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { logout } from '../../../flux/actions/waiter/authActions';
+import { logout } from '../../../flux/actions/restaurantAdmin/authActions';
 import { NavLink } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';

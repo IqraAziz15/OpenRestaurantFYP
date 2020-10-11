@@ -28,8 +28,8 @@ var restaurant_adminSchema = new Schema({
         default: Date.now
     },
     restaurant: {    
-            type:mongoose.Types.ObjectId,
-            ref: 'Restaurant'
+        type:mongoose.Types.ObjectId,
+        ref: 'Restaurant'
     }    
    
 });

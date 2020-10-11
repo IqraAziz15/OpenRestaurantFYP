@@ -36,10 +36,8 @@ var waiterSchema = new Schema({
     },
     orders: [
         {
-            order: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Order'
-            } 
+            type: mongoose.Types.ObjectId,
+            ref: 'Order'
         }
     ],
 });

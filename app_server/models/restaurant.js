@@ -80,18 +80,14 @@ var restaurantSchema = new Schema({
     },
      ratings: [
         {
-            rating: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Rating'
-            }
+            type: mongoose.Types.ObjectId,
+            ref: 'Rating'
         }
     ],
     reviews: [
         {
-            review: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Review'
-            }
+            type: mongoose.Types.ObjectId,
+            ref: 'Review'
         }
     ],
     menu: {
@@ -102,28 +98,18 @@ var restaurantSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Restaurant_admin'
     },
-    
-    restaurant_waiter:{
-            type:[{
-                wid:{
-                    type:mongoose.Types.ObjectId,
-                    ref:'Waiter'
-                }
-            }]
-        },
-    restaurant_staff:{
-            type:[{
-                sid:{
-                    type:mongoose.Types.ObjectId,
-                    ref:'Staff'
-                }
-            }]
+    restaurant_waiter:[
+        {   
+            type:mongoose.Types.ObjectId,
+            ref:'Waiter'
         }
-          
-
-       
-    
-
+    ], 
+    restaurant_staff:[
+        {
+            type:mongoose.Types.ObjectId,
+            ref:'Staff'
+        }
+    ]
 });
 
 module.exports = mongoose.model('Restaurant', restaurantSchema) 

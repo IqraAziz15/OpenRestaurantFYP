@@ -13,6 +13,36 @@ exports.findRestaurant = ( function(req, res, next) {
     });
 });
 
+exports.addWaiterToRestaurant = ((req, res) => {
+    Restaurant.findOneAndUpdate({ _id: req.body.rid }, {
+        "$push": {
+            "restaurant_waiter": req.body.wid
+        }
+    }, { new: true, upsert: false },
+    function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });   
+});
+
+exports.addStaffToRestaurant = ((req, res) => {
+    Restaurant.findOneAndUpdate({ _id: req.body.rid }, {
+        "$push": {
+            "restaurant_staff": req.body.sid
+        }
+    }, { new: true, upsert: false },
+    function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });   
+});
+
 /////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
 
 exports.addMenuToRestaurant = ( function(req, res, next) {

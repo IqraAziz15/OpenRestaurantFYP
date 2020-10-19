@@ -9,6 +9,8 @@ import MainPageLayout from './components/layouts/userProfileLayout/restaurantadm
 import { Provider } from 'react-redux';
 import store from './flux/store/store_restaurant_admin';
 // import store from './flux/store/store_staff';
+// import store from './flux/store/store_waiter';
+import EditItem from './components/restaurantAdmin/item/edititem';
 import { loadUser } from './flux/actions/restaurantAdmin/authActions';
 import Signupra from './components/layouts/superAdminLayout/restaurantadmin';
 import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
@@ -28,13 +30,13 @@ import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
 
 class App extends React.Component{
   
-  componentDidMount() {
-    store.dispatch(loadUser());
-  }
+  // componentDidMount() {
+  //   store.dispatch(loadUser());
+  // }
   render() {
   return (
     <div className="App">
-      {/* <CLayout/> */}
+      <CLayout/>
       {/* <RaLayout/> */}
       
       
@@ -58,12 +60,12 @@ class App extends React.Component{
         <Additem/>
       </div> */}
 
-      <Provider store={store}>
+      {/* <Provider store={store}>
         <div>
         <MainPageLayout/>
-        {/* <SaLayout/> */}
+        <SaLayout/>
         </div>
-      </Provider>
+      </Provider> */}
       
     </div>
    

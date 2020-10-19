@@ -15,14 +15,16 @@ class ViewWaiter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      waiters: [],
+      rest: this.props.rest,
+      restaurant_waiter: [],
     }
   }
 
   componentDidMount() {
-    fetch(API)
-      .then(response => response.json())
-      .then(data => this.setState({waiters: data }));
+    // fetch(API)
+    //   .then(response => response.json())
+    //   .then(data => this.setState({waiters: data }));
+    console.log(this.state.rest);
   }
 
   delwaiter(id)
@@ -44,36 +46,34 @@ class ViewWaiter extends React.Component {
           var error = new Error(response.statusText)
           error.response = response
           throw error
-        }})
-    
+        }
+      })
   }
 }
   
     render() {
-        const { waiters} = this.state;
+        // const { waiters} = this.state;
         return (
         <div style={{marginTop:"50px", marginBottom:"50px"}}>
             <center>
+              
                 <TableContainer component={Paper} style={{width:"50%", border:"1"}}>
                 <Table aria-label="simple table">
                     <TableHead>
                     <TableRow>
                     
-                        <TableCell align="none"><b>username</b></TableCell>
-                        <TableCell align="none"><b>email</b></TableCell>
-                        <TableCell align="none"><b>Delete</b></TableCell>
+                        <TableCell align="none"><b>USERNAME</b></TableCell>
+                        <TableCell align="none"><b>EMAIL</b></TableCell>
+                        <TableCell align="none"><b>DELETE</b></TableCell>
                 {/*      <TableCell align="none"><b>Edit</b></TableCell>
                         <TableCell align="none"><b>p</b></TableCell>  */}    
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {waiters.map(waiter =>
+                    {this.state.rest.restaurant_waiter.map(waiter => 
                         <TableRow key={waiter._id}>
-                        
-                        
                         <TableCell align="none">{waiter.username}</TableCell>
                         <TableCell align="none">{waiter.email}</TableCell>
-
                         <TableCell><Button className="button" variant="danger" size="sm" onClick={()=>this.delwaiter(waiter._id)}>Delete</Button></TableCell> 
                     {/*    <TableCell><Button className="button" variant="primary" size="sm" >Edit</Button></TableCell> 
                         <TableCell align="none">{waiter.password}</TableCell> */}
@@ -81,9 +81,8 @@ class ViewWaiter extends React.Component {
                     )}
                     </TableBody>
                 </Table>
-                </TableContainer>
+              </TableContainer>
             </center>
-
         </div>
         );
 

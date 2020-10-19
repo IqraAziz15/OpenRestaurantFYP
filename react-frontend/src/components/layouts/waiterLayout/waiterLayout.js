@@ -30,6 +30,8 @@ import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 // import viewanddeletewaiter from '../../restaurantAdmin/waiter/viewanddeletewaiter';
 // // import {findrestaurant} from '../../../fetch_requests/restaurant';
 // import './restaurantadminlayout.css';
+import WProfile from '../../waiter/wprofile';
+import WSettings from '../../waiter/wsettings';
 import './waiterLayout.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -46,22 +48,23 @@ class WaiterLayout extends React.Component
         collapsed: false,
         isOpen : false,
         user: this.props.user,
-        rest_id: '',
-        rest: '',
+        rest: ''
       };
-
 
     static propTypes = {
         auth : PropTypes.object.isRequired,
         isAuthenticated : PropTypes.bool,
-        // error : PropTypes.object.isRequired
     }
-    
+
+    onCollapse = collapsed => {
+      console.log(collapsed);
+      this.setState({ collapsed });   
+    };
 
     componentDidMount = async () => {
-        var body = JSON.stringify({rid : this.state.user.id});
+        var body = JSON.stringify({wid : this.state.user.id});
         const pointerToThis = this;
-        await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/",  {
+        await fetch("http://localhost:4000/waiter/restaurant/findwaiter/",  {
         method:'POST',
         body,
         headers: {
@@ -69,30 +72,9 @@ class WaiterLayout extends React.Component
         }
       })
         .then(response => response.json())
-        .then(data => pointerToThis.setState({ rest: data}));
-
-
-    //     var body1 = JSON.stringify({id : this.state.rest_id});
-    //     const pointerToThis = this;
-    //     await fetch("http://localhost:4000/restaurantadmin/restaurant/getrestaurant/",  {
-    //     method:'POST',
-    //     body1,
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     }
-    //   })
-    //     .then(response => response.json())
-    //     .then(data => pointerToThis.setState({ rest: data}));
-        
+        .then(data => pointerToThis.setState({ rest: data})); 
     }
 
-      onCollapse = collapsed => {
-        console.log(collapsed);
-        this.setState({ collapsed });
-
-        
-      };
-    
       render() {
         return (
             <div>
@@ -109,7 +91,8 @@ class WaiterLayout extends React.Component
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
                         
-                        <Menu.Item key="1" icon={<UserOutlined />}> User Profile</Menu.Item>
+                        <Menu.Item key="1" icon={<UserOutlined />}><Link className="link" to="/waiterprofile">
+                            User Profile</Link></Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Order">
                             {/* <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item> */}
                            
@@ -127,7 +110,8 @@ class WaiterLayout extends React.Component
                                 </Menu.Item>
                         </SubMenu>
             
-                        <Menu.Item key="5" icon={<SettingOutlined />}>Setting</Menu.Item>
+                        <Menu.Item key="5" icon={<SettingOutlined />}><Link className="link" to="/waitersettings">
+                            Settings</Link></Menu.Item>
                         <Menu.Item key="6" icon={<LogoutOutlined />}>Logout</Menu.Item>
                         
                         
@@ -141,9 +125,10 @@ class WaiterLayout extends React.Component
                     <Content style={{ margin: '0 16px' }}>
                         
                         <Switch>
-                            {/* <Route path="" component={  }>
-                            </Route> */}
-                            
+                          <Route path="/waiterprofile" render={(props) => ( <WProfile {...props} user={this.state.user} />)}>
+                          </Route>
+                          <Route path="/waitersettings" render={(props) => ( <WSettings {...props} user={this.state.user} />)}>
+                          </Route>
                         </Switch>
                         
                     </Content>

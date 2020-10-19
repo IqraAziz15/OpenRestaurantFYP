@@ -9,6 +9,13 @@ var menuSchema = new Schema({
             autopopulate: true
         }
     ],
+    deals: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Deal',
+            autopopulate: { select: '-image' }
+        }
+    ],
 
 });
 

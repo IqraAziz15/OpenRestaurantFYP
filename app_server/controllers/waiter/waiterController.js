@@ -18,6 +18,17 @@ exports.acceptOrder = (function(req, res, next) {
         res.json(results);
     });
 });
+
+exports.findWaiter = ( function(req, res, next) {
+    Waiter.findOne({ waiter: req.body.wid }).
+    exec(function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });
+});
   
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 

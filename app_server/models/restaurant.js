@@ -101,15 +101,17 @@ var restaurantSchema = new Schema({
     restaurant_waiter:[
         {   
             type:mongoose.Types.ObjectId,
-            ref:'Waiter'
+            ref:'Waiter',
+            autopopulate: true
         }
     ], 
     restaurant_staff:[
         {
             type:mongoose.Types.ObjectId,
-            ref:'Staff'
+            ref:'Staff',
+            autopopulate: true
         }
     ]
 });
-
+restaurantSchema.plugin(require('mongoose-autopopulate'));
 module.exports = mongoose.model('Restaurant', restaurantSchema) 

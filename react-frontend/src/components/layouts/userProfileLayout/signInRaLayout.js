@@ -8,6 +8,7 @@ import {
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import signin from '../../userProfile/restaurantAdmin/signin';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
 import RaLayout from '../restaurantAdminLayout/restaurantadminlayout';
 

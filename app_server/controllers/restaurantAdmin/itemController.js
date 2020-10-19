@@ -1,52 +1,68 @@
 var multer = require('multer');
 var Item = require('../../models/item')
-
+var _ = require('lodash');
+var formidable = require('formidable');
+const fs = require('fs');
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, './uploads/')
-    },
-    filename: function(req, file, cb) {
-        cb(null, file.originalname)
+    destination: function (req, res, cb) {
+        cb(null, 'uploads/')
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage }); 
+
+/////////////////////////////////////////////       PARAM OPERATIONS        //////////////////////////////////////////////
+
+exports.itemById = (req, res, next, id)=>{
+    Item.findById(id).exec((err, item)=>{
+        if(err || !item){
+            return res.status(400).json({
+                error: "Item not found"
+            });
+        }
+        req.profile = item;
+        next();
+    });
+};
 
 /////////////////////////////////////////////       POST OPERATIONS        //////////////////////////////////////////////
 
-exports.addItem = (upload.single('image'), (req, res) => {
-    console.log(req.file);
-    // console.log(req.file.filename);
-    // var paths = 'http://localhost:4000/uploads/' + req.file.filename;
-    // console.log(paths);
-    
-    var i = new Item;
-    i.name = req.body.name;
-    i.price = req.body.price;
-    i.description = req.body.description;
-    i.image = 'http://localhost:4000/uploads/' + req.file.filename;
-    i.save((err, result) => {
-        console.log(result)
-
-        if (err) {
-            console.log(`upload.single error: ${err}`);
-            return console.log(err)
-        }
-        console.log('saved to database')
-        res.send(i);
-    })
+exports.addItem = (upload.single('image'), (req, res, next) => {
+    Item.create(req.body)
+            .then((item) => {
+            console.log('Item has been Added ', item);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(item);
+        }, (err) => next(err))
+        .catch((err) => next(err));
 });
 
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 
-exports.viewItem = (function(req, res, next) {
-    Item.find().sort('name').exec(function(error, results) {
-        if (error) {
-            return next(error);
-        }
-        // Respond with valid data
-        res.json(results);
-    });
+exports.viewItem = (function(req, res) {
+    return res.json(req.profile);
 });
+
+exports.getAllItems = (function(req, res){
+    var item =Item.find()
+    .select("_id price image description")
+    .then((item)=>{
+        console.log("item");
+        console.log(item);
+        res.status(200).json(
+            item 
+        );
+    })
+    .catch(err=>console.log(err));
+});
+
+exports.itemPhoto = (req, res, next) => {
+    if(req.profile.image.data){
+        res.set(("Content-Type" , req.profile.image.contentType));
+        return res.send(req.profile.image.data)
+    }
+    next();
+}
 
 ///////////////////////////////////////////        DELETE OPERATIONS        //////////////////////////////////////////////
 
@@ -69,4 +85,34 @@ exports.editItem = (function(req, res, next) {
          });
     });
 });
+
+exports.addPhoto = ((req,res,next) =>{
+    let form = new formidable.IncomingForm()
+     form.keepExtensions = true
+     form.parse(req, (err, fields, files)=>{
+         console.log("form parsed")
+         if(err) {
+             return res.status(400).json({
+                 error: "Photo could not be uploaded"
+             })
+         }
+         console.log("Fids",fields)
+         console.log(files)
+         let Item = req.profile
+         Item= _.extend(Item, fields)
+ 
+         if(files.image){
+             Item.image.data =fs.readFileSync(files.image.path)
+             Item.image.contentType = files.image.type
+         }
+         Item.save((err, result)=>{
+             if(err){ 
+                 return res.status(400).json({
+                     error: err
+                 })
+             }
+             res.json(Item)
+         })
+     }) 
+ });
 

@@ -1,88 +1,119 @@
-import React,{Component} from 'react';
-import addrestaurant from '../../superAdmin/restaurant/addrestaurant'; 
+import React from 'react';
+import 'antd/dist/antd.css';
+import { Layout, Menu, Breadcrumb, PageHeader, Typography } from 'antd';
+import {
+    LogoutOutlined,
+    SettingOutlined,
+    FormOutlined,
+    TeamOutlined,
+    UserOutlined,
+    DatabaseOutlined,
+    AppstoreOutlined,
+    ProfileOutlined,
+    LineChartOutlined,
+    ContainerOutlined,
+    AppstoreAddOutlined,
+    FileAddOutlined,
+    WindowsOutlined
+} from '@ant-design/icons';
+import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Signupra from './restaurantadmin';
-// import addrestaurantadmin from './addrestaurantadmin';
 import viewanddeleterestaurant from '../../superAdmin/restaurant/viewanddeleterestaurant';
 import RegisterModal from '../../userProfile/restaurantAdmin/signup';
-// import logo1 from '../assets/images/logo1.png'; 
-import './superadminlayout.css'; 
-import { Layout, Menu,Button} from 'antd';
-import { MenuOutlined} from '@ant-design/icons';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
 
-const { SubMenu } = Menu;
+import './superadminlayout.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+// import { Button } from 'reactstrap';
+// import logo from '../assets/images/logo.png';
+// import Title from 'antd/lib/skeleton/Title';
 const { Header, Content, Footer, Sider } = Layout;
+const { SubMenu } = Menu;
+// const { Text } = Typography;
 
-class SaLayout extends Component{
-    constructor(){
-    super()
-    
-};
-render(){
-    return(
-        <Router>
-            <Layout>
-                <Header className="header">
-                <div className="App-logo" />
-            {/*       <img className="App-logo" src={logo1} alt="Logo"/>  */}
-                <h3 className="App-name"><span className="open">Open </span><span className="rest">Restaurant</span></h3>
-            
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-                </Menu>
+class SaLayout extends React.Component
+{
+    state = {
+        collapsed: false,
+        isOpen : false,
+        user: this.props.user,
+        rest: ''
+      };
+
+    static propTypes = {
+        auth : PropTypes.object.isRequired,
+        isAuthenticated : PropTypes.bool,
+    }
+
+    onCollapse = collapsed => {
+      console.log(collapsed);
+      this.setState({ collapsed });   
+    };
+
+    // componentDidMount = async () => {
+    //     var body = JSON.stringify({wid : this.state.user.id});
+    //     const pointerToThis = this;
+    //     await fetch("http://localhost:4000/waiter/restaurant/findwaiter/",  {
+    //     method:'POST',
+    //     body,
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     }
+    //   })
+    //     .then(response => response.json())
+    //     .then(data => pointerToThis.setState({ rest: data})); 
+    // }
+
+      render() {
+        return (
+            <div>
+                <Header> 
+                <h2 style={{color: 'white'}}>Open Restaurant</h2>
+                {/* <img src= { logo } height = "45" width = "45"></img> */}
+                {/* <h5>{this.state.user ? `Welcome ${this.state.user.name}  ${this.state.rest.name}` : ''}</h5>    */}
+                {/* <h3>{this.state.user ? `Welcome ${this.state.user.name} ${this.state.user.id}` : ''}</h3>     */}
                 </Header>
-                <Layout>
-                <Sider width={200} className="site-layout-background" >
-                    <Menu theme="dark"
-                    mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    style={{ height: '100%', borderRight: 0 }}
-                    >
-                    <SubMenu key="sub1" icon={<MenuOutlined />} title="Dashboard">
-                    <SubMenu key="sub2" title="Manage Restaurants">
-                        <Menu.Item key="1" ><Link className="link" to="/addrestaurant" >Add Restaurant</Link></Menu.Item>
+                <div className="clear-div"></div>
+                <Router>
+                <Layout style={{ minHeight: '100vh' }} >
+                    <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                    <div className="logo" />
+                    <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
                         
-                        <Menu.Item key="2"><Link className="link" to="/viewanddeleterestaurant" >View Restaurants</Link></Menu.Item>
-                        <Menu.Item key="3"><Link className="link" to="/signup" >Sign Up RA</Link></Menu.Item>
-                    
-                    {/*  <Menu.Item key="2"><Link className="link" to="/changerestaurantadmin" >Change Restaurant Admin</Link></Menu.Item> */}
- 
-                    </SubMenu>
-                    {/* <SubMenu key="sub3" title="Settings">
-                        <Menu.Item key="3" >Change username</Menu.Item>
-                        <Menu.Item key="4" >Change password</Menu.Item>
+                        <Menu.Item key="1" icon={<UserOutlined />}>User Profile</Menu.Item>
                         
-                    </SubMenu> */}
-                    {/*  <Menu.Item key="5" >Logout</Menu.Item> */}
-                    
-                    </SubMenu>
+                        <Menu.Item key="2" icon={<SettingOutlined />}><Link className="link" to="/signup" >Sign Up RA</Link></Menu.Item>
+                        <Menu.Item key="3" icon={<SettingOutlined />}><Link className="link" to="/viewanddeleterestaurant" >View Restaurants</Link></Menu.Item>
+                        <Menu.Item key="4" icon={<SettingOutlined />}>ABC</Menu.Item>
+                        <Menu.Item key="5" icon={<LogoutOutlined />}>Logout</Menu.Item>
+                        
+                        
+                        
                     </Menu>
-                </Sider>
-                <Content
-                    className="site-layout-background"
-                    style={{
-                        padding: 24,
-                        margin: 0,
-                        minHeight: 800,
-                    }}
-                    >
+                    </Sider>
+                    <Layout className="site-layout">
+                    {/* <Header className="site-layout-background" style={{ padding: 0 }} >
+
+                    </Header> */}
+                    <Content style={{ margin: '0 16px' }}>
+                        
                         <Switch>
-                            <Route path="/addrestaurant" component={addrestaurant}/>
                             <Route path="/viewanddeleterestaurant" component={viewanddeleterestaurant}/>
                             <Route exact path="/signup" component={Signupra}/>
                         </Switch>
+                        
                     </Content>
+                    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                    </Layout>
                 </Layout>
-                <Footer style={{ textAlign: 'center', color:"black" }}></Footer>
-            </Layout>
-        </Router>
-        ); 
-
-    }
+                </Router>
+            </div>
+        );
+      }
 }
-export default SaLayout;
+
+const mapStateToProps = (state) => ({
+    auth: state.auth
+  });
+  
+  export default connect(mapStateToProps, null)(SaLayout);

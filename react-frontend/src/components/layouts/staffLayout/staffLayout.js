@@ -30,6 +30,8 @@ import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 // import viewanddeletewaiter from '../../restaurantAdmin/waiter/viewanddeletewaiter';
 // // import {findrestaurant} from '../../../fetch_requests/restaurant';
 // import './restaurantadminlayout.css';
+import SProfile from '../../staff/sprofile';
+import SSettings from '../../staff/ssettings';
 import './staffLayout.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -61,7 +63,7 @@ class WaiterLayout extends React.Component
     componentDidMount = async () => {
         var body = JSON.stringify({rid : this.state.user.id});
         const pointerToThis = this;
-        await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/",  {
+        await fetch("http://localhost:4000/staff/restaurant/findstaff/",  {
         method:'POST',
         body,
         headers: {
@@ -109,7 +111,8 @@ class WaiterLayout extends React.Component
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
                         
-                        <Menu.Item key="1" icon={<UserOutlined />}> User Profile</Menu.Item>
+                        <Menu.Item key="1" icon={<UserOutlined />}><Link className="link" to="/staffprofile">
+                            User Profile</Link></Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Order">
                             {/* <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item> */}
                            
@@ -127,7 +130,8 @@ class WaiterLayout extends React.Component
                                 </Menu.Item>
                         </SubMenu>
             
-                        <Menu.Item key="5" icon={<SettingOutlined />}>Setting</Menu.Item>
+                        <Menu.Item key="5" icon={<SettingOutlined />}><Link className="link" to="/staffsettings">
+                            Settings</Link></Menu.Item>
                         <Menu.Item key="6" icon={<LogoutOutlined />}>Logout</Menu.Item>
                         
                         
@@ -141,9 +145,10 @@ class WaiterLayout extends React.Component
                     <Content style={{ margin: '0 16px' }}>
                         
                         <Switch>
-                            {/* <Route path="" component={  }>
-                            </Route> */}
-                            
+                          <Route path="/staffprofile" render={(props) => ( <SProfile {...props} user={this.state.user} />)}>
+                          </Route>
+                          <Route path="/staffsettings" render={(props) => ( <SSettings {...props} user={this.state.user} />)}>
+                          </Route>
                         </Switch>
                         
                     </Content>

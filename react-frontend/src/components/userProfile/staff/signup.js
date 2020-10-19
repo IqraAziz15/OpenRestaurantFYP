@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import {Form, Button} from 'react-bootstrap'; 
 import {
   Alert
@@ -12,6 +13,7 @@ import { clearErrors } from '../../../flux/actions/staff/errorActions';
 
 class RegisterModal extends Component {
     state = {
+        restid: this.props.restid,
         username : '',
         name : '',
         email : '',
@@ -40,8 +42,37 @@ class RegisterModal extends Component {
         this.setState({ msg : "success" })
       }
     }
-    
+  }
 
+  registerStaff = async() => {
+    const {name, username, email, phonenumber, password, restid} = this.state
+    var data= {
+      name, username, email, phonenumber, password
+  }
+  var sid=''
+    await axios
+      .post('http://localhost:4000/userprofile/staff/registerstaff', data, {
+            headers: {
+                "content-type": "application/json"
+              }
+        }).then(res=>{
+            console.log(res);
+            sid = res.data.user.id
+            alert('Staff Added Successfully')     
+        }) 
+        .catch(err=>console.log(err)) 
+
+        const body1 = { restid, sid};
+        console.log(body1)
+        await axios
+          .post('http://localhost:4000/restaurantadmin/restaurant/addstafftorestaurant', body1, data, {
+            headers: {
+                "content-type": "application/json"
+              }
+        }).then(res=>{
+            console.log(res); 
+        }) 
+        .catch(err=>console.log(err)) 
   }
 
   onChange = e => {
@@ -50,55 +81,49 @@ class RegisterModal extends Component {
 
   onSubmit = async (e) => {
       e.preventDefault();
-      const { name, username, email, phonenumber, password } = this.state;
-      //create user object
-      const newUser = {
-        name,
-        username,
-        email,
-        phonenumber,
-        password,
-      };
+      
       //Attempt to register
-      this.props.register(newUser);
+      this.registerStaff();
       // window.location.reload();
   }
 
 
   render(){
     return (
-      <div>
-        {this.state.msg ? <Alert color="success">{ this.state.msg }</Alert> : null}
-        <Form onSubmit={this.onSubmit}>
-          <Form.Group >
-            <Form.Label>Restaurant details</Form.Label>
-            <center>
-            <Form.Control type="text" name="name" id="name" ref="name" onChange={this.onChange} placeholder="Enter name of waiter" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
-            </center>
-          </Form.Group>
-          <Form.Group >
-            <center>
-            <Form.Control type="text" name="username" id="username" ref="username" onChange={this.onChange} placeholder="Enter username of waiter" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
-            </center>
-          </Form.Group>
-          <Form.Group >
-            <center>
-            <Form.Control type="email" name="email" id="email" ref="email" onChange={this.onChange} placeholder="Enter email of waiter" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
-            </center>
-          </Form.Group>
-          <Form.Group >
-            <center>
-            <Form.Control type="text" name="phonenumber" id="phonenumber" ref="phonenumber" onChange={this.onChange} placeholder="Enter phonenumber of waiter" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
-            </center>
-          </Form.Group>
-          <Form.Group >
-            <center>
-            <Form.Control type="password" name="password" id="password" ref="password" onChange={this.onChange} placeholder="Enter password of waiter" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
-            </center>
-          </Form.Group>
-          <Button className="butn" type="submit">Sign Up</Button>
-        </Form>
-      </div>
+      <div style={{textAlign: 'start'}}>
+          {this.state.msg ? <Alert color="success">{ this.state.msg }</Alert> : null}
+                <center><h2>Add New Staff Memeber</h2></center>
+                <form onSubmit={this.onSubmit}>
+                    <div class = "form-group">
+                        <label for="name">Name</label>
+                        <input class="form-control" type="text" ref="name" name="name" placeholder="Enter name of staff" onChange={this.onChange} id="name"/>
+                    </div>
+
+                    <div class = "form-group">
+                        <label for="username">Username</label>
+                        <input class="form-control" type="text" ref="username" name="username" placeholder="Enter username of staff" onChange={this.onChange} id="username"/>
+                    </div>
+
+                    <div class = "form-group">
+                        <label for="email">Email</label>
+                        <input class="form-control" type="email" ref="email" name="email" placeholder="Enter email of staff" onChange={this.onChange} id="email"/>
+                    </div>
+
+                    <div class = "form-group">
+                        <label for="phonenumber">Phone Number</label>
+                        <input class="form-control" type="text" ref="phonenumber" name="phonenumber" placeholder="Enter phonenumber of staff" onChange={this.onChange} id="phonenumber"/>
+                    </div>
+
+                    <div class = "form-group">
+                        <label for="email">Password</label>
+                        <input class="form-control" type="password" ref="password" name="password" placeholder="Enter password of staff" onChange={this.onChange} id="password"/>
+                    </div>
+                    <br/>
+                    <div class = "form-group">
+                    <button type="submit" class="btn btn-dark">Add Staff</button>
+                    </div>
+                </form>
+            </div>
     );
   };
 }

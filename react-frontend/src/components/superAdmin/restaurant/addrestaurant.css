@@ -13,6 +13,9 @@
     height: 500px;
 }
 
+label{
+    text-align: start;
+}
 input[type="submit"]:hover 
 {
     background-color: black;

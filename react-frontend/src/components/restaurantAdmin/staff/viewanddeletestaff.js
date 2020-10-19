@@ -15,14 +15,16 @@ class ViewStaff extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      staffs: [],
+      rest: this.props.rest,
+      restaurant_staff: []
     }
   }
 
   componentDidMount() {
-    fetch(API)
-      .then(response => response.json())
-      .then(data => this.setState({staffs: data }));
+    // fetch(API)
+    //   .then(response => response.json())
+    //   .then(data => this.setState({staffs: data }));
+    console.log(this.state.rest);
   }
 
   delstaff(id)
@@ -49,7 +51,7 @@ class ViewStaff extends React.Component {
     }
   
   render() {
-    const { staffs} = this.state;
+    // const { staffs} = this.state;
     return (
       <div style={{marginTop:"50px", marginBottom:"50px"}}>
         <center>
@@ -57,13 +59,13 @@ class ViewStaff extends React.Component {
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="none"><b>Username</b></TableCell>
-            <TableCell align="none"><b>Email</b></TableCell>
-            <TableCell align="none"><b>Delete</b></TableCell>      
+            <TableCell align="none"><b>USERNAME</b></TableCell>
+            <TableCell align="none"><b>EMAIL</b></TableCell>
+            <TableCell align="none"><b>DELETE</b></TableCell>      
           </TableRow>
         </TableHead>
         <TableBody>
-          {staffs.map(staff =>
+        {this.state.rest.restaurant_staff.map(staff =>
             <TableRow key={staff._id}>
               <TableCell align="none">{staff.username}</TableCell>
               <TableCell align="none">{staff.email}</TableCell>

@@ -110,7 +110,7 @@ class RegisterModal extends Component {
             </center>
           </Form.Group>
           <Form.Group >
-          <Form.Label>Restaurant details</Form.Label>
+          <Form.Label>Restaurant Admin details</Form.Label>
             <center>
             <Form.Control type="text" name="restownername" id="restownername" ref="restownername" onChange={this.onChange} placeholder="Enter owner's name of restaurant" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
             </center>

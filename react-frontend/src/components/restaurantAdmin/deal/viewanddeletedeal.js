@@ -6,21 +6,20 @@ const API = 'http://localhost:4000/restaurantadmin/deal/viewdeal';
 const API1 = 'http://localhost:4000/restaurantadmin/deal/removedeal/';
 
 
-class viewdeal extends React.Component
+class ViewDeals extends React.Component
 {
   constructor(props) {
     super(props);
 
     this.state = {
+        rest: this.props.rest,
         deals: [],
         editItemModalShow: false
       };
   }
 
-  componentDidMount() {
-    fetch(API)
-      .then(response => response.json())
-      .then(data => this.setState({ deals: data }));
+  componentDidMount = () => {
+    console.log(this.state.rest);
   }
 
   deletedeal(id)
@@ -58,17 +57,17 @@ class viewdeal extends React.Component
         </div>
         <hr></hr>
         <div class="list-group">
-        {deals.map(deal =>
+        {this.state.rest.menu.deals.map(deal =>
               <a href="#" class="list-group-item list-group-item-action">
                 <div style={{alignContent: 'space-between' }} class="d-flex w-55">
-                <img src = {deal.image} style={{marginRight: '40px' }} width="100" height="100" />
+                <img src = {`http://localhost:4000/restaurantadmin/deal/image/${deal._id}`} style={{marginRight: '40px' }} width="100" height="100" />
                 <div>
                     <h5 class="mb-1" key={deal.name}>{deal.name}</h5>
                     <p class="mb-1" key={deal.total_bill}>{deal.total_bill}</p>
                     <small key={deal.description}>{deal.description}</small>
                 </div>
                 <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
-                  <i class="material-icons" style={{marginRight: '30px' }} onClick={()=>this.setState({editDealModalShow: true, deal_name:deal.name, deal_total_bill:deal.total_bill, deal_description:deal.description, deal_id: deal._id})}>edit</i>
+                  <i class="material-icons" style={{marginRight: '30px' }} onMouseDown={()=>this.setState({editDealModalShow: true, deal_name:deal.name, deal_total_bill:deal.total_bill, deal_description:deal.description, deal_id: deal._id})}>edit</i>
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <i class="material-icons" onClick={()=>this.deletedeal(deal._id)} >delete</i>
                 </div>
@@ -90,6 +89,6 @@ class viewdeal extends React.Component
   }
 }
 
-export default viewdeal;
+export default ViewDeals;
 
 

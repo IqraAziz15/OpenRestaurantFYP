@@ -16,4 +16,10 @@ router.post('/getsubmenu/', submenuController.getSubmenuById);
 
 router.delete('/removeitemfromsubmenu', submenuController.removeItemFromSubmenu);
 
+router.delete('/removesubmenu/:id', submenuController.removeSubmenu);
+
+///////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
+
+router.put('/editsubmenu/:sid', submenuController.editSubmenu);
+
 module.exports = router;

@@ -10,9 +10,9 @@ var itemSchema = new Schema({
         required: true
     },
     image: {
-        // data: Buffer,
-        // contentType: String
-        type: String
+        data: Buffer,
+        contentType: String
+        // type: String
     },
     description: {
         type: String,

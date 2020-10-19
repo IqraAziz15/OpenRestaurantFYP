@@ -6,12 +6,13 @@ import { UserOutlined } from '@ant-design/icons';
 import 'material-design-icons/iconfont/material-icons.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import './raprofile.css';
+import '../restaurantAdmin/profile/raprofile.css';
 
-class RaProfile extends React.Component {
+class WProfile extends React.Component {
 
     state = {
         user: this.props.user,
+        rest: ''
     };
 
     static propTypes = {
@@ -22,7 +23,7 @@ class RaProfile extends React.Component {
 
     componentDidMount = async () => {
         const pointerToThis = this;
-        await fetch("http://localhost:4000/superadmin/restaurantadmin/adminrestaurant/" + this.state.user.id + "", {
+        await fetch("http://localhost:4000/waiter/viewprofile/" + this.state.user.id + "", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"
@@ -30,8 +31,8 @@ class RaProfile extends React.Component {
         })
             .then(response => response.json())
             .then(data => pointerToThis.setState({ user: data }));
-        var body = JSON.stringify({ rid: this.state.user.id });
-        await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/", {
+        var body = JSON.stringify({ wid: this.state.user.id });
+        await fetch("http://localhost:4000/waiter/restaurant/findwaiter/", {
             method: 'POST',
             body,
             headers: {
@@ -81,4 +82,4 @@ const mapStateToProps = (state) => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps, null)(RaProfile);
+export default connect(mapStateToProps, null)(WProfile);

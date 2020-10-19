@@ -17,23 +17,26 @@ import {
     WindowsOutlined
 } from '@ant-design/icons';
 import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import additem from '../../restaurantAdmin/item/additems';
+import Additem from '../../restaurantAdmin/item/additems';
 import ViewItems from '../../restaurantAdmin/item/viewanddeleteitem';
-import adddeal from '../../restaurantAdmin/deal/adddeals';
-import viewanddeletedeal from '../../restaurantAdmin/deal/viewanddeletedeal';
+import EditItem from '../../restaurantAdmin/item/edititem';
+import AddDeal from '../../restaurantAdmin/deal/adddeals';
+import ViewDeals from '../../restaurantAdmin/deal/viewanddeletedeal';
 import restaurantstatistics from '../../restaurantAdmin/restaurantStatistics/restaurantstatistics';
 import adminstatistics from '../../restaurantAdmin/restaurantStatistics/adminstatistics';
 // import addstaff from '../../restaurantAdmin/staff/addstaff';
 import Signupstaff from './signupstaff';
-import viewanddeletestaff from '../../restaurantAdmin/staff/viewanddeletestaff';
+import ViewStaff from '../../restaurantAdmin/staff/viewanddeletestaff';
 // import addwaiter from '../../restaurantAdmin/waiter/addwaiter';
 import Signupwaiter from './signupwaiter';
-import viewanddeletewaiter from '../../restaurantAdmin/waiter/viewanddeletewaiter';
+import ViewWaiter from '../../restaurantAdmin/waiter/viewanddeletewaiter';
 // import {findrestaurant} from '../../../fetch_requests/restaurant';
 import './restaurantadminlayout.css';
 import RaProfile from '../../restaurantAdmin/profile/raprofile';
+import RaSettings from '../../restaurantAdmin/settings/rasetting';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Logout from '../../userProfile/restaurantAdmin/logout';
 import { Button } from 'reactstrap';
 // import logo from '../assets/images/logo.png';
 // import Title from 'antd/lib/skeleton/Title';
@@ -70,7 +73,7 @@ class RaLayout extends React.Component
         }
       })
         .then(response => response.json())
-        .then(data => pointerToThis.setState({ rest: data}));
+        .then(data => pointerToThis.setState({ rest: data, rest_id: data._id}));
 
 
     //     var body1 = JSON.stringify({id : this.state.rest_id});
@@ -89,9 +92,7 @@ class RaLayout extends React.Component
 
       onCollapse = collapsed => {
         console.log(collapsed);
-        this.setState({ collapsed });
-
-        
+        this.setState({ collapsed });   
       };
     
       render() {
@@ -170,11 +171,11 @@ class RaLayout extends React.Component
                             </SubMenu>
                         </SubMenu>
                         
-                        <Menu.Item key="12" icon={<SettingOutlined />}>Setting</Menu.Item>
+                        <Menu.Item key="12" icon={<SettingOutlined />}><Link className="link" to="/usersettings" >Settings</Link></Menu.Item>
                         <Menu.Item key="13" icon={<LineChartOutlined />}>
                             <Link className="link" to="/adminstatistics" >Statistics</Link>
                             </Menu.Item>
-                        <Menu.Item key="14" icon={<LogoutOutlined />}>Logout</Menu.Item>
+                        <Menu.Item key="14" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
                         
                         
                         
@@ -187,25 +188,27 @@ class RaLayout extends React.Component
                     <Content style={{ margin: '0 16px' }}>
                         
                         <Switch>
-                            <Route path="/additem" component={ additem }>
+                            <Route path="/additem" render={(props) => ( <Additem {...props} rest={this.state.rest} />)}>
                             </Route>
                             <Route path="/viewanddeleteitem" render={(props) => ( <ViewItems {...props} rest={this.state.rest} />)}>
                             </Route>
-                            <Route path="/adddeal" component={ adddeal }>
+                            <Route path="/adddeal" render={(props) => ( <AddDeal {...props} rest={this.state.rest} />)}>
                             </Route>
-                            <Route path="/viewanddeletedeal" component={ viewanddeletedeal }>
+                            <Route path="/viewanddeletedeal" render={(props) => ( <ViewDeals {...props} rest={this.state.rest} />)}>
                             </Route>
                             <Route path="/adminstatistics" component={ adminstatistics }>
                             </Route>
-                            <Route path="/addstaff" component={ Signupstaff }>
+                            <Route path="/addstaff" render={(props) => ( <Signupstaff {...props} restid={this.state.rest_id} />)}>
                             </Route>
-                            <Route path="/viewanddeletestaff" component={ viewanddeletestaff }>
+                            <Route path="/viewanddeletestaff" render={(props) => ( <ViewStaff {...props} rest={this.state.rest} />)}>
                             </Route>
-                            <Route path="/addwaiter" component={ Signupwaiter }>
+                            <Route path="/addwaiter" render={(props) => ( <Signupwaiter {...props} restid={this.state.rest_id} />)}>
                             </Route>
-                            <Route path="/viewanddeletewaiter" component={ viewanddeletewaiter }>
+                            <Route path="/viewanddeletewaiter" render={(props) => ( <ViewWaiter {...props} rest={this.state.rest} />)}>
                             </Route>
                             <Route path="/userprofile" render={(props) => ( <RaProfile {...props} user={this.state.user} />)}>
+                            </Route>
+                            <Route path="/usersettings" render={(props) => ( <RaSettings {...props} user={this.state.user} />)}>
                             </Route>
                         </Switch>
                         

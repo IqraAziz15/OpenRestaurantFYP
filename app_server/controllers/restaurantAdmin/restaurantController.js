@@ -13,8 +13,10 @@ exports.findRestaurant = ( function(req, res, next) {
     });
 });
 
-exports.addWaiterToRestaurant = ((req, res) => {
-    Restaurant.findOneAndUpdate({ _id: req.body.rid }, {
+
+
+exports.addWaiterToRestaurant = ((req, res, next) => {
+    Restaurant.findOneAndUpdate({ _id: req.body.restid }, {
         "$push": {
             "restaurant_waiter": req.body.wid
         }
@@ -28,8 +30,8 @@ exports.addWaiterToRestaurant = ((req, res) => {
     });   
 });
 
-exports.addStaffToRestaurant = ((req, res) => {
-    Restaurant.findOneAndUpdate({ _id: req.body.rid }, {
+exports.addStaffToRestaurant = ((req, res, next) => {
+    Restaurant.findOneAndUpdate({ _id: req.body.restid }, {
         "$push": {
             "restaurant_staff": req.body.sid
         }

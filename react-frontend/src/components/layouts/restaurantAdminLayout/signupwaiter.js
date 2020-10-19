@@ -9,7 +9,7 @@ class Signupwaiter extends Component {
               <center>
       
              <div>
-                 <RegisterModal/>
+                 <RegisterModal {...this.props}/>
              </div>
              </center>
             </div>

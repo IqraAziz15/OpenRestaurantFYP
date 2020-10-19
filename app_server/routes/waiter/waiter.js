@@ -6,6 +6,8 @@ const waiterController = require('../../controllers/waiter/waiterController');
 
 router.post('/order/:wid/acceptorder/:oid', waiterController.acceptOrder);
 
+router.post('/findwaiter/', waiterController.findWaiter);
+
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 
 router.get('/viewprofile/:id', waiterController.viewWaiterProfile);

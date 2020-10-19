@@ -1,51 +1,68 @@
 var multer = require('multer');
 var Deal = require('../../models/deal')
-
+var _ = require('lodash');
+var formidable = require('formidable');
+const fs = require('fs');
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, './uploads/')
-    },
-    filename: function(req, file, cb) {
-        cb(null, file.originalname)
+    destination: function (req, res, cb) {
+        cb(null, 'uploads/')
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage }); 
+
+/////////////////////////////////////////////       PARAM OPERATIONS        //////////////////////////////////////////////
+
+exports.dealById = (req, res, next, id)=>{
+    Deal.findById(id).exec((err, deal)=>{
+        if(err || !deal){
+            return res.status(400).json({
+                error: "Deal not found"
+            });
+        }
+        req.profile = deal;
+        next();
+    });
+};
 
 /////////////////////////////////////////////       POST OPERATIONS        //////////////////////////////////////////////
 
-exports.addDeal = (upload.single('image'), (req, res) => {
-    console.log(req.file);
-    // console.log(req.file.filename);
-    // var paths = 'http://localhost:4000/uploads/' + req.file.filename;
-    // console.log(paths);
-    
-    var d = new Deal;
-    d.name = req.body.name;
-    d.description = req.body.description;
-    d.total_bill = req.body.total_bill;
-    d.image = 'http://localhost:4000/uploads/' + req.file.filename;
-    d.save((err, result) => {
-        console.log(result)
-        if (err) {
-            console.log(`upload.single error: ${err}`);
-            return console.log(err)
-        }
-        console.log('saved to database')
-        res.send(d);
-    })
+exports.addDeal = (upload.single('image'), (req, res, next) => {
+    Deal.create(req.body)
+            .then((deal) => {
+            console.log('Deal has been Added ', deal);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(deal);
+        }, (err) => next(err))
+        .catch((err) => next(err));
 });
 
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 
-exports.viewDeal = (function(req, res, next) {
-    Deal.find().sort('name').exec(function(error, results) {
-        if (error) {
-            return next(error);
-        }
-        // Respond with valid data
-        res.json(results);
-    });
+exports.viewDeal = (function(req, res) {
+    return res.json(req.profile);
 });
+
+exports.getAllDeals = (function(req, res){
+    var deal =Deal.find()
+    .select("_id image description total_bill")
+    .then((deal)=>{
+        console.log("deal");
+        console.log(deal);
+        res.status(200).json(
+            deal 
+        );
+    })
+    .catch(err=>console.log(err));
+});
+
+exports.dealPhoto = (req, res, next) => {
+    if(req.profile.image.data){
+        res.set(("Content-Type" , req.profile.image.contentType));
+        return res.send(req.profile.image.data)
+    }
+    next();
+}
 
 ///////////////////////////////////////////        DELETE OPERATIONS        //////////////////////////////////////////////
 
@@ -63,9 +80,38 @@ exports.removeDeal = (function(req, res, next) {
 
 exports.editDeal = (function(req, res, next) {
     Deal.findByIdAndUpdate({_id:req.params.did}, req.body).then(function() {
-        Deal.findOne({_id:req.params.did}).then(function(Item){
-             res.send(Item);
+        Deal.findOne({_id:req.params.did}).then(function(Deal){
+             res.send(Deal);
          });
     });
 });
 
+exports.addPhoto = ((req,res,next) =>{
+    let form = new formidable.IncomingForm()
+     form.keepExtensions = true
+     form.parse(req, (err, fields, files)=>{
+         console.log("form parsed")
+         if(err) {
+             return res.status(400).json({
+                 error: "Photo could not be uploaded"
+             })
+         }
+         console.log("Fids",fields)
+         console.log(files)
+         let Deal = req.profile
+         Deal= _.extend(Deal, fields)
+ 
+         if(files.image){
+            Deal.image.data =fs.readFileSync(files.image.path)
+            Deal.image.contentType = files.image.type
+         }
+         Deal.save((err, result)=>{
+             if(err){ 
+                 return res.status(400).json({
+                     error: err
+                 })
+             }
+             res.json(Deal)
+         })
+     }) 
+ });

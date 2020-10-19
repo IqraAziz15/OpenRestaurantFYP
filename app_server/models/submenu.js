@@ -10,17 +10,10 @@ var subMenuSchema = new Schema({
         {
             type: mongoose.Types.ObjectId,
             ref: 'Item',
-            autopopulate: true
+            autopopulate: { select: '-image' }
         }
     ],
-    deals: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: 'Deal',
-            autopopulate: true
-        }
-    ],
-
+    
 });
 subMenuSchema.plugin(require('mongoose-autopopulate'));
 module.exports = mongoose.model('SubMenu', subMenuSchema)

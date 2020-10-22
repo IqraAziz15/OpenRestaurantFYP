@@ -1,13 +1,15 @@
 import React from 'react';
+import "antd/dist/antd.css";
 import RaLayout from './components/layouts/restaurantAdminLayout/restaurantadminlayout';
 import SaLayout from './components/layouts/superAdminLayout/superadminlayout';
 import CLayout from './components/layouts/customerLayout/customerlayout';
+// import P2Layout from './components/layouts/customerLayout/page2';
 import MainPageLayout from './components/layouts/userProfileLayout/restaurantadmin';
-
+// import MainPageLayout from './components/layouts/userProfileLayout/superadmin';
 // import MainPageLayout from './components/layouts/userProfileLayout/waiter';
 // import MainPageLayout from './components/layouts/userProfileLayout/staff';
 import { Provider } from 'react-redux';
-import store from './flux/store/store_restaurant_admin';
+import store from './flux/store/store_super_admin';
 // import store from './flux/store/store_staff';
 // import store from './flux/store/store_waiter';
 import EditItem from './components/restaurantAdmin/item/edititem';
@@ -30,13 +32,14 @@ import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
 
 class App extends React.Component{
   
-  // componentDidMount() {
-  //   store.dispatch(loadUser());
-  // }
+  componentDidMount() {
+    store.dispatch(loadUser());
+  }
   render() {
   return (
     <div className="App">
-      <CLayout/>
+      <P2Layout/>
+      {/* <CLayout/> */}
       {/* <RaLayout/> */}
       
       
@@ -60,12 +63,12 @@ class App extends React.Component{
         <Additem/>
       </div> */}
 
-      {/* <Provider store={store}>
+      <Provider store={store}>
         <div>
         <MainPageLayout/>
-        <SaLayout/>
+        {/* <SaLayout/> */}
         </div>
-      </Provider> */}
+      </Provider>
       
     </div>
    

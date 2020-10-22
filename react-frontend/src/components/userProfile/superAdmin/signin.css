@@ -1,0 +1,75 @@
+:root {
+  --red: #ff0000; 
+  --white: #fff;
+  --black: #000;
+  --tomato: #f25e36;
+  --burnt-sienna: #f27350;
+  --dark-salmon: #f18e73;
+  --coral: #f26c48;
+  --light-tomato: #f26640;
+  --zinnwaldite: #f7b8a6;
+  --pale-pink: #fad8ce;
+  --seashell: #fceeea;
+  --linen: #fbe4dd;
+  --main: #dac5a3;
+
+  --color: #f58f0a;
+  --color1: #278d7c;
+  --color2: #e8b52e;
+  --color3: rgb(255, 255, 255);
+  --color5: #E23232;
+  --color6: #E23232;
+  --color7: rgb(201, 17, 9);
+  --color8: rgb(220, 18, 2);
+  --color9: rgb(255, 255, 255, 0.6);
+  --color10: #111d2c;
+}
+
+.login-form {
+    width: 300px;
+  }
+.login-form-forgot {
+    float: right;
+  }
+.ant-col-rtl .login-form-forgot {
+    float: left;
+  }
+.login-form-button {
+    width: 100%;
+    border: 1px solid var(--color10);
+  }
+  
+.login-div {
+  text-align: center;
+  /* border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 100px 100px;
+  margin: 20px 0; */
+      /* margin-top: 10em;
+      width: 300px;
+      margin-left: 10em; */
+  }
+.login-form {
+    border: 1px solid var(--color10);
+    padding: 4em;
+    border-radius: 20px;
+    height: 300px;
+  }
+  
+.login-form Button {
+    background-color: var(--color10);
+    border-radius: 3px;
+    color: white;
+  }
+  
+Button, Input:hover {
+    border-color: var(--color10);
+  }
+  
+.login {
+    display: block;
+    color: var(--color10);
+    font-size: 22px;
+    font-weight: 600;
+    padding: 0%;
+  }

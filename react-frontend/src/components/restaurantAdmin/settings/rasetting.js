@@ -9,6 +9,12 @@ import PropTypes from 'prop-types';
 
 class RaSettings extends React.Component {
 
+    constructor(props){
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    
+      }; 
+
     state = {
         user: this.props.user,
         rest: ''
@@ -19,6 +25,32 @@ class RaSettings extends React.Component {
         isAuthenticated: PropTypes.bool,
         // error : PropTypes.object.isRequired
     }
+
+    handleSubmit(rid)
+    {
+        let username=this.refs.username.value;
+        fetch('http://localhost:4000/restaurantadmin/setting/editusername/'+rid, {
+            method:'PUT',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                username,
+            })
+        })
+        .then(function(response) {
+          if (response.ok) {
+            alert('Username updated Successfully')
+            window.location.reload(false);
+            return true;
+                } else {
+            var error = new Error(response.statusText)
+            error.response = response
+            throw error
+              }
+          })
+            
+      } 
 
     componentDidMount = async () => {
         const pointerToThis = this;
@@ -40,6 +72,9 @@ class RaSettings extends React.Component {
         })
             .then(response => response.json())
             .then(data => pointerToThis.setState({ rest: data }));
+
+
+            console.log(this.props.user)
     }
 
     render() {
@@ -55,7 +90,7 @@ class RaSettings extends React.Component {
                             </div>
                         </a>
                         <br/>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <div href="#" class="list-group-item list-group-item-action">
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
                                     <p><b> Username: </b> {this.state.user.username}  </p>
@@ -64,13 +99,15 @@ class RaSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="username" name="username" placeholder="Enter new username here" id="username"/>
-                                <button type="submit" class="btn btn-dark" >Save Changes</button>
-                            </div> 
-                        </a>
+                            <form>
+                                <div class = "form-group">
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="username" name="username" placeholder="Enter new username here" id="username"/>
+                                    <button type="submit" class="btn btn-dark" onClick={()=>this.handleSubmit(this.props.user.id)}>Save Changes</button>
+                                </div> 
+                            </form>
+                        </div>
                         <br/>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <div href="#" class="list-group-item list-group-item-action">
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
                                     <p><b>Email: </b>{this.state.user.email}  </p>
@@ -79,13 +116,15 @@ class RaSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="email" name="email" placeholder="Enter new email here" id="email"/>
-                                <button type="submit" class="btn btn-dark" >Save Changes</button>
-                            </div> 
-                        </a>
+                            <form>
+                                <div class = "form-group">
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="email" name="email" placeholder="Enter new email here" id="email"/>
+                                    <button type="submit" class="btn btn-dark" >Save Changes</button>
+                                </div> 
+                            </form>
+                        </div>
                         <br/>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <div href="#" class="list-group-item list-group-item-action">
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
                                     <p><b>Phone Number: </b>{this.state.user.phonenumber}  </p>
@@ -94,13 +133,15 @@ class RaSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="phonenumber" name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
-                                <button type="submit" class="btn btn-dark" >Save Changes</button>
-                            </div> 
-                        </a>
+                            <form>
+                                <div class = "form-group">
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="phonenumber" name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
+                                    <button type="submit" class="btn btn-dark" >Save Changes</button>
+                                </div> 
+                            </form>
+                        </div>
                         <br/>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <div href="#" class="list-group-item list-group-item-action">
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
                                     <p><b>Password: </b> </p>
@@ -109,13 +150,15 @@ class RaSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="password" name="password" placeholder="Enter previous password here" id="password"/>
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="npassword" name="npassword" placeholder="Enter new password here" id="npassword"/>
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/>
-                                <button type="submit" class="btn btn-dark" >Save Changes</button>
-                            </div> 
-                        </a>
+                            <form>
+                                <div class = "form-group">
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="password" name="password" placeholder="Enter previous password here" id="password"/>
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="npassword" name="npassword" placeholder="Enter new password here" id="npassword"/>
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/>
+                                    <button type="submit" class="btn btn-dark" >Save Changes</button>
+                                </div> 
+                            </form>
+                        </div>
                     </div>
 
                     

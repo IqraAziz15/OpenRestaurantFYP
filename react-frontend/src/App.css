@@ -22,9 +22,11 @@
 }
 
 .App {
-  background-image: url('./assets/images/background2.png');
-  background-attachment: fixed;
-  /* text-align: center; */
+  text-align: center;
+  /* margin-left: 28em; */
+  justify-content: center;
+  align-content: center;
+  align-self: center;
 }
 
 /* @media (prefers-reduced-motion: no-preference) {
@@ -32,7 +34,7 @@
     animation: App-logo-spin infinite 20s linear;
   }
 } */
-
+/* 
 .Nav-bar {
   display: flex;
   border-bottom: 1px solid var(--color3);
@@ -43,7 +45,7 @@
 }
 
 .App-logo {
-  /* margin-top: 25px; */
+  margin-top: 25px;
   float: left;
   padding: 0.5em;
   margin: 0em;
@@ -92,23 +94,23 @@ a{
   padding-right: 2em;
   font-weight: bold;
 }
+ */
 
-
-header {
+/* header {
   height: 20px;
   color: var(--white);
   font-size: 0.8em;
   text-align: center;
   background-color: var(--color3);
   opacity: 80%;
-}
+} */
 
 /* header, .Nav-bar {
   top: 0;
   position: fixed;
   width: 100%;
 } */
-
+/* 
 .Nav-buttons {
   flex: 30%;
 }
@@ -147,4 +149,4 @@ footer {
   to {
     transform: rotate(360deg);
   }
-}
+} */

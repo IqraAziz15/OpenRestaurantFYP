@@ -1,58 +1,84 @@
-import React from 'react';
-import 'antd/dist/antd.css';
-import { Card, Col, Row, Divider, Input } from 'antd';
-
+import React, {Fragment} from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'material-design-icons/iconfont/material-icons.css';
+import { Navbar, Nav, Form, NavDropdown, Container } from 'react-bootstrap';
+import "antd/dist/antd.css";
+import RateComponent from "../../customer/reviewRatingComponents/addRatings";
+import RestaurantCard from "../../customer/viewComponent/restaurantCard";
+import ItemCard from "../../customer/viewComponent/itemCard";
+import AllItemsCard from "../../customer/viewComponent/allItemsCard";
+import AllDealsCard from "../../customer/viewComponent/allDealsCard";
+import DealCard from "../../customer/viewComponent/dealCard";
+import AllRestaurantsCard from "../../customer/viewComponent/allRestaurantsCard";
+import Checkout from '../../customer/cartComponents/proceedtocheckout';
+import CallViewOrder from '../../customer/cartComponents/callViewOrder';
+import Successmsg from '../../customer/cartComponents/successmsg';
+import OrderHistory from '../../customer/cartComponents/vieworder';
+import "../../customer/customer.css";
+import { message, Card, Col, Row, Divider, Input } from "antd";
+import Slider from "react-slick";
+import { Spin } from "antd";
+import Home from './home';
+import ViewItem from "../../customer/viewComponent/viewItem";
+import P2Layout from "../../customer/viewComponent/viewRestaurant";
+import Cart from '../../customer/cartComponents/cartCard';
+import ViewRest from "../../customer/viewComponent/callViewRest";
+import CallViewItem from "../../customer/viewComponent/callViewItem";
+import { Link, Redirect, BrowserRouter as Router, Switch, Route, useParams, useRouteMatch } from "react-router-dom";
 const { Meta } = Card;
 const { Search } = Input;
 
-class CLayout extends React.Component
-{
-    render()
-    {
-        return(
-            <div>
-                <div className="site-card-wrapper">
-                    <br/><br/>
-                    <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
-                    <Divider orientation = 'left'>All Restaurants</Divider>
-                    <Row justify="space-between">
-                        <Col span={4}>
-                        <Card
-                            hoverable
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                        >
-                            <Meta title="Europe Street beat1" description="www.instagram.com" />
-                        </Card>
-                        </Col>
-                        <Col span={4}>
-                        <Card
-                            hoverable
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                        >
-                            <Meta title="Europe Street beat2" description="www.instagram.com" />
-                        </Card>
-                        </Col>
-                        <Col span={4}>
-                        <Card
-                            hoverable
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                        >
-                            <Meta title="Europe Street beat3" description="www.instagram.com" />
-                        </Card>
-                        </Col>
-                        <Col span={4}>
-                        <Card
-                            hoverable
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-                        >
-                            <Meta title="Europe Street beat4" description="www.instagram.com" />
-                        </Card>
-                        </Col>
-                    </Row>
-                </div>
+class CLayout extends React.Component {
+  render() {
+      return(
+            <div className="app-container">
+                <Router>
+                <Container style={{marginRight:'0em', marginLeft:'0em', textAlign: 'center'}}>
+                    <br/>
+                    <Navbar bg="light" variant="light" sticky="top" style={{width: '100%', margin: 0, left: '-1', sticky: '-1', positon: 'fixed', top: '-1'}}>
+                        <Navbar.Brand href="">Open Restaurant</Navbar.Brand>
+                        <Nav className="ml-auto">
+                            <Nav.Link href="" style={{paddingRight:'5em'}}><Link className="link" to="/home" >Home</Link></Nav.Link>
+                            <Nav.Link href="" style={{paddingRight:'5em'}}><Link className="link" to="/allrestaurants" >Restaurants</Link></Nav.Link>
+                            {/* <Nav.Link href="" style={{paddingRight:'5em'}}>Menu</Nav.Link> */}
+                            <NavDropdown title="Menu" id="collasible-nav-dropdown" style={{paddingRight:'5em'}}>
+                                <NavDropdown.Item href=""><Link className="link" to="/allfoods" >Items</Link></NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item href=""><Link className="link" to="/alldeals" >Deals</Link></NavDropdown.Item>
+                            </NavDropdown>
+                            <Nav.Link href="" style={{paddingRight:'5em'}}>Sign Up/Sign In</Nav.Link>
+                        </Nav>
+                        <Form inline>
+                            <i class="material-icons" style={{paddingRight:'2.5em'}}> <Link className="link" to="/cart" >shopping_cart</Link></i>
+                        </Form>
+                    </Navbar>
+                    <br/>
+                    <Search
+              className="search-box"
+              placeholder="Search here"
+              onSearch={(value) => console.log(value)}
+              enterButton
+            />
+                </Container>
+                <Container className='App-intro' style={{marginRight:'1em', marginLeft:'1em'}}>
+                <Switch>
+                  <Route exact path="/" component={Home}/>    
+                  <Route path="/home" component={Home}/>
+                  <Route path='/allrestaurants' component={AllRestaurantsCard}/>
+                  <Route path='/allfoods' component={AllItemsCard}/>
+                  <Route path='/alldeals' component={AllDealsCard}/>
+                  <Route path='/cart' component={Cart}/>
+                  <Route path='/order/checkout' component={Checkout}/>
+                  <Route path='/restaurantview/:id' component={ViewRest}/>
+                  <Route path='/view/:id' component={CallViewItem}/>
+                  <Route path='/pending/order/:random' component={CallViewOrder}/>
+                  <Route path='/place/order/' component={Successmsg}/>
+                </Switch>
+                </Container>
+                </Router>
             </div>
-        );
-    }
+    );
+  }
 }
 
 export default CLayout;

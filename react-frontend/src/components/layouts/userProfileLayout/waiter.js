@@ -16,7 +16,7 @@ import {
   } from "react-router-dom";
 class AppNavbar extends Component{
     state = {
-        isOpen : false
+        isOpen : true
     }
 
     static propTypes = {

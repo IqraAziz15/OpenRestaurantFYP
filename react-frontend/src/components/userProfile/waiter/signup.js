@@ -74,7 +74,7 @@ class RegisterModal extends Component {
 
   render(){
     return (
-      <div style={{textAlign: 'start'}}>
+      <div style={{textAlign: 'start' }}>
           {this.state.msg ? <Alert color="success">{ this.state.msg }</Alert> : null}
                 <center><h2>Add New Waiter</h2></center>
                 <form onSubmit={this.onSubmit}>

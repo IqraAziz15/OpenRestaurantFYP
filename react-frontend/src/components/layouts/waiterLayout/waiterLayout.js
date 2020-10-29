@@ -35,6 +35,7 @@ import WSettings from '../../waiter/wsettings';
 import './waiterLayout.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Logout from '../../userProfile/waiter/logout';
 // import { Button } from 'reactstrap';
 // import logo from '../assets/images/logo.png';
 // import Title from 'antd/lib/skeleton/Title';
@@ -112,7 +113,7 @@ class WaiterLayout extends React.Component
             
                         <Menu.Item key="5" icon={<SettingOutlined />}><Link className="link" to="/waitersettings">
                             Settings</Link></Menu.Item>
-                        <Menu.Item key="6" icon={<LogoutOutlined />}>Logout</Menu.Item>
+                        <Menu.Item key="6" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
                         
                         
                         

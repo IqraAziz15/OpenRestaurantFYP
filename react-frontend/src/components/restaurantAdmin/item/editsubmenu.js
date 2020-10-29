@@ -25,8 +25,7 @@ const API ='http://localhost:4000/restaurantadmin/submenu/editsubmenu/';
       .then(function(response) {
         if (response.ok) {
           alert('Submenu updated Successfully')
-          window.location.reload(false);
-          return true;
+          
               } else {
           var error = new Error(response.statusText)
           error.response = response

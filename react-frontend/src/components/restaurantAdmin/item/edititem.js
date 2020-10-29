@@ -30,8 +30,7 @@ const API ='http://localhost:4000/restaurantadmin/item/edititem/';
       .then(function(response) {
         if (response.ok) {
           alert('Item updated Successfully')
-          //window.location.reload(false);
-          return true;
+         
               } else {
           var error = new Error(response.statusText)
           error.response = response

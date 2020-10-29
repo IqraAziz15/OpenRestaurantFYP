@@ -18,12 +18,20 @@ var itemSchema = new Schema({
         type: String,
          
     },
-    ratings: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: 'Rating'
-        }
-    ],
+    // ratings: [
+    //     {
+    //         type: mongoose.Types.ObjectId,
+    //         ref: 'Rating'
+    //     }
+    // ],
+    ratings: 
+    {
+        type: Number,
+    },
+    rating_count: 
+    {
+        type: Number,
+    },
     reviews: [
         {
             type: mongoose.Types.ObjectId,

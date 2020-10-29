@@ -19,7 +19,7 @@ import { clearErrors } from '../../../flux/actions/waiter/errorActions';
 
 class LoginModal extends Component {
     state = {
-        modal : false,
+        modal : true,
         email : '',
         password : '',
         msg : null
@@ -81,9 +81,9 @@ class LoginModal extends Component {
   render(){
     return (
       <div>
-        <NavLink onClick={this.toggle} href="#">
+        {/* <NavLink onClick={this.toggle} href="#">
           Login
-        </NavLink>
+        </NavLink> */}
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Login</ModalHeader>
           <ModalBody>

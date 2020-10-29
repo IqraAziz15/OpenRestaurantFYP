@@ -1,28 +1,9 @@
 
 
 
-:root {
-  --red: #ff0000; 
-  --white: #fff;
-  --black: #000;
-  --tomato: #f25e36;
-  --burnt-sienna: #f27350;
-  --dark-salmon: #f18e73;
-  --coral: #f26c48;
-  --light-tomato: #f26640;
-  --zinnwaldite: #f7b8a6;
-  --pale-pink: #fad8ce;
-  --seashell: #fceeea;
-  --linen: #fbe4dd;
-  --main: #dac5a3;
-
-  --main-color: #f58f0a;
-  --color2: #278d7c;
-  --color3: #e8b52e;
-}
 
 .App {
-  text-align: center;
+  /* text-align: center; */
   /* margin-left: 28em; */
   justify-content: center;
   align-content: center;

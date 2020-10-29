@@ -11,7 +11,7 @@ class RaSettings extends React.Component {
 
     constructor(props){
         super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        //this.handleSubmit = this.handleSubmit.bind(this);
     
       }; 
 
@@ -26,7 +26,7 @@ class RaSettings extends React.Component {
         // error : PropTypes.object.isRequired
     }
 
-    handleSubmit(rid)
+    changeUsername = (rid) =>
     {
         let username=this.refs.username.value;
         fetch('http://localhost:4000/restaurantadmin/setting/editusername/'+rid, {
@@ -49,8 +49,94 @@ class RaSettings extends React.Component {
             throw error
               }
           })
+      } 
+
+    changeEmail = (rid) =>
+    {
+        let email=this.refs.email.value;
+        fetch('http://localhost:4000/restaurantadmin/setting/editemail/'+rid, {
+            method:'PUT',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                email,
+            })
+        })
+        .then(function(response) {
+          if (response.ok) {
+            alert('Email Updated Successfully')
+            window.location.reload(false);
+            return true;
+                } else {
+            var error = new Error(response.statusText)
+            error.response = response
+            throw error
+              }
+          })
             
       } 
+
+      changePhoneNumber = (rid) =>
+      {
+          let phonenumber=this.refs.phonenumber.value;
+          fetch('http://localhost:4000/restaurantadmin/setting/editphonenumber/'+rid, {
+              method:'PUT',
+              headers:{
+                  'Content-Type':'application/json'
+              },
+              body:JSON.stringify({
+                phonenumber,
+              })
+          })
+          .then(function(response) {
+            if (response.ok) {
+              alert('PhoneNumber Updated Successfully')
+                  } else {
+              var error = new Error(response.statusText)
+              error.response = response
+              throw error
+                }
+            })
+              
+        } 
+
+        changePassword = (rid) =>
+        {
+            let password=this.refs.password.value;
+            fetch('http://localhost:4000/restaurantadmin/setting/editpassword/'+rid, {
+                method:'PUT',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    password,
+                })
+            })
+            .then(function(response) {
+              if (response.ok) {
+                alert('Password Updated Successfully')
+                window.location.reload(false);
+                return true;
+                    } else {
+                var error = new Error(response.statusText)
+                error.response = response
+                throw error
+                  }
+              })
+                
+          } 
+  
+        //   export const updateDoctor = (patient, next) => {
+        //     if(typeof window !== "undefined"){
+        //         if(localStorage.getItem("jwt")){
+        //             let auth = JSON.parse(localStorage.getItem("jwt"));
+        //             auth.patient =patient;
+        //             localStorage.setItem('jwt',JSON.stringify(auth));
+        //             next();
+        //         }
+        //     }
+        // }
 
     componentDidMount = async () => {
         const pointerToThis = this;
@@ -82,13 +168,13 @@ class RaSettings extends React.Component {
             <div>
                 {this.state.user ?                  
                     <div style={{ padding: '1.5em'}}>
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <div href="#" class="list-group-item list-group-item-action">
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
                                     <p><b>Name: </b>{this.state.user.name}  </p>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                         <br/>
                         <div href="#" class="list-group-item list-group-item-action">
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
@@ -102,7 +188,7 @@ class RaSettings extends React.Component {
                             <form>
                                 <div class = "form-group">
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="username" name="username" placeholder="Enter new username here" id="username"/>
-                                    <button type="submit" class="btn btn-dark" onClick={()=>this.handleSubmit(this.props.user.id)}>Save Changes</button>
+                                    <button type="submit" class="btn btn-dark" onClick={()=>this.changeUsername(this.props.user.id)}>Save Changes</button>
                                 </div> 
                             </form>
                         </div>
@@ -119,7 +205,7 @@ class RaSettings extends React.Component {
                             <form>
                                 <div class = "form-group">
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="email" name="email" placeholder="Enter new email here" id="email"/>
-                                    <button type="submit" class="btn btn-dark" >Save Changes</button>
+                                    <button type="submit" class="btn btn-dark" onClick={()=>this.changeEmail(this.props.user.id)}>Save Changes</button>
                                 </div> 
                             </form>
                         </div>
@@ -136,8 +222,9 @@ class RaSettings extends React.Component {
                             <form>
                                 <div class = "form-group">
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="phonenumber" name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
-                                    <button type="submit" class="btn btn-dark" >Save Changes</button>
+                                    <button type="submit" class="btn btn-dark" onClick={()=>this.changePhoneNumber(this.props.user.id)}>Save Changes</button>
                                 </div> 
+
                             </form>
                         </div>
                         <br/>
@@ -152,21 +239,15 @@ class RaSettings extends React.Component {
                             </div>
                             <form>
                                 <div class = "form-group">
-                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="password" name="password" placeholder="Enter previous password here" id="password"/>
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="password" name="password" placeholder="Enter previous password here" id="password"/> 
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="npassword" name="npassword" placeholder="Enter new password here" id="npassword"/>
-                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/>
-                                    <button type="submit" class="btn btn-dark" >Save Changes</button>
+                                    {/* <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/> */}
+                                    <button type="submit" class="btn btn-dark" onClick={()=>this.changePassword(this.props.user.id)}>Save Changes</button>
                                 </div> 
                             </form>
                         </div>
                     </div>
-
-                    
-
-                    : ''}
-
-
-
+                : ''}
             </div>
         );
     }

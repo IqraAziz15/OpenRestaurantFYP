@@ -52,7 +52,7 @@ class LoginSuperAdmin extends Component {
   
   render() {
     return (
-      <div className="login-div">
+      <div className="login-div" style={{margin:"100px", marginLeft:"600px", marginTop:"10em"}}>
         {this.state.msg ? <Alert color="danger">{this.state.msg}</Alert> : null}
 
         <Form

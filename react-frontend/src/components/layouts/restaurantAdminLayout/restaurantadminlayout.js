@@ -63,6 +63,7 @@ class RaLayout extends React.Component
     
 
     componentDidMount = async () => {
+        console.log(this.state.user)
         var body = JSON.stringify({rid : this.state.user.id});
         const pointerToThis = this;
         await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/",  {
@@ -188,13 +189,13 @@ class RaLayout extends React.Component
                     <Content style={{ margin: '0 16px' }}>
                         
                         <Switch>
-                            <Route path="/additem" render={(props) => ( <Additem {...props} rest={this.state.rest} />)}>
+                            <Route path="/additem" render={(props) => ( <Additem {...props} rest={this.state.rest} user={this.state.user}/>)}>
                             </Route>
-                            <Route path="/viewanddeleteitem" render={(props) => ( <ViewItems {...props} rest={this.state.rest} />)}>
+                            <Route path="/viewanddeleteitem" render={(props) => ( <ViewItems {...props} rest={this.state.rest} user={this.state.user} />)}>
                             </Route>
-                            <Route path="/adddeal" render={(props) => ( <AddDeal {...props} rest={this.state.rest} />)}>
+                            <Route path="/adddeal" render={(props) => ( <AddDeal {...props} rest={this.state.rest} user={this.state.user}/>)}>
                             </Route>
-                            <Route path="/viewanddeletedeal" render={(props) => ( <ViewDeals {...props} rest={this.state.rest} />)}>
+                            <Route path="/viewanddeletedeal" render={(props) => ( <ViewDeals {...props} rest={this.state.rest} user={this.state.user} />)}>
                             </Route>
                             <Route path="/adminstatistics" component={ adminstatistics }>
                             </Route>

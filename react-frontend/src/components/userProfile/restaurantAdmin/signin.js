@@ -90,7 +90,7 @@ class LoginModal extends Component {
         </NavLink> */}
           <Form
           className="login-form"
-        >
+          style={{margin:"100px", marginLeft:"600px", marginTop:"10em"}}>
           <Form.Item
             rules={[
               {
@@ -124,7 +124,7 @@ class LoginModal extends Component {
               onChange={this.onChange}
             />
           </Form.Item>
-          <Form.Item>
+          {/* <Form.Item>
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
@@ -132,7 +132,7 @@ class LoginModal extends Component {
             <a className="login-form-forgot" href="">
               Forgot password
             </a>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.onSubmit}>

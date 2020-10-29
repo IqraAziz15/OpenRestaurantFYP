@@ -8,7 +8,7 @@ router.post('/additem', itemController.addItem);
 
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 
-router.get('/viewitem:itemId', itemController.viewItem);
+router.get('/viewitem/:itemId', itemController.viewItem);
 
 router.get("/image/:itemId", itemController.itemPhoto);
 

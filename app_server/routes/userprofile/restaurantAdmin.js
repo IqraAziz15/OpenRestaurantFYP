@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const restaurantAdminController = require('../../controllers/userprofile/restaurantAdminController');
+var auth = require('../../../middleware/auth')
 
 /**
  * @route   POST routes/userprofile/restaurantadmin/loginrestaurantadmin
@@ -24,6 +25,6 @@ router.post('/registerrestaurantadmin', restaurantAdminController.restaurantAdmi
  * @access  Private
  */
 
-router.get('/restaurantadmin', restaurantAdminController.restaurantAdminProfile);
+router.get('/restaurantadmin', auth, restaurantAdminController.restaurantAdminProfile);
 
 module.exports = router;

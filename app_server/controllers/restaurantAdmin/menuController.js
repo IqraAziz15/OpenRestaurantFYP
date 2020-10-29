@@ -13,7 +13,7 @@ exports.addMenu = (function(req, res, next) {
         .catch((err) => next(err));
 });
 
-exports.addSubmenuToMenu = ((req, res) => {
+exports.addSubmenuToMenu = ((req, res, next) => {
     Menu.findOneAndUpdate({ _id: req.body.mid }, {
         "$push": {
             "submenus": req.body.sid

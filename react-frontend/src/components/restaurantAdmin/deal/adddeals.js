@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Spin } from 'antd';
 const API = 'http://localhost:4000/restaurantadmin/deal/adddeal';
 const API1 = 'http://localhost:4000/restaurantadmin/deal/addphoto';
 const axios = require('axios');
@@ -23,6 +26,7 @@ class AddDeal extends React.Component {
         // subid:this.props.rest.menu.submenus._id,
         menu_id:this.props.rest.menu._id,
         rest: this.props.rest,
+        user: this.props.user,
         name:'',
         total_bill:'',
         decription:'',
@@ -35,13 +39,30 @@ class AddDeal extends React.Component {
         // isOtherSelected: false
     }
 
-    componentDidMount() {
+    componentDidMount = async () => {
         this.dealData = new FormData();
+        // this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        this.getrest();
+        this.setState({ menu_id: this.state.rest.menu._id })
+        console.log(this.props.rest.menu.submenus[0]._id)
+        console.log(this.props.rest)
+
+
     }
 
-    refresh=()=>{
-        this.setState({counter:this.state.counter++});
-    };
+    getrest = async () => {
+        var body = JSON.stringify({ rid: this.state.user.id });
+        const pointerToThis = this;
+        await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/", {
+            method: 'POST',
+            body,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.json())
+            .then(data => pointerToThis.setState({ rest: data }));
+    }
 
     onChange = (e) => {
         this.dealData.set(e.target.name, e.target.value);
@@ -84,8 +105,6 @@ class AddDeal extends React.Component {
             alert('Photo Added Successfully')
         })
             .catch(err => console.log(err))
-
-        this.refresh();
         
         const body2={ mid: this.state.menu_id, did: deal_id}
         await axios
@@ -95,6 +114,7 @@ class AddDeal extends React.Component {
               }
         }).then(res=>{
             console.log(res); 
+            document.getElementById("form").reset();
         }) 
         .catch(err=>console.log(err)) 
     }
@@ -129,9 +149,21 @@ class AddDeal extends React.Component {
 
     render() {
         return (
+            <div>
+                 {this.state.loading ? (
+                    <center>
+                        <Spin
+                            className="spinner"
+                            tip="Loading...Please Wait"
+                            size="large"
+                        />
+                    </center>
+                ) :
+           
+
             <div class="container mt-5">
                 <center><h2>Add New Deal</h2></center>
-                <form name="addform" enctype="multipart/form-data">
+                <form name="addform" enctype="multipart/form-data" id="form">
                     <div class = "form-group">
                         <label for="name">Deal Name</label>
                         <input class="form-control" type="text" ref="name" name="name" placeholder="Enter name" onChange={this.onChange} id="name"/>
@@ -164,6 +196,8 @@ class AddDeal extends React.Component {
                     {/* <input type="hidden" ref="hid" value={this.state.counter}></input> */}
                 </form>
             </div>
+            }
+        </div>
         );
     }
 }

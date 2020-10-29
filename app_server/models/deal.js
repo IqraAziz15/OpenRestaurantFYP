@@ -19,6 +19,20 @@ var dealSchema = new Schema({
         type: String,
         required: true
     },
+    ratings: 
+    {
+        type: Number,
+    },
+    rating_count: 
+    {
+        type: Number,
+    },
+    reviews: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Review'
+        }
+    ],
 });
 
 module.exports = mongoose.model('Deal', dealSchema)

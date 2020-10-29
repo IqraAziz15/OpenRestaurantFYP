@@ -3,7 +3,8 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    Redirect
   } from "react-router-dom";
 import '../../../App.css';
 import { connect } from 'react-redux';
@@ -15,7 +16,7 @@ import { Button } from 'react-bootstrap';
 
 class MainPageLayout extends React.Component{
     state = {
-        isOpen : false
+        isOpen : true
     }
     static propTypes = {
         auth : PropTypes.object.isRequired,
@@ -28,10 +29,11 @@ class MainPageLayout extends React.Component{
         return(
             <div>
                 <Router>
-                    <Link className="link" to="/signin" >Login</Link>
+                    {/* <Link className="link" to="/signin" ></Link> */}
                     <div className="App-intro">
                         <Switch>
                             <Route path="/signin" component={signin}/>
+                            <Redirect to='signin'/>
                         </Switch>
                     </div>
                 </Router>

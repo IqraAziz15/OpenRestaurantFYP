@@ -45,13 +45,13 @@ exports.viewItem = (function(req, res) {
 
 exports.getAllItems = (function(req, res){
     var item =Item.find()
-    .select("_id price image description")
+    .select("-image")
     .then((item)=>{
         console.log("item");
         console.log(item);
         res.status(200).json(
             item 
-        );
+        ); 
     })
     .catch(err=>console.log(err));
 });

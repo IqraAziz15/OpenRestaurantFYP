@@ -24,7 +24,7 @@ class MainPageLayout extends React.Component{
         return(
             <div>
                 <Router>
-                    <Link className="link" to="/signin" >Login</Link>
+                    {/* <Link className="link" to="/signin" ></Link> */}
                     <div className="App-intro">
                         <Switch>
                             <Route path="/signin" component={signin}/>

@@ -108,14 +108,21 @@ exports.restaurantAdminRegister = (async (req, res) => {
  * @access  Private
  */
 
-exports.restaurantAdminProfile = (auth, async (req, res) => {
+exports.restaurantAdminProfile = async (req, res) => {
     try{
+      console.log('ghsdgsjdddddddddddddddddddddddddabfdsbhfsjh')
         Restaurantadmin.findById(req.user.id)
         .select('-password')
-        .then(user => res.json(user));
+        .then(user => res.json({
+          id: user._id,
+          name: user.name,
+          username : user.username,
+          email: user.email,
+          phonenumber: user.phonenumber
+        }));
     }
     catch (e) {
         res.status(400).json({ error: e.message });
       }
-});
+};
 

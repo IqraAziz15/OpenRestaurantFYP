@@ -2,6 +2,7 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Switch,
+    Redirect,
     Route,
     Link
   } from "react-router-dom";
@@ -27,10 +28,11 @@ class MainPageLayout extends React.Component{
         return(
             <div>
                 <Router>
-                    <Link className="link" to="/signin" >Login</Link>
+                    <Link className="link" to="/signin" ></Link>
                     <div className="App-intro">
                         <Switch>
                             <Route path="/signin" component={signin}/>
+                            <Redirect to='signin'/>
                         </Switch>
                     </div>
                 </Router>

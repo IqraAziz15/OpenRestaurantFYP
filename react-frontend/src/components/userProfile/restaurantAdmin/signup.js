@@ -84,7 +84,7 @@ class RegisterModal extends Component {
         {this.state.msg ? <Alert color="success">{ this.state.msg }</Alert> : null}
         <Form onSubmit={this.onSubmit}>
           <Form.Group >
-            <Form.Label>Restaurant details</Form.Label>
+            <Form.Label>Restaurant Admin details</Form.Label>
             <center>
             <Form.Control type="text" name="name" id="name" ref="name" onChange={this.onChange} placeholder="Enter name of restaurant admin" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
             </center>
@@ -110,10 +110,10 @@ class RegisterModal extends Component {
             </center>
           </Form.Group>
           <Form.Group >
-          <Form.Label>Restaurant Admin details</Form.Label>
-            <center>
+          <Form.Label>Restaurant details</Form.Label>
+            {/* <center>
             <Form.Control type="text" name="restownername" id="restownername" ref="restownername" onChange={this.onChange} placeholder="Enter owner's name of restaurant" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
-            </center>
+            </center> */}
           </Form.Group>
           <Form.Group >
             <center>
@@ -126,9 +126,9 @@ class RegisterModal extends Component {
             </center>
           </Form.Group>
           <Form.Group >
-            <center>
+            {/* <center>
             <Form.Control type="file" name="restlogo" id="restlogo" ref="restlogo" onChange={this.onChange} placeholder="Enter logo of restaurant" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}} />
-            </center>
+            </center> */}
           </Form.Group>
           <Button className="butn" type="submit">Add Restaurant</Button>
         </Form>

@@ -1,6 +1,9 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {EditDeal} from './editdeal'; 
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {Spin} from 'antd';
 import 'material-design-icons/iconfont/material-icons.css';
 const API = 'http://localhost:4000/restaurantadmin/deal/viewdeal';
 const API1 = 'http://localhost:4000/restaurantadmin/deal/removedeal/';
@@ -8,19 +11,47 @@ const API1 = 'http://localhost:4000/restaurantadmin/deal/removedeal/';
 
 class ViewDeals extends React.Component
 {
-  constructor(props) {
-    super(props);
-
-    this.state = {
+  state = {
         rest: this.props.rest,
+        user: this.props.user,
         deals: [],
-        editItemModalShow: false
+        editItemModalShow: false,
+        loading: true
       };
-  }
 
-  componentDidMount = () => {
-    console.log(this.state.rest);
-  }
+      static propTypes = {
+        auth : PropTypes.object.isRequired,
+        isAuthenticated : PropTypes.bool,
+        // error : PropTypes.object.isRequired
+    }
+
+
+      componentDidMount =async()=> {
+        console.log(this.state.user)
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        this.getrest();
+        
+      }
+
+      getrest = async() =>
+      {
+        var body = JSON.stringify({rid : this.state.user.id});
+        const pointerToThis = this;
+        await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/",  {
+        method:'POST',
+        body,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(data => pointerToThis.setState({ rest: data}));
+      }
+    
+      componentWillUnmount() {
+        clearTimeout(this.id)
+      }
+
 
   deletedeal(id)
   {
@@ -34,8 +65,7 @@ class ViewDeals extends React.Component
       ).then(function(response) {
         if (response.ok) {
           alert('Deal Deleted Successfully')
-          window.location.reload(false);
-          return true;
+         
               } else {
           var error = new Error(response.statusText)
           error.response = response
@@ -50,6 +80,17 @@ class ViewDeals extends React.Component
     const { deals, deal_name, deal_total_bill, deal_description, deal_id } = this.state;
     let editDealModalClose=()=> this.setState({editDealModalShow:false});
     return(
+      <div>
+       
+      {this.state.loading ? (
+        <center>
+          <Spin
+            className="spinner"
+            tip="Loading...Please Wait"
+            size="large"
+          />
+        </center>
+      ) :
       <div class="container mt-3">
         <div class = "d-flex w-50">
           <h2 class="mb-1">DEALS MENU</h2>
@@ -85,10 +126,17 @@ class ViewDeals extends React.Component
         )}
         </div>
       </div>
+  }
+  </div>
     );
   }
 }
 
-export default ViewDeals;
 
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, null)(ViewDeals);
 

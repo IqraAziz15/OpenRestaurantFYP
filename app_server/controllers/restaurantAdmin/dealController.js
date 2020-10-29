@@ -45,7 +45,7 @@ exports.viewDeal = (function(req, res) {
 
 exports.getAllDeals = (function(req, res){
     var deal =Deal.find()
-    .select("_id image description total_bill")
+    .select("-image")
     .then((deal)=>{
         console.log("deal");
         console.log(deal);

@@ -4,8 +4,9 @@ import {EditItem} from './edititem';
 import {EditSubmenu} from './editsubmenu';
 import 'material-design-icons/iconfont/material-icons.css';
 import { ResponsiveEmbed } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import {Spin} from 'antd';
 const API = 'http://localhost:4000/restaurantadmin/menu/viewmenu';
 const API1 = 'http://localhost:4000/restaurantadmin/item/removeitem/';
 const API2 = 'http://localhost:4000/restaurantadmin/submenu/removesubmenu/';
@@ -14,19 +15,49 @@ class ViewItems extends React.Component
 {
   
     state = {
-        rest: this.props.rest,
+        rest: '',
+        user: this.props.user,
         submenu: [],
         items: [],
         editItemModalShow: false,
-        editSubmenuModalShow: false
+        editSubmenuModalShow: false,
+        loading: true
       };
+      static propTypes = {
+        auth : PropTypes.object.isRequired,
+        isAuthenticated : PropTypes.bool,
+        // error : PropTypes.object.isRequired
+    }
 
 
-  componentDidMount = () => {
-    console.log(this.state.rest);
-  }
+      componentDidMount =async()=> {
+        console.log(this.state.user)
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        this.getrest();
+        
+      }
+
+      getrest = async() =>
+      {
+        var body = JSON.stringify({rid : this.state.user.id});
+        const pointerToThis = this;
+        await fetch("http://localhost:4000/restaurantadmin/restaurant/findrestaurant/",  {
+        method:'POST',
+        body,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(data => pointerToThis.setState({ rest: data}));
+      }
+    
+      componentWillUnmount() {
+        clearTimeout(this.id)
+      }
+
   
-  deleteitem(id)
+  deleteitem = async(id) =>
   {
     if(window.confirm('are you sure?')){
       fetch(API1+ id, {
@@ -38,8 +69,7 @@ class ViewItems extends React.Component
       ).then(function(response) {
         if (response.ok) {
           alert('Record Deleted Successfully')
-          window.location.reload(false);
-          return true;
+          
               } else {
           var error = new Error(response.statusText)
           error.response = response
@@ -47,9 +77,10 @@ class ViewItems extends React.Component
         }
       })
     }
+    this.getrest();
   }
 
-  deletesubmenu(id)
+  deletesubmenu = async(id) =>
   {
     if(window.confirm('are you sure?')){
       fetch(API2+ id, {
@@ -61,23 +92,38 @@ class ViewItems extends React.Component
       ).then(function(response) {
         if (response.ok) {
           alert('Record Deleted Successfully')
-          window.location.reload(false);
-          return true;
+          
+          
               } else {
           var error = new Error(response.statusText)
           error.response = response
           throw error
         }
       })
+
     }
+    this.getrest();
   }
 
   render()
   {
+    
     const {  item_name, item_price, item_description, item_id, submenu_name, submenu_id } = this.state;
     let editItemModalClose=()=> this.setState({editItemModalShow:false});
     let editSubmenuModalClose=()=> this.setState({editSubmenuModalShow:false});
     return(
+      
+      <div>
+       
+      {this.state.loading ? (
+        <center>
+          <Spin
+            className="spinner"
+            tip="Loading...Please Wait"
+            size="large"
+          />
+        </center>
+      ) :
       <div class="container mt-3">
         <div class = "d-flex w-50">
           <h2 class="mb-1">ITEMS MENU</h2>
@@ -86,7 +132,6 @@ class ViewItems extends React.Component
         <hr></hr>
         <div class="list-group">
         {this.state.rest.menu.submenus.map(submenu =>
-        
               <a href="#" class="list-group-item list-group-item-action">
                 <div style={{alignContent: 'space-between' }} class="d-flex w-55 ">
                   <h4 key={submenu.name}>{submenu.name}</h4>
@@ -130,11 +175,16 @@ class ViewItems extends React.Component
 
         
         </div>
+      </div>}
       </div>
     );
   }
 }
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
 
-export default ViewItems;
+export default connect(mapStateToProps, null)(ViewItems);
+
 
 

@@ -6,4 +6,10 @@ const settingController = require('../../controllers/restaurantAdmin/settingCont
 
 router.put('/editusername/:rid', settingController.editUsernameInSetting);
 
+router.put('/editemail/:rid', settingController.editEmailInSetting);
+
+router.put('/editphonenumber/:rid', settingController.editPhoneNumberInSetting);
+
+router.put('/editpassword/:rid', settingController.editPasswordInSetting);
+
 module.exports = router;

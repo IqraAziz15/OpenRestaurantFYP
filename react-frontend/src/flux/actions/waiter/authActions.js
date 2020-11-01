@@ -21,7 +21,7 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get('/userprofile/waiter/waiter ', tokenConfig(getState))
+    .get('http://localhost:4000/userprofile/waiter/waiter ', tokenConfig(getState))
     .then(res =>
       dispatch({
         type: USER_LOADED,

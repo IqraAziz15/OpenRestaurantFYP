@@ -11,7 +11,7 @@ import Cart from './components/customer/cartComponents/cartCard';
 import Proceedtocheckout from './components/customer/cartComponents/proceedtocheckout';
 import Successmsg from './components/customer/cartComponents/successmsg';
 import Orderhistory from './components/customer/cartComponents/vieworder';
-import MainPageLayout from './components/layouts/userProfileLayout/restaurantadmin';
+// import MainPageLayout from './components/layouts/userProfileLayout/restaurantadmin';
 // import MainPageLayout from './components/layouts/userProfileLayout/superadmin';
 // import MainPageLayout from './components/layouts/userProfileLayout/waiter';
 // import MainPageLayout from './components/layouts/userProfileLayout/staff';
@@ -23,6 +23,8 @@ import store from './flux/store/store_restaurant_admin';
 // import store from './flux/store/store_waiter';
 import EditItem from './components/restaurantAdmin/item/edititem';
 import { loadUser } from './flux/actions/restaurantAdmin/authActions';
+// import { loadUser } from './flux/actions/staff/authActions';
+// import { loadUser } from './flux/actions/waiter/authActions';
 import Signupra from './components/layouts/superAdminLayout/restaurantadmin';
 import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
 // import AppNavbar from './components/layouts/userProfileLayout/waiter';
@@ -41,14 +43,14 @@ import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
 
 class App extends React.Component{
   
-  componentDidMount() {
-    store.dispatch(loadUser());
-  }
+  // componentDidMount() {
+  //   store.dispatch(loadUser());
+  // }
   render() {
   return (
-    <div className="App" style={{backgroundColor: 'white'}}>
+    <div className="App" >
       {/* <P2Layout/> */}
-      {/* <CLayout/> */}
+      <CLayout/>
       {/* <RaLayout/> */}
       {/* <CartLayout/> */}
       {/* <NavbarLayout/> */}
@@ -75,11 +77,11 @@ class App extends React.Component{
         <Additem/>
       </div> */}
 
-      <Provider store={store}>
+      {/* <Provider store={store}>
         <div>
         <MainPageLayout/>
         </div>
-      </Provider>
+      </Provider> */}
       
     </div>
    

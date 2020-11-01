@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const waiterController = require('../../controllers/userprofile/waiterController');
+var auth = require('../../../middleware/auth')
+
 
 /**
  * @route   POST routes/user/loginwaiter
@@ -24,6 +26,6 @@ router.post('/registerwaiter', waiterController.waiterRegister);
  * @access  Private
  */
 
-router.get('/waiter', waiterController.waiterProfile);
+router.get('/waiter', auth, waiterController.waiterProfile);
 
 module.exports = router;

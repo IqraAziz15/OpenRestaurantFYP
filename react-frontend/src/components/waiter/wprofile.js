@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Image, Container, Row, Col, Figure, FigureImage, FigureCaption } from 'react-bootstrap';
 import { Avatar } from 'antd';
+import {Spin} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import 'material-design-icons/iconfont/material-icons.css';
 import { connect } from 'react-redux';
@@ -12,7 +13,8 @@ class WProfile extends React.Component {
 
     state = {
         user: this.props.user,
-        rest: ''
+        rest: '',
+        loading: true
     };
 
     static propTypes = {
@@ -22,6 +24,7 @@ class WProfile extends React.Component {
     }
 
     componentDidMount = async () => {
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
         const pointerToThis = this;
         await fetch("http://localhost:4000/waiter/viewprofile/" + this.state.user.id + "", {
             method: 'GET',
@@ -43,11 +46,23 @@ class WProfile extends React.Component {
             .then(data => pointerToThis.setState({ rest: data }));
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.id)
+      }
+
     render() {
         return (
             <div>
-
-
+                {this.state.loading ? (
+                    <center>
+                    <Spin
+                        className="spinner"
+                        tip="Loading...Please Wait"
+                        size="large"
+                    />
+                    </center>
+                ) :
+                <div>
                 {this.state.user ?
                     
                     <div style={{ padding: '1.5em'}}>
@@ -72,8 +87,8 @@ class WProfile extends React.Component {
 
                     : ''}
 
-
-
+                </div>
+                }
             </div>
         );
     }

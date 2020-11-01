@@ -18,6 +18,7 @@ class RegisterModal extends Component {
         email : '',
         phonenumber : '',
         password : '',
+        image: null,
         msg : null
     }
 
@@ -57,9 +58,18 @@ class RegisterModal extends Component {
       this.setState({ [e.target.name] : e.target.value });
   };
 
+  // uploadImage = (name) => (event) => {
+  //   const value = name === 'image' ? event.target.files[0] : event.target.value;
+  //   const fileSize = name === 'image' ? event.target.files[0].size : 0;
+  //   this.restAdminData.set(name, value);
+  //   this.setState({ [name]: value, fileSize })
+  // };
+
+  
+
   onSubmit = async (e) => {
       e.preventDefault();
-      const { name, username, email, phonenumber, password, restownername, restname, restlocation, restlogo } = this.state;
+      const { name, username, email, phonenumber, password, image, restownername, restname, restlocation, restlogo } = this.state;
       //create user object
       const newUser = {
         name,
@@ -67,6 +77,7 @@ class RegisterModal extends Component {
         email,
         phonenumber,
         password,
+        image,
         restownername,
         restname, 
         restlocation,
@@ -109,6 +120,21 @@ class RegisterModal extends Component {
             <Form.Control type="password" name="password" id="password" ref="password" onChange={this.onChange} placeholder="Enter password of restaurant admin" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}}/>
             </center>
           </Form.Group>
+          {/* <Form.Group >
+            <center>
+            <Form.Control 
+            onChange={this.uploadImage("image")}
+            type="file"
+            id="image"
+            name="image"
+            id="image"
+            ref="image"
+            accept="image/*"
+            placeholder="Upload profile picture" 
+            size="sm" 
+            style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}} />
+            </center>
+          </Form.Group> */}
           <Form.Group >
           <Form.Label>Restaurant details</Form.Label>
             {/* <center>
@@ -125,11 +151,11 @@ class RegisterModal extends Component {
             <Form.Control type="text" name="restlocation" id="restlocation" ref="restlocation" onChange={this.onChange} placeholder="Enter location of restaurant" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}} />
             </center>
           </Form.Group>
-          <Form.Group >
-            {/* <center>
+          {/* <Form.Group >
+            <center>
             <Form.Control type="file" name="restlogo" id="restlogo" ref="restlogo" onChange={this.onChange} placeholder="Enter logo of restaurant" size="sm" style={{width:"90%", color:"black", backgroundColor:"transparent",border:"1px solid black"}} />
-            </center> */}
-          </Form.Group>
+            </center>
+          </Form.Group> */}
           <Button className="butn" type="submit">Add Restaurant</Button>
         </Form>
       </div>

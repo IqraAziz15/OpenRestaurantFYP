@@ -46,7 +46,6 @@ export const register = ({ name, username, email, phonenumber, password, restown
       'Content-Type': 'application/json'
     }
   };
-
   // Request body
   const body = JSON.stringify({ name, username, email, phonenumber, password });
   let restAdminId = '';

@@ -10,10 +10,15 @@
   align-items: center;
   padding: 3em;
 }
-.App {
+.app-container {
   background-color: var(--color1);
-  min-height: 800px;
-  height: "max-content";
+  min-height: 1200px;
+  height: max-content;
+
+}
+.App{
+  min-height: 1200px;
+  height: max-content;
 }
 
 .link {

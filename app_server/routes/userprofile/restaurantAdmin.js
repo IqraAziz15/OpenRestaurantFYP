@@ -3,6 +3,22 @@ var router = express.Router();
 const restaurantAdminController = require('../../controllers/userprofile/restaurantAdminController');
 var auth = require('../../../middleware/auth')
 
+/////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
+
+router.get('/viewrestaurantadmin/:restAdminId', restaurantAdminController.viewRestaurantAdmin);
+
+router.get("/image/:restAdminId", restaurantAdminController.restaurantAdminPhoto);
+
+router.get("/getallrestaurantadmin", restaurantAdminController.getAllRestaurantAdmin);
+
+/////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
+
+router.put('/addphoto/:restAdminId', restaurantAdminController.addPhoto);
+
+/////////////////////////////////////////////        PARAM OPERATIONS        //////////////////////////////////////////////
+
+router.param("restAdminId", restaurantAdminController.restaurantAdminById);
+
 /**
  * @route   POST routes/userprofile/restaurantadmin/loginrestaurantadmin
  * @desc    Login user

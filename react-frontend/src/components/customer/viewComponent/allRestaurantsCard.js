@@ -55,7 +55,7 @@ class CLayout extends React.Component {
     };
 
     return (
-      <div>
+      <div className='app-container'>
         {this.state.loading ? (
           <center>
             <Spin

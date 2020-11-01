@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const staffController = require('../../controllers/userprofile/staffController');
+var auth = require('../../../middleware/auth')
+
 
 /**
  * @route   POST routes/user/loginstaff
@@ -24,6 +26,6 @@ router.post('/registerstaff', staffController.staffRegister);
  * @access  Private
  */
 
-router.get('/staff', staffController.staffProfile);
+router.get('/staff', auth, staffController.staffProfile);
 
 module.exports = router;

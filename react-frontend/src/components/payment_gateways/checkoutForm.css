@@ -1,0 +1,31 @@
+Form {
+    margin: 8em;
+}
+Input {
+    margin: 5em;
+    display: inline;
+    color: #111d2c;
+}
+fieldset {
+    margin-left: 5em;
+    margin-right: 5em;
+    margin-bottom: 2em;
+}
+button {
+    border: 1px solid var(--color10);
+    background-color: var(--color10);
+    padding-left: 2em;
+    padding-right: 2em;
+    border-radius: 3px;
+    color: white;
+}
+.form-containter {
+    border: 1px solid var(--color10);
+    height: 40em;
+    margin-top: 2.5em;
+    padding-top: 5em;
+}
+label {
+    color: #111d2c;
+    font-weight: 600;
+}

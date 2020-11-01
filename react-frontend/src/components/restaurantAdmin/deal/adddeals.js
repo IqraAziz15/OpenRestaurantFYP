@@ -34,6 +34,7 @@ class AddDeal extends React.Component {
         counter: 0,
         fileSize: 0,
         deal_id: '',
+        loading: true
         // category: '',
         // subname:'',
         // isOtherSelected: false
@@ -41,14 +42,16 @@ class AddDeal extends React.Component {
 
     componentDidMount = async () => {
         this.dealData = new FormData();
-        // this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
         this.getrest();
         this.setState({ menu_id: this.state.rest.menu._id })
         console.log(this.props.rest.menu.submenus[0]._id)
         console.log(this.props.rest)
-
-
     }
+
+    componentWillUnmount() {
+        clearTimeout(this.id)
+      }
 
     getrest = async () => {
         var body = JSON.stringify({ rid: this.state.user.id });
@@ -76,7 +79,27 @@ class AddDeal extends React.Component {
         this.setState({ [name]: value, fileSize })
     };
 
+    addMenu = async () => {
+        var pointerToThis = this;
+        let { subname, subid } = this.state;
+        var data1 = { name: subname }
+        var s_id = '';
+        if (this.state.rest.menu == null) {
+            await axios.post('http://localhost:4000/restaurantadmin/menu/addmenu', data1, {
+                headers: {
+                    "content-type": "application/json"
+                }
+            }).then(res => {
+                pointerToThis.setState({ subid: res.data._id });
+                alert('Submenu Added Successfully')
+            })
+                .catch(err => console.log(err))
+
+        }
+    }
+
     dealHandler = async (e) => {
+        this.addMenu();
         e.preventDefault();
         var pointerToThis = this;
         let { name, total_bill, description, menu_id, image, subname } = this.state;
@@ -114,6 +137,7 @@ class AddDeal extends React.Component {
               }
         }).then(res=>{
             console.log(res); 
+            alert('Deal Added to Menu Successfully')
             document.getElementById("form").reset();
         }) 
         .catch(err=>console.log(err)) 

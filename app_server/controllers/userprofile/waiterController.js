@@ -1,7 +1,6 @@
 var config = require('config');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-var auth = require('../../../middleware/auth');
 var Waiter = require('../../models/waiter')
 const JWT_SECRET = config.get('jwtSecret');
 
@@ -108,11 +107,17 @@ exports.waiterRegister = (async (req, res) => {
  * @access  Private
  */
 
-exports.waiterProfile = (auth, async (req, res) => {
+exports.waiterProfile = (async (req, res) => {
     try{
         Waiter.findById(req.user.id)
         .select('-password')
-        .then(user => res.json(user));
+        .then(user => res.json({
+          id: user._id,
+          name: user.name,
+          username : user.username,
+          email: user.email,
+          phonenumber: user.phonenumber
+        }));
     }
     catch (e) {
         res.status(400).json({ error: e.message });

@@ -24,14 +24,35 @@ import P2Layout from "../../customer/viewComponent/viewRestaurant";
 import Cart from '../../customer/cartComponents/cartCard';
 import ViewRest from "../../customer/viewComponent/callViewRest";
 import CallViewItem from "../../customer/viewComponent/callViewItem";
+import Mobile from './mobileNav';
+import Tablet from './tabletNav';
 import { Link, Redirect, BrowserRouter as Router, Switch, Route, useParams, useRouteMatch } from "react-router-dom";
 const { Meta } = Card;
 const { Search } = Input;
 
 class CLayout extends React.Component {
+    state = { 
+        screenWidth: null 
+        };
+        
+    
+    componentDidMount() {
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+        window.addEventListener("resize", this.updateWindowDimensions());
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.updateWindowDimensions)
+    }
+    
+    updateWindowDimensions() {
+       this.setState({ screenWidth: window.innerWidth });
+    }
   render() {
+    if (this.state.screenWidth <= 652) return <div><Mobile/></div>;
+    if (this.state.screenWidth <= 1024) return <div><Tablet/></div>;
       return(
-            <div className="app-container">
+            <div className="app-container" style={{height: 'max-content'}}>
                 <Router>
                 <Container style={{marginRight:'0em', marginLeft:'0em', textAlign: 'center'}}>
                     <br/>

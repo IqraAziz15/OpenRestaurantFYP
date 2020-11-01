@@ -1,9 +1,92 @@
 var config = require('config');
 var bcrypt = require('bcrypt');
+var multer = require('multer');
 var jwt = require('jsonwebtoken');
 var auth = require('../../../middleware/auth');
+var _ = require('lodash');
+var formidable = require('formidable');
+const fs = require('fs');
+const storage = multer.diskStorage({
+    destination: function (req, res, cb) {
+        cb(null, 'uploads/')
+    }
+});
+const upload = multer({ storage: storage }); 
 var Restaurantadmin = require('../../models/restaurant_admin')
 const JWT_SECRET = config.get('jwtSecret');
+
+/////////////////////////////////////////////       PARAM OPERATIONS        //////////////////////////////////////////////
+
+exports.restaurantAdminById = (req, res, next, id)=>{
+  Restaurantadmin.findById(id).exec((err, restaurantAmin)=>{
+      if(err || !restaurantAmin){
+          return res.status(400).json({
+              error: "Restaurantadmin not found"
+          });
+      }
+      req.profile = restaurantAmin;
+      next();
+  });
+};
+
+/////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
+
+exports.viewRestaurantAdmin = (function(req, res) {
+  return res.json(req.profile);
+});
+
+exports.getAllRestaurantAdmin = (function(req, res){
+  var restaurantAmdin =RestaurantAdmin.find()
+  .select("-image")
+  .then((restaurantAmdin)=>{
+      console.log("restaurantAmdin");
+      console.log(restaurantAmdin);
+      res.status(200).json(
+        restaurantAmdin 
+      );
+  })
+  .catch(err=>console.log(err));
+});
+
+exports.restaurantAdminPhoto = (req, res, next) => {
+  if(req.profile.image.data){
+      res.set(("Content-Type" , req.profile.image.contentType));
+      return res.send(req.profile.image.data)
+  }
+  next();
+}
+
+/////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
+
+exports.addPhoto = ((req,res,next) =>{
+  let form = new formidable.IncomingForm()
+   form.keepExtensions = true
+   form.parse(req, (err, fields, files)=>{
+       console.log("form parsed")
+       if(err) {
+           return res.status(400).json({
+               error: "Photo could not be uploaded"
+           })
+       }
+       console.log("Fids",fields)
+       console.log(files)
+       let RestaurantAdmin = req.profile
+       RestaurantAdmin= _.extend(RestaurantAdmin, fields)
+
+       if(files.image){
+        RestaurantAdmin.image.data =fs.readFileSync(files.image.path)
+        RestaurantAdmin.image.contentType = files.image.type
+       }
+       RestaurantAdmin.save((err, result)=>{
+           if(err){ 
+               return res.status(400).json({
+                   error: err
+               })
+           }
+           res.json(RestaurantAdmin)
+       })
+   }) 
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,8 +137,8 @@ exports.restaurantAdminLogin = (async (req, res) => {
  * @access  Public
  */
 
-exports.restaurantAdminRegister = (async (req, res) => {
-    const { name, username, email, phonenumber, password } = req.body;
+exports.restaurantAdminRegister = (upload.single('image'), async (req, res) => {
+    const { name, username, email, phonenumber, password, image } = req.body;
   
     // Simple validation
     if (!name || !username || !email || !phonenumber || !password) {
@@ -77,7 +160,8 @@ exports.restaurantAdminRegister = (async (req, res) => {
         username,
         email,
         phonenumber,
-        password: hash
+        password: hash, 
+        image
       });
   
       const savedRestaurantAdmin = await newRestaurantAdmin.save();
@@ -94,7 +178,8 @@ exports.restaurantAdminRegister = (async (req, res) => {
           name: savedRestaurantAdmin.name,
           username : savedRestaurantAdmin.username,
           email: savedRestaurantAdmin.email,
-          phonenumber: savedRestaurantAdmin.phonenumber
+          phonenumber: savedRestaurantAdmin.phonenumber,
+          image: savedRestaurantAdmin.image,
         }
       });
     } catch (e) {
@@ -110,7 +195,6 @@ exports.restaurantAdminRegister = (async (req, res) => {
 
 exports.restaurantAdminProfile = async (req, res) => {
     try{
-      console.log('ghsdgsjdddddddddddddddddddddddddabfdsbhfsjh')
         Restaurantadmin.findById(req.user.id)
         .select('-password')
         .then(user => res.json({

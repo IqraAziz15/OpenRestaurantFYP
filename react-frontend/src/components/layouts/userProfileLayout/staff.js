@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import {Spin} from 'antd';
 import RegisterModal from '../../userProfile/staff/signup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginModal from '../../userProfile/staff/signin';
@@ -16,8 +17,17 @@ import {
   } from "react-router-dom";
 class AppNavbar extends Component{
     state = {
-        isOpen : false
+        isOpen : false,
+        loading: true
     }
+
+    componentDidMount() {
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+      }
+    
+      componentWillUnmount() {
+        clearTimeout(this.id)
+      }
 
     static propTypes = {
         auth : PropTypes.object.isRequired,
@@ -25,27 +35,21 @@ class AppNavbar extends Component{
         // error : PropTypes.object.isRequired
     }
 
-    
-
     render()
     {
         const { isAuthenticated, user } = this.props.auth;
         const authLinks = (
-            <Fragment>
-               
-               
+            <Fragment>   
                <Router>
                     <div className="App-intro">
                         <Switch>
                             {/* <Route path="/dashboard" component={RaLayout} user={user}/> */}
-                            <Route path="/dashboard" render={(props) => ( <StaffLayout {...props} user={user} />)}/>
-                            <Redirect to="/dashboard" />
+                            {/* <Route path="/dashboard" render={(props) => ( <StaffLayout {...props} user={user} />)}/>
+                            <Redirect to="/dashboard" /> */}
+                            <StaffLayout user={user} />
                         </Switch>
                     </div>
-                </Router>
-                
-                   
-                
+                </Router>    
             </Fragment>
         );
 
@@ -55,17 +59,24 @@ class AppNavbar extends Component{
             </Fragment>
         );
         return (
+
             <div>
           
-               
-                
-                    
-                    { isAuthenticated ? authLinks : guestLinks }
-                    
-                
-               
+                {this.state.loading ? (
+                <center>
+                    <Spin
+                    className="spinner"
+                    tip="Loading...Please Wait"
+                    size="large"
+                    />
+                </center>
+                ) :
+                        
+                    <div>
+                        { isAuthenticated ? authLinks : guestLinks }
+                    </div>               
            
-            
+                }
             </div>
         );
 }

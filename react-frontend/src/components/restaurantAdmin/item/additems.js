@@ -25,18 +25,17 @@ class Additem extends React.Component {
         item_id: '',
         category: '',
         subname: '',
-        isOtherSelected: false
+        isOtherSelected: false,
+        loading: true
     }
 
     componentDidMount = async () => {
         this.itemData = new FormData();
-        // this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
         this.getrest();
-        this.setState({ menu_id: this.state.rest.menu._id })
-        console.log(this.props.rest.menu.submenus[0]._id)
+        // this.setState({ menu_id: this.state.rest.menu._id })
+        // console.log(this.props.rest.menu.submenus[0]._id)
         console.log(this.props.rest)
-
-
     }
 
     getrest = async () => {
@@ -54,7 +53,7 @@ class Additem extends React.Component {
     }
 
     componentWillUnmount() {
-        // clearTimeout(this.id)
+        clearTimeout(this.id)
     }
 
     // refresh = () => {
@@ -96,18 +95,6 @@ class Additem extends React.Component {
             })
                 .catch(err => console.log(err))
 
-            const body2 = { rid: this.state.rest._id, mid: this.state.menu_id }
-            await axios
-                .post('http://localhost:4000/restaurantadmin/menu/addsubmenutomenu', body2, {
-                    headers: {
-                        "content-type": "application/json"
-                    }
-                }).then(res => {
-                    console.log(res);
-                })
-                .catch(err => console.log(err))
-            console.log(this.state)
-
         }
 
         await axios.post('http://localhost:4000/restaurantadmin/submenu/addsubmenu', data1, {
@@ -120,7 +107,7 @@ class Additem extends React.Component {
         })
             .catch(err => console.log(err))
 
-        const body1 = { mid: this.state.menu_id, sid: this.state.subid }
+        const body1 = { mid: this.state.rest.menu._id, sid: this.state.subid }
         await axios
             .post('http://localhost:4000/restaurantadmin/menu/addsubmenutomenu', body1, {
                 headers: {
@@ -128,13 +115,14 @@ class Additem extends React.Component {
                 }
             }).then(res => {
                 console.log(res);
+                alert('Submenu Added To Menu Successfully')
             })
             .catch(err => console.log(err))
         console.log(this.state)
     }
     itemHandler = async (e) => {
         e.preventDefault();
-        if (this.state.category === 'other') this.addSubmenu();
+        // if (this.state.category === 'other') this.addSubmenu();
         var pointerToThis = this;
         let { name, price, description, menu_id, image, subname } = this.state;
         var data = {
@@ -173,11 +161,11 @@ class Additem extends React.Component {
                 }
             }).then(res => {
                 console.log(res);
+                alert('Item Added to Submenu Successfully')
                 document.getElementById("form").reset();
                 
             })
-            .catch(err => console.log(err))
-            
+            .catch(err => console.log(err))  
     }
 
     render() {

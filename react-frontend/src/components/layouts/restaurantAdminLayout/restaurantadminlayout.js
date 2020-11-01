@@ -98,7 +98,7 @@ class RaLayout extends React.Component
     
       render() {
         return (
-            <div>
+            <div style={{backgroundColor: 'white'}}>
                 <Header> 
                 <h2 style={{color: 'white'}}>Open Restaurant</h2>
                 {/* <img src= { logo } height = "45" width = "45"></img> */}
@@ -111,10 +111,9 @@ class RaLayout extends React.Component
                     <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
-                        
                         <Menu.Item key="1" icon={<UserOutlined />}><Link className="link" to="/userprofile">
                             User Profile</Link>
-                                </Menu.Item>
+                        </Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Restaurant Team">
                             {/* <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item> */}
                             <SubMenu key="sub3" title="Manage Waiter" icon={<UserOutlined />}>

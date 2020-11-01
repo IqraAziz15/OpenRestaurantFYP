@@ -30,7 +30,7 @@ class ViewDeals extends React.Component
         console.log(this.state.user)
         this.id = setTimeout(() => this.setState({ loading: false }), 2000)
         this.getrest();
-        
+        console.log(this.state.rest)
       }
 
       getrest = async() =>

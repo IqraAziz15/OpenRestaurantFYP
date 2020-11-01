@@ -23,6 +23,10 @@ var restaurant_adminSchema = new Schema({
     password:{
         type:String
     },    
+    image: {
+        data: Buffer,
+        contentType: String
+    },
     register_date: {
         type: Date,
         default: Date.now

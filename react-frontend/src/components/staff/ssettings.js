@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Image, Container, Row, Col, Figure, FigureImage, FigureCaption } from 'react-bootstrap';
 import { Avatar } from 'antd';
+import {Spin} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import 'material-design-icons/iconfont/material-icons.css';
 import { connect } from 'react-redux';
@@ -11,7 +12,8 @@ class SSettings extends React.Component {
 
     state = {
         user: this.props.user,
-        rest:''
+        rest:'',
+        loading: true
     };
 
     static propTypes = {
@@ -125,6 +127,7 @@ class SSettings extends React.Component {
           } 
 
     componentDidMount = async () => {
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
         const pointerToThis = this;
         await fetch("http://localhost:4000/staff/viewprofile/" + this.state.user.id + "", {
             method: 'GET',
@@ -146,9 +149,23 @@ class SSettings extends React.Component {
             .then(data => pointerToThis.setState({ rest: data }));
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.id)
+    }
+
     render() {
         return (
             <div>
+                {this.state.loading ? (
+                    <center>
+                    <Spin
+                        className="spinner"
+                        tip="Loading...Please Wait"
+                        size="large"
+                    />
+                    </center>
+                ) :
+                <div>
                 {this.state.user ?                  
                     <div style={{ padding: '1.5em'}}>
                         <div href="#" class="list-group-item list-group-item-action">
@@ -221,13 +238,9 @@ class SSettings extends React.Component {
                             </div> 
                         </div>
                     </div>
-
-                    
-
                     : ''}
-
-
-
+                </div>
+            }
             </div>
         );
     }

@@ -1,7 +1,6 @@
 var config = require('config');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-var auth = require('../../../middleware/auth');
 var Staff = require('../../models/staff')
 const JWT_SECRET = config.get('jwtSecret');
 
@@ -108,13 +107,19 @@ exports.staffRegister = (async (req, res) => {
  * @access  Private
  */
 
-exports.staffProfile = (auth, async (req, res) => {
+exports.staffProfile = async (req, res) => {
     try{
       Staff.findById(req.user.id)
         .select('-password')
-        .then(user => res.json(user));
+        .then(user => res.json({
+          id: user._id,
+          name: user.name,
+          username : user.username,
+          email: user.email,
+          phonenumber: user.phonenumber
+        }));
     }
     catch (e) {
         res.status(400).json({ error: e.message });
       }
-});
+};

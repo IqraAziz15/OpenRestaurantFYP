@@ -4,12 +4,12 @@ import Orderhistory from './vieworder';
 
 function ViewOrder() {
 
-    const { random } = useParams();
-    console.log(random);
+    const { orderId } = useParams();
+    console.log(orderId);
 
     return (
         <div>
-            <Orderhistory random={random} />
+            <Orderhistory orderId={orderId}/>
         </div>
     );
 }

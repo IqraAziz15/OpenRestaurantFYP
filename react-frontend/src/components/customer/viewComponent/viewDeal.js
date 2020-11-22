@@ -1,48 +1,30 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "./viewItem.css";
-import axios from 'axios';
 import { message, Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip } from "antd";
 import Image from "react-bootstrap/Image";
 import RatingComponent from "../reviewRatingComponents/ratingComponent";
 import ReviewComponent from "../reviewRatingComponents/reviewComponent";
 // import ItemCounter from "../cartComponents/itemCounter";
+import axios from 'axios';
 import ItemCounter from '../../layouts/customerLayout/counter'
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
-class ViewItem extends Component {
+class ViewDeals extends Component {
   state = {
-    itemId: this.props.id,
-    item: "",
+    dealId: this.props.id,
+    deal: "",
     loading: false,
     addCart: true,
     customerId: '5fa7fe33910c3a1810eccbc9'
   };
 
-  addToCart = async() => {
-    this.setState({addCart: false});
-    var body =
-    {
-      cid: this.state.customerId,
-      iid: this.state.itemId
-    }
-    var header= {
-      'Content-Type': 'application/json'
-    }
-    var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
-    )
-    if (res.status == 200) message.success('Added to cart')
-    else  message.error('Try Again')
-    this.setState({addCart: true});
-    
-};
-
-  componentDidMount= async() => {
+  componentDidMount() {
     
     var pointerToThis = this;
-    await fetch(
-      `http://localhost:4000/restaurantadmin/item/viewitem/${this.state.itemId}`,
+    fetch(
+      `http://localhost:4000/restaurantadmin/deal/viewdeal/${this.state.dealId}`,
       {
         method: "GET",
         headers: {
@@ -51,8 +33,27 @@ class ViewItem extends Component {
       }
     )
       .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ item: data }));
+      .then((data) => pointerToThis.setState({ deal: data }));
   }
+
+
+addToCart = async() => {
+  this.setState({addCart: false});
+  var body =
+  {
+    cid: this.state.customerId,
+    iid: this.state.dealId
+  }
+  var header= {
+    'Content-Type': 'application/json'
+  }
+  var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
+  )
+  if (res.status == 200) message.success('Added to cart')
+  else  message.error('Try Again')
+  this.setState({addCart: true});
+  
+};
 
   render() {
     const gridStyle = {
@@ -91,21 +92,21 @@ class ViewItem extends Component {
                   className="image"
                   width={250}
                   height={220}
-                  src={`http://localhost:4000/restaurantadmin/item/image/${this.state.itemId}`}
+                  src={`http://localhost:4000/restaurantadmin/deal/image/${this.state.dealId}`}
                   roundedCircle
                 />
               </Card.Grid>
               <Card.Grid hoverable={false} style={gridStyle2}>
                 <Card className="grid-card">
                   <p>
-                    <span className="item-name">{this.state.item.name}</span>
+                    <span className="item-name">{this.state.deal.name}</span>
                     <br/>
-                    {this.state.item.description}<hr/>
-                    <span className='price'>Rs. {this.state.item.price}</span><hr/>
+                    {this.state.deal.description}<hr/>
+                    <span className="price">Rs. {this.state.deal.total_bill}</span><hr/>
                   </p>
                   <RatingComponent
                     ratings={3.9}
-                    count={this.state.item.rating_count}
+                    count={this.state.deal.rating_count}
                     type="inner"
                   />
                 </Card>
@@ -152,4 +153,4 @@ class ViewItem extends Component {
   }
 }
 
-export default ViewItem;
+export default ViewDeals;

@@ -15,7 +15,8 @@ import CallViewOrder from '../../customer/cartComponents/callViewOrder';
 import Successmsg from '../../customer/cartComponents/successmsg';
 import OrderHistory from '../../customer/cartComponents/vieworder';
 import "../../customer/customer.css";
-import { message, Card, Col, Row, Divider, Input } from "antd";
+import { message, Card, Col, Row, Divider, Input, Badge} from "antd";
+import {ShoppingCartOutlined} from '@ant-design/icons';
 import Slider from "react-slick";
 import { Spin } from "antd";
 import Home from './home';
@@ -24,6 +25,7 @@ import P2Layout from "../../customer/viewComponent/viewRestaurant";
 import Cart from '../../customer/cartComponents/cartCard';
 import ViewRest from "../../customer/viewComponent/callViewRest";
 import CallViewItem from "../../customer/viewComponent/callViewItem";
+import CallViewDeals from "../../customer/viewComponent/callViewDeals";
 import Mobile from './mobileNav';
 import Tablet from './tabletNav';
 import { Link, Redirect, BrowserRouter as Router, Switch, Route, useParams, useRouteMatch } from "react-router-dom";
@@ -32,11 +34,25 @@ const { Search } = Input;
 
 class CLayout extends React.Component {
     state = { 
-        screenWidth: null 
+        screenWidth: null,
+        customerId : "5fa7fe33910c3a1810eccbc9",
+        user : '', 
         };
-        
+    
+    getCustomer = async() => {
+        const pointerToThis= this;
+        await fetch(`http://localhost:4000/userprofile/customer/getcustomer/${this.state.customerId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        })
+        .then((response) => response.json())
+        .then((data) => pointerToThis.setState({ user: data, loading: false }));
+    }
     
     componentDidMount() {
+        this.getCustomer();
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         window.addEventListener("resize", this.updateWindowDimensions());
     }
@@ -69,9 +85,16 @@ class CLayout extends React.Component {
                             </NavDropdown>
                             <Nav.Link href="" style={{paddingRight:'5em'}}>Sign Up/Sign In</Nav.Link>
                         </Nav>
-                        <Form inline>
+                        {/* <Form inline>
                             <i class="material-icons" style={{paddingRight:'2.5em'}}> <Link className="link" to="/cart" >shopping_cart</Link></i>
-                        </Form>
+                        </Form> */}
+                         <Nav key="cart" style={{ paddingBottom: 3 }}>
+                            <Badge count={this.state.user && this.state.user.cart.length}>
+                                <a href="/cart" style={{ marginRight: -22 , color:'#667777'}}>
+                                <ShoppingCartOutlined type="shopping-cart" style={{ fontSize: 25, marginBottom: 3 }} />
+                                </a>
+                            </Badge>
+                        </Nav>
                     </Navbar>
                     <br/>
                     <Search
@@ -92,8 +115,9 @@ class CLayout extends React.Component {
                   <Route path='/order/checkout' component={Checkout}/>
                   <Route path='/restaurantview/:id' component={ViewRest}/>
                   <Route path='/view/:id' component={CallViewItem}/>
-                  <Route path='/pending/order/:random' component={CallViewOrder}/>
-                  <Route path='/place/order/' component={Successmsg}/>
+                  <Route path='/viewdeal/:id' component={CallViewDeals}/>
+                  <Route path='/pending/order/:orderId' component={CallViewOrder}/>
+                  <Route path='/place/order/:orderId' component={Successmsg}/>
                 </Switch>
                 </Container>
                 </Router>

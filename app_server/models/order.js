@@ -1,40 +1,40 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var orderSchema = new Schema({
-    name: {
+    orderid:{
         type: String,
+        required:true
+    },
+    // name: {
+    //     type: String,
+    //     required: true
+    // },
+    giftcoupon: {
+        type: String,
+    },
+    customer_id: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Customer',
         required: true
     },
-    items: [
-        {
-            item: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Item'
-            },
-            quantity: {
-                type: Number,
-                required: true
-            },
-        }
-    ],
-    deals: [
-        {
-            deal: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Deal'
-            },
-            quantity: {
-                type: Number,
-                required: true
-            },
-        }
-    ], 
+    ordered_food : {
+        type: Array,
+        required: true
+    },
     total_bill: {
         type: Number,
         required: true
     },
     comments: {
         type: String,
+    },
+    ordertime: {
+        type: Date,
+        default: Date.now
+    },
+    status:{
+        type:String,
+        default: "Pending"
     },
     payment_method: {
         type: String,

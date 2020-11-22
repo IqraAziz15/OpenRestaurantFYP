@@ -26,6 +26,23 @@ class P2Layout extends React.Component {
       .then((data) => pointerToThis.setState({ rest: data, loading: false }));
   };
 
+  addItemToCart(itemId){
+    const pointerToThis = this;
+    const body = JSON.stringify({ 
+      cid: '5fa039f90cc3292850361335',
+      id: itemId,
+      quantity: 1
+    })
+    fetch("http://localhost:4000/customer/cart/additemtocart/", {
+      method: "POST",
+      body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+  }
+
   render() {
     return (
       <div style={{ padding: "1.5em 1.5em" }}>
@@ -58,7 +75,7 @@ class P2Layout extends React.Component {
                     {this.state.rest.location}
                   </p>
                   <p class="mb-1" style={{ display: "block" }}>
-                    Texas Chicken is a leading international fast food brand that
+                    It is a leading international fast food brand that
                     specializes in the crispy fried chicken and is well known
                     for its zinger burgers.
                   </p>
@@ -67,7 +84,12 @@ class P2Layout extends React.Component {
             </div>
             <br />
             <h2>MENU</h2>
+            <hr/>
+            {this.state.rest.menu ? 
             <div class="list-group">
+              
+              <h4>ITEMS MENU</h4>
+              <div>
               {this.state.rest.menu.submenus.map((submenu) => (
                 <div>
                   <a href="#" class="list-group-item list-group-item-action">
@@ -81,6 +103,7 @@ class P2Layout extends React.Component {
                           style={{ alignContent: "space-between" }}
                           class="d-flex w-55 "
                         >
+                        <a style={{ cursor:"pointer" }} href={`/view/${item._id}`} key={item._id}>
                           <img
                             src={`http://localhost:4000/restaurantadmin/item/image/${item._id}`}
                             style={{ marginRight: "40px" }}
@@ -104,7 +127,12 @@ class P2Layout extends React.Component {
                             <small key={item.description}>
                               {item.description}
                             </small>
+                            
                           </div>
+                          </a>
+                          <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
+                          <i onClick={()=>this.addItemToCart(item._id)} class="material-icons">shopping_cart</i>
+                        </div>
                         </div>
                         <hr />
                       </div>
@@ -113,7 +141,32 @@ class P2Layout extends React.Component {
                   <br />
                 </div>
               ))}
+              </div>
+
+              <div>
+                <div class="list-group">
+                <h4>DEALS MENU</h4>
+                    {this.state.rest.menu.deals.map(deal =>
+                      <div class="list-group-item list-group-item-action">
+                        <a style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
+                          <div style={{alignContent: 'space-between' }} class="d-flex w-55">
+                          <img src = {`http://localhost:4000/restaurantadmin/deal/image/${deal._id}`} style={{marginRight: '40px' }} width="100" height="100" />
+                          <div>
+                              <h5 class="mb-1" key={deal.name}>{deal.name}</h5>
+                              <p class="mb-1" key={deal.total_bill}>{deal.total_bill}</p>
+                              <small key={deal.description}>{deal.description}</small>
+                          </div>
+                          <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
+                            <a href=''><i onClick={()=>alert('added')} class="material-icons">shopping_cart</i></a>
+                          </div>
+                          </div>
+                        </a>  
+                    </div>
+                )}
+                </div>      
+              </div>
             </div>
+            : ''}
           </div>
         )}
       </div>

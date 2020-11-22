@@ -4,10 +4,18 @@ const cartController = require('../../controllers/customer/cartController');
 
 /////////////////////////////////////////////       POST OPERATIONS        //////////////////////////////////////////////
 
-router.post('/addcart', cartController.addCart);
+// router.post('/addcart', cartController.addCart);
 
-router.post('/additemtocart', cartController.addItemsToCart);
+router.post('/addCart', cartController.addCart);
 
-router.post('/adddealstocart', cartController.addDealsToCart);
+router.post('/getCartItems', cartController.getCartItems);
+
+router.post('/removeFromCart', cartController.removeFromCart);
+
+// router.post('/additemtocart', cartController.addItemsToCart);
+
+// router.post('/adddealstocart', cartController.addDealsToCart);
+
+// router.post('/getcartbyid/', cartController.getCartById);
 
 module.exports = router;

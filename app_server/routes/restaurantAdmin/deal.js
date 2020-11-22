@@ -8,7 +8,7 @@ router.post('/adddeal', dealController.addDeal);
 
 /////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
 
-router.get('/viewdeal:dealId', dealController.viewDeal);
+router.get('/viewdeal/:dealId', dealController.viewDeal);
 
 router.get("/image/:dealId", dealController.dealPhoto);
 

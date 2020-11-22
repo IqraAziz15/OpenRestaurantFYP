@@ -17,6 +17,7 @@ var staffRouter = require('./app_server/routes/staff/staff');
 var staffRestaurantRouter = require('./app_server/routes/staff/restaurant');
 var staffOrderRouter = require('./app_server/routes/staff/order');
 var staffSettingRouter = require('./app_server/routes/staff/setting');
+var userCustomerRouter = require('./app_server/routes/userprofile/customer');
 var userWaiterRouter = require('./app_server/routes/userprofile/waiter');
 var userStaffRouter = require('./app_server/routes/userprofile/staff');
 var userSuperAdminRouter = require('./app_server/routes/userprofile/superadmin');
@@ -33,6 +34,9 @@ var superAdminRestaurantRouter = require('./app_server/routes/superadmin/restaur
 var superAdminRestaurantAdminRouter = require('./app_server/routes/superadmin/restaurantAdmin');
 var customerItemRouter = require('./app_server/routes/customer/item')
 var customerRestaurantRouter = require('./app_server/routes/customer/restaurant')
+var customerCartRouter = require('./app_server/routes/customer/cart')
+var customerCheckoutRouter = require('./app_server/routes/customer/checkout')
+var customerOrderRouter = require('./app_server/routes/customer/order')
 
 var app = express();
 
@@ -70,6 +74,7 @@ app.use('/staff', staffRouter);
 app.use('/staff/restaurant', staffRestaurantRouter);
 app.use('/staff/order', staffOrderRouter);
 app.use('/staff/setting', staffSettingRouter);
+app.use('/userprofile/customer', userCustomerRouter);
 app.use('/userprofile/waiter', userWaiterRouter);
 app.use('/userprofile/staff', userStaffRouter);
 app.use('/userprofile/restaurantAdmin', userrestaurantAdminRouter);
@@ -86,6 +91,9 @@ app.use('/superadmin/restaurant', superAdminRestaurantRouter);
 app.use('/superadmin/restaurantadmin', superAdminRestaurantAdminRouter);
 app.use('/customer/item', customerItemRouter);
 app.use('/customer/restaurant', customerRestaurantRouter);
+app.use('/customer/cart', customerCartRouter);
+app.use('/customer/checkout', customerCheckoutRouter);
+app.use('/customer/order', customerOrderRouter);
 
 
 // catch 404 and forward to error handler

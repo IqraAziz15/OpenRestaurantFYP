@@ -68,6 +68,7 @@ class CLayout extends React.Component {
           <div className="rest-card-div">
             <Divider className="divider" orientation="left" />
             {this.state.rests.map((rest) => (
+              <a style={{ cursor:"pointer" }} href={`/restaurantview/${rest._id}`} key={rest._id}>
               <Card.Grid hoverable={false} style={gridStyle}>
                 <a
                   style={{ cursor: "pointer" }}
@@ -75,13 +76,16 @@ class CLayout extends React.Component {
                 >
                   <RestaurantCard
                     name={rest.name}
+                    location={rest.location}
                     ratings={rest.average_ratings}
                     count={rest.rating_count}
                   />
                 </a>
               </Card.Grid>
+              </a>
             ))}
             {this.state.rests.map((rest) => (
+              <a style={{ cursor:"pointer" }} href={`/restaurantview/${rest._id}`} key={rest._id}>
               <Card.Grid hoverable={false} style={gridStyle}>
                 <a
                   style={{ cursor: "pointer" }}
@@ -89,11 +93,13 @@ class CLayout extends React.Component {
                 >
                   <RestaurantCard
                     name={rest.name}
+                    location={rest.location}
                     ratings={rest.average_ratings}
                     count={rest.rating_count}
                   />
                 </a>
               </Card.Grid>
+              </a>
             ))}
           </div>
         )}

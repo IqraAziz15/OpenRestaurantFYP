@@ -210,6 +210,7 @@ class Home extends React.Component {
             >
               <Slider {...settings1}>
                 {this.state.deals.map((deal) => (
+                <a style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
                   <a style={{ cursor:"pointer" }} >
                     <DealCard style={{ cursor:"pointer" }}
                       name={deal.name}
@@ -220,6 +221,7 @@ class Home extends React.Component {
                       img_url={deal._id}
                     />
                   </a>
+                </a>
                 ))}
               </Slider>
             </Card>

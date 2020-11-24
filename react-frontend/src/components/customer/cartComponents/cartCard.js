@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "../viewComponent/viewItem.css";
-import { Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip, message } from "antd";
+import { Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip, message, InputNumber } from "antd";
 import Image from "react-bootstrap/Image";
 import '../customer.css';
 import axios from 'axios';
@@ -25,7 +25,13 @@ class Cart extends Component {
     itemid: this.props.id,
     user:'',
     showTotal: false,
+    quantity: 0,
   };
+
+  onChange = (value) => {
+    this.setState({ quantity:value })
+  }
+
 
   getCustomer = async() => {
     const pointerToThis= this;
@@ -227,7 +233,8 @@ removeFromCartNew = async (productId) => {
                 <Card className="button-card">
                 <Space directon='Horizontal' size='large'>
                 <span>Quantity : </span>
-                <ItemCounter default={item.quantity} min={1} max={20} onChange={this.onChange.bind(this)} />
+                {/* <ItemCounter default={item.quantity} min={1} max={20} onChange={this.onChange.bind(this)} /> */}
+                <InputNumber min={1} max={10} defaultValue={item.quantity} onChange={this.onChange} />
                 </Space>
                 </Card><hr/>
                 <Card className="grid-card card1">

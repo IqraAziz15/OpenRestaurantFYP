@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "./viewItem.css";
-import { message, Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip } from "antd";
+import { message, Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip, InputNumber } from "antd";
 import Image from "react-bootstrap/Image";
 import RatingComponent from "../reviewRatingComponents/ratingComponent";
 import ReviewComponent from "../reviewRatingComponents/reviewComponent";
@@ -17,8 +17,13 @@ class ViewDeals extends Component {
     deal: "",
     loading: false,
     addCart: true,
-    customerId: '5fa7fe33910c3a1810eccbc9'
+    customerId: '5fa7fe33910c3a1810eccbc9',
+    quantity:0
   };
+
+  onChange = (value) => {
+    this.setState({ quantity:value })
+  }
 
   componentDidMount() {
     
@@ -42,7 +47,8 @@ addToCart = async() => {
   var body =
   {
     cid: this.state.customerId,
-    iid: this.state.dealId
+    iid: this.state.dealId,
+    quantity: this.state.quantity
   }
   var header= {
     'Content-Type': 'application/json'
@@ -123,7 +129,8 @@ addToCart = async() => {
                 <hr/>
                 <Card className="button-card">
                 <Space directon='Horizontal' size='large'>
-                <ItemCounter default={1} min={1} max={10}/>
+                <InputNumber min={1} max={10} defaultValue={1} onChange={this.onChange} />
+                {/* <ItemCounter default={1} min={1} max={10}/> */}
                 <Button className='button' loading={!this.state.addCart} id='add-cart-button' color={'#855b36'} onClick={()=>this.addToCart()}>Add to Cart</Button>
                 </Space>
                 </Card>

@@ -14,25 +14,27 @@
 //     }
 // }
 
-import React from 'react';
-import { InputNumber } from 'antd';
-import 'antd/dist/antd.css';
+// import React from 'react';
+// import { InputNumber } from 'antd';
+// import 'antd/dist/antd.css';
 
 
 
-export default class Counter extends React.Component
-{
-    onChange(value)
-    {
-        this.props.onChange(value )
-    }
-    render()
-    {
-        return(
-            <div>
-                <InputNumber name="quantity" max={this.props.max} min={this.props.min} defaultValue={this.props.default} onChange={this.onChange.bind(this)} />
-            </div>
-        )
-    }
-}
+// export default class Counter extends React.Component
+// {
+//     onChange(value)
+//     {
+//         this.props.onChange(value)
+//     }
+//     render()
+//     {
+//         return(
+//             <div>
+//                 <InputNumber name="quantity" max={this.props.max} min={this.props.min} defaultValue={this.props.default} onChange={this.onChange.bind(this)} />
+//             </div>
+//         )
+//     }
+// }
+
+
 

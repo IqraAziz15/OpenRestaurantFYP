@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import { Link, Redirect, BrowserRouter as Router, Switch, NavLink, Route, useRouteMatch } from "react-router-dom";
 //     import { withRouter } from "react-router";
 // import {useParams } from 'react-router';
+import axios from "axios";
+import { message } from "antd";
 import img from '../../../assets/icons/rest.png';
 class P2Layout extends React.Component {
   state = {
@@ -10,6 +12,8 @@ class P2Layout extends React.Component {
     rest_id: this.props.id,
     rest: "",
     loading: true,
+    addCart: true,
+    customerId: '5fa7fe33910c3a1810eccbc9',
   };
     
   componentDidMount = () => {
@@ -26,22 +30,25 @@ class P2Layout extends React.Component {
       .then((data) => pointerToThis.setState({ rest: data, loading: false }));
   };
 
-  addItemToCart(itemId){
-    const pointerToThis = this;
-    const body = JSON.stringify({ 
-      cid: '5fa039f90cc3292850361335',
-      id: itemId,
+  addToCart = async(itemId) => {
+    this.setState({addCart: false});
+    var body =
+    {
+      cid: this.state.customerId,
+      iid: itemId,
       quantity: 1
-    })
-    fetch("http://localhost:4000/customer/cart/additemtocart/", {
-      method: "POST",
-      body,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-  }
+    }
+    var header= {
+      'Content-Type': 'application/json'
+    }
+    var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
+    )
+    if (res.status == 200) message.success('Added to cart')
+    else  message.error('Try Again')
+    this.setState({addCart: true});
+    
+};
+
 
   render() {
     return (
@@ -131,7 +138,7 @@ class P2Layout extends React.Component {
                           </div>
                           </a>
                           <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
-                          <i onClick={()=>this.addItemToCart(item._id)} class="material-icons">shopping_cart</i>
+                          <i loading={!this.state.addCart} onClick={()=>this.addToCart(item._id)} class="material-icons">add_shopping_cart</i>
                         </div>
                         </div>
                         <hr />
@@ -148,19 +155,21 @@ class P2Layout extends React.Component {
                 <h4>DEALS MENU</h4>
                     {this.state.rest.menu.deals.map(deal =>
                       <div class="list-group-item list-group-item-action">
-                        <a style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
+                       
                           <div style={{alignContent: 'space-between' }} class="d-flex w-55">
+                          <a style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
                           <img src = {`http://localhost:4000/restaurantadmin/deal/image/${deal._id}`} style={{marginRight: '40px' }} width="100" height="100" />
                           <div>
                               <h5 class="mb-1" key={deal.name}>{deal.name}</h5>
                               <p class="mb-1" key={deal.total_bill}>{deal.total_bill}</p>
                               <small key={deal.description}>{deal.description}</small>
                           </div>
+                          </a> 
                           <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
-                            <a href=''><i onClick={()=>alert('added')} class="material-icons">shopping_cart</i></a>
+                            <i loading={!this.state.addCart} onClick={()=>this.addToCart(deal._id)} class="material-icons" >add_shopping_cart</i>
                           </div>
                           </div>
-                        </a>  
+                         
                     </div>
                 )}
                 </div>      

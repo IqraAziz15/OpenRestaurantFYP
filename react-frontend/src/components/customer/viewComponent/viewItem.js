@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "./viewItem.css";
 import axios from 'axios';
-import { message, Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip } from "antd";
+import { message, Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip, InputNumber} from "antd";
 import Image from "react-bootstrap/Image";
 import RatingComponent from "../reviewRatingComponents/ratingComponent";
 import ReviewComponent from "../reviewRatingComponents/reviewComponent";
@@ -15,17 +15,23 @@ class ViewItem extends Component {
   state = {
     itemId: this.props.id,
     item: "",
-    loading: false,
+    loading: true,
     addCart: true,
-    customerId: '5fa7fe33910c3a1810eccbc9'
+    customerId: '5fa7fe33910c3a1810eccbc9',
+    quantity:0
   };
+
+  onChange = (value) => {
+    this.setState({ quantity:value })
+  }
 
   addToCart = async() => {
     this.setState({addCart: false});
     var body =
     {
       cid: this.state.customerId,
-      iid: this.state.itemId
+      iid: this.state.itemId,
+      quantity: this.state.quantity
     }
     var header= {
       'Content-Type': 'application/json'
@@ -51,7 +57,7 @@ class ViewItem extends Component {
       }
     )
       .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ item: data }));
+      .then((data) => pointerToThis.setState({ item: data, loading:false }));
   }
 
   render() {
@@ -94,6 +100,7 @@ class ViewItem extends Component {
                   src={`http://localhost:4000/restaurantadmin/item/image/${this.state.itemId}`}
                   roundedCircle
                 />
+                
               </Card.Grid>
               <Card.Grid hoverable={false} style={gridStyle2}>
                 <Card className="grid-card">
@@ -122,7 +129,8 @@ class ViewItem extends Component {
                 <hr/>
                 <Card className="button-card">
                 <Space directon='Horizontal' size='large'>
-                <ItemCounter default={1} min={1} max={10}/>
+                {/* <ItemCounter default={1} min={1} max={10}/> */}
+                <InputNumber min={1} max={10} defaultValue={1} onChange={this.onChange} />
                 <Button className='button' loading={!this.state.addCart} id='add-cart-button' color={'#855b36'} onClick={()=>this.addToCart()}>Add to Cart</Button>
                 </Space>
                 </Card>

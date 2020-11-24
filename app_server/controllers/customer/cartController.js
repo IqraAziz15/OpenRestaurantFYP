@@ -135,7 +135,7 @@ exports.addCart = function(req, res) {
         if (duplicate) {
             Customer.findOneAndUpdate(
                 { _id: req.body.cid, "cart.id": req.body.iid },
-                { $inc: { "cart.$.quantity": 1 } },
+                { $inc: { "cart.$.quantity": req.body.quantity } },
                 { new: false },
                 (err, userInfo) => {
                     if (err) return res.json({ success: false, err });
@@ -149,7 +149,7 @@ exports.addCart = function(req, res) {
                     $push: {
                         cart: {
                             id: req.body.iid,
-                            quantity: 1,
+                            quantity: req.body.quantity,
                             // date: Date.now()
                         }
                     }

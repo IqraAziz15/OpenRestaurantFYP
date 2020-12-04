@@ -3,7 +3,8 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    Redirect
   } from "react-router-dom";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -27,7 +28,8 @@ class MainPageLayout extends React.Component{
                     {/* <Link className="link" to="/signin" ></Link> */}
                     <div className="App-intro">
                         <Switch>
-                            <Route path="/signin" component={signin}/>
+                            {/* <Route path="/signin" component={signin}/> */}
+                            <Redirect to='/staff/signin' />
                         </Switch>
                     </div>
                 </Router>

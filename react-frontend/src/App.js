@@ -15,6 +15,11 @@ import Orderhistory from './components/customer/cartComponents/vieworder';
 // import MainPageLayout from './components/layouts/userProfileLayout/superadmin';
 // import MainPageLayout from './components/layouts/userProfileLayout/waiter';
 // import MainPageLayout from './components/layouts/userProfileLayout/staff';
+import SProfile from './components/staff/sprofile';
+import SSettings from './components/staff/ssettings';
+import Allorders from './components/staff/sallorders';
+import signin from './components/userProfile/staff/signin';
+
 import MainPageLayout from './components/layouts/mainLayout/mainlayout';
 import { Provider } from 'react-redux';
 import store from './flux/store/store_restaurant_admin';
@@ -26,9 +31,11 @@ import { loadUser } from './flux/actions/restaurantAdmin/authActions';
 // import { loadUser } from './flux/actions/superAdmin/authActions';
 // import { loadUser } from './flux/actions/staff/authActions';
 // import { loadUser } from './flux/actions/waiter/authActions';
+import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Signupra from './components/layouts/superAdminLayout/restaurantadmin';
 import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
-// import AppNavbar from './components/layouts/userProfileLayout/waiter';
+import AppNavbar3 from './components/layouts/userProfileLayout/staff';
+
 // import RestaurantAdmin from './components/restaurant_admin';
 // import AddItem from './components/additems';
 // import AddItem from './components/extra';
@@ -41,17 +48,32 @@ import  RegisterModal  from './components/userProfile/restaurantAdmin/signup';
 //   Redirect
 // } from 'react-router-dom';
 // import { Router } from 'express';
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe("pk_test_51HEBkBAA6YnKro0mXZpOZTmOQOMYTdMlZnvkfVxa9GvKq7vybBYkuKyWib3dIVpJ9IKYPk9l4TSnkHpnAS7Cm9L300TDmPH2NG");
+
+
 
 class App extends React.Component{
   
-  // componentDidMount() {
-  //   store.dispatch(loadUser());
-  // }
+  componentDidMount() {
+    store.dispatch(loadUser());
+  }
   render() {
   return (
     <div className="App" >
       {/* <P2Layout/> */}
-      <CLayout/>
+      <Elements stripe={stripePromise}>
+          <Provider store={store}>
+            <CLayout />
+          </Provider>
+        </Elements>
       {/* <RaLayout/> */}
       {/* <CartLayout/> */}
       {/* <NavbarLayout/> */}
@@ -71,17 +93,52 @@ class App extends React.Component{
         <Route path="/additem" component={additem} />
         <Redirect to="/additem" />
       </Switch>
+
+      
       
     </Router> */}
 
       {/* <div>
         <Additem/>
       </div> */}
-
-      {/* <Provider store={store}>
+     {/* <Router>
+      <a className="link" href="/customer">
+       Customer
+      </a>
+      <a className="link" href="/mlayout">
+        Main Layout
+      </a>
+      <Switch>
+        <Route path="/customer" component = {CLayout}>
+        </Route>        
+        <Provider store={store} >
         <div>
-        <MainPageLayout/>
+        {/* <MainPageLayout/>
+         */}
+         {/* <Route path="/mlayout" component = {MainPageLayout}>
+        </Route>
+        
         </div>
+      </Provider>            
+      </Switch>
+
+      
+      </Router>  */} 
+
+      {/* <Provider store={store} > */}
+        {/* <div>
+        <MainPageLayout/>
+        </div> */}
+        {/* <Router>
+    <Switch>
+    <Route path="/staff/signin" component={signin}/>
+      <Route path="/staff" component={AppNavbar3}>
+      </Route>
+      
+      <Route path="/" component = {MainPageLayout}>
+      </Route>
+    </Switch>
+    </Router>
       </Provider> */}
       
     </div>

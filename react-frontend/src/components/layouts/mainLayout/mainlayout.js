@@ -6,17 +6,12 @@ import AppNavbar from "../userProfileLayout/waiter";
 import AppNavbar1 from "../userProfileLayout/superadmin";
 import AppNavbar2 from "../userProfileLayout/restaurantadmin";
 import AppNavbar3 from "../userProfileLayout/staff";
-/*  import loginimage from "../../src/assets/images/loginimage.png";  */ 
 
-
+/*  import loginimage from "../../src/assets/images/loginimage.png";  */
+import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import { Layout, Menu,Button} from 'antd';
+import { Redirect } from 'react-router';
 
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
@@ -63,7 +58,8 @@ render(){
         return <AppNavbar2/>
     }
     else if(this.state.visible3){
-        return <AppNavbar3/>
+        // return <AppNavbar3/>
+        return (<Router><Redirect push to = {'/staff'}/></Router>);
     }
     return(
  
@@ -108,6 +104,7 @@ render(){
  
     
   </Row>
+  
 </div>
 </div>
 

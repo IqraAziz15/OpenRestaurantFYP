@@ -14,21 +14,22 @@ const { TabPane } = Tabs;
 class ViewDeals extends Component {
   state = {
     dealId: this.props.id,
+    rest: '',
     deal: "",
     loading: false,
     addCart: true,
     customerId: '5fa7fe33910c3a1810eccbc9',
-    quantity:0
+    quantity:1
   };
 
   onChange = (value) => {
     this.setState({ quantity:value })
   }
 
-  componentDidMount() {
+  componentDidMount= async() => {
     
     var pointerToThis = this;
-    fetch(
+    await fetch(
       `http://localhost:4000/restaurantadmin/deal/viewdeal/${this.state.dealId}`,
       {
         method: "GET",
@@ -39,6 +40,18 @@ class ViewDeals extends Component {
     )
       .then((response) => response.json())
       .then((data) => pointerToThis.setState({ deal: data }));
+      // console.log(deal)
+      
+      var body = JSON.stringify({ id: this.state.deal.rest_id });
+    await fetch("http://localhost:4000/restaurantadmin/restaurant/getrestaurant/", {
+        method: "POST",
+        body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => pointerToThis.setState({ rest: data, loading: false }));
   }
 
 
@@ -48,7 +61,8 @@ addToCart = async() => {
   {
     cid: this.state.customerId,
     iid: this.state.dealId,
-    quantity: this.state.quantity
+    quantity: this.state.quantity,
+    rid: this.state.rest._id
   }
   var header= {
     'Content-Type': 'application/json'
@@ -119,7 +133,7 @@ addToCart = async() => {
               </Card.Grid>
               <Card.Grid hoverable={false} style={gridStyle}>
                 <Card className="grid-card card1">
-                  <p>Texas Chicken</p>
+                <p>{this.state.rest.name}</p>
                   <RatingComponent
                     ratings={4.1}
                     count={32}
@@ -129,7 +143,7 @@ addToCart = async() => {
                 <hr/>
                 <Card className="button-card">
                 <Space directon='Horizontal' size='large'>
-                <InputNumber min={1} max={10} defaultValue={1} onChange={this.onChange} />
+                <InputNumber min={1} max={20} defaultValue={1} onChange={this.onChange} />
                 {/* <ItemCounter default={1} min={1} max={10}/> */}
                 <Button className='button' loading={!this.state.addCart} id='add-cart-button' color={'#855b36'} onClick={()=>this.addToCart()}>Add to Cart</Button>
                 </Space>

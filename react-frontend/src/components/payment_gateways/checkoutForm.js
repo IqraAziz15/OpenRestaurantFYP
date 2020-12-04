@@ -3,15 +3,15 @@ import {CardElement, Elements, useStripe, useElements} from '@stripe/react-strip
 // import React, {useState} from 'react';
 import {loadStripe} from '@stripe/stripe-js';
 // import "antd/dist/antd.css";
+import { Redirect } from 'react-router';
 import { Form, Input, Button, Checkbox, Alert } from "antd";
-import "../superAdmin/loginSuperAdmin.css";
 import "./checkoutForm.css";
 const CARD_OPTIONS = {
   iconStyle: 'solid',
   style: {
     base: {
-      iconColor: '#111d2c',
-      color: '#111d2c',
+      iconColor: '#bb8c63',
+      color: ' #000',
       fontWeight: 500,
       fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
       fontSize: '16px',
@@ -24,8 +24,8 @@ const CARD_OPTIONS = {
       },
     },
     invalid: {
-      iconColor: '#ffc7ee',
-      color: '#ffc7ee',
+      iconColor: '#800000',
+      color: '#800000',
     },
   },
 };
@@ -38,7 +38,7 @@ const CardField = ({onChange}) => (
 
 const SubmitButton = ({processing, error, children, disabled, onClick}) => (
   <button
-    className={`SubmitButton ${error ? 'SubmitButton--error' : ''}`}
+    className={`pay-button SubmitButton ${error ? 'SubmitButton--error' : ''}`}
     type="primary submit" ghost
     disabled={processing || disabled}
     onClick={onClick}
@@ -58,7 +58,7 @@ const ResetButton = ({onClick}) => (
     Reset
   </button>
 );
-const CheckoutForm = () => {
+const CheckoutForm = (props) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
@@ -113,13 +113,14 @@ const CheckoutForm = () => {
 
   return paymentMethod ? (
     <div className="Result">
-      <div className="ResultTitle" role="alert">
+      {/* <div className="ResultTitle" role="alert">
         Payment successful
       </div>
       <div className="ResultMessage">
         Order Payment Done
       </div>
-      <ResetButton onClick={reset} />
+      <ResetButton onClick={reset} /> */}
+      <Redirect push to={`/place/order/${props.orderId}`} />;
     </div>
   ) : (
     <Form className="Form" onSubmit={handleSubmit}>
@@ -148,7 +149,7 @@ const CheckoutForm = () => {
             className="FormRowInput"
             id="name"
             type="text"
-            placeholder="enter name"
+            placeholder="Enter Name"
             required
             value={AmountDetails.name}
             onChange={(e) => { setAmount({...AmountDetails, name: e.target.value})}}
@@ -165,7 +166,7 @@ const CheckoutForm = () => {
         />
       </fieldset>
       <br></br>
-      {error && <ErrorMessage>{error.message}</ErrorMessage>}
+      {error && <ErrorMessage>{error.message}<br/></ErrorMessage>}
       <SubmitButton processing={processing} error={error} disabled={!stripe} onClick={handleSubmit}>
         Pay
       </SubmitButton>

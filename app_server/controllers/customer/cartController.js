@@ -122,36 +122,87 @@ exports.addCart = function(req, res) {
             return err;
         }
         let duplicate = false;
-        console.log(req.body.cid +'.............................'+ req.body.iid)
+        let restExist = false;
         console.log(userInfo)
         if( userInfo.cart.length > 0){
-            userInfo.cart.forEach((item) => {
-                if (item.id == req.body.iid) {
-                    duplicate = true;
-                }
+            userInfo.cart.forEach((rest) => {
+                if( rest.id == (req.body.rid)){
+                    restExist= true;
+                    rest.rest.forEach((item) => {
+                        if (item.id == req.body.iid) {
+                            duplicate = true;
+                            console.log(rest)
+                        }
+                    })
+            }
             })
         }
- 
+        
         if (duplicate) {
-            Customer.findOneAndUpdate(
-                { _id: req.body.cid, "cart.id": req.body.iid },
-                { $inc: { "cart.$.quantity": req.body.quantity } },
-                { new: false },
+            Customer.findOne(
+                { _id: req.body.cid, "cart.id": req.body.rid})
+                .exec(function(error, results) {
+                            if (error) {
+                                return next(error);
+                            }
+                    var cart = results.cart;
+                    if( cart.length > 0){
+                        cart.forEach((rest) => {
+                            if( rest.id == (req.body.rid)){
+                                rest.rest.forEach((item) => {
+                                    if (item.id == req.body.iid) {
+                                        item.quantity = item.quantity + req.body.quantity
+                                    }
+                                })
+                        }
+                        })
+                    }
+            Customer.findByIdAndUpdate({_id: req.body.cid},{cart: cart},
+            { new: true, upsert: false },
                 (err, userInfo) => {
                     if (err) return res.json({ success: false, err });
                     res.status(200).json(userInfo.cart)
                 }
-            )
-        } else {
+                            
+            );
+            
+        })
+    }
+        else if (!restExist) { 
             Customer.findOneAndUpdate(
                 { _id: req.body.cid },
                 {
                     $push: {
                         cart: {
-                            id: req.body.iid,
-                            quantity: req.body.quantity,
+                            id: req.body.rid,
+                            
+                                rest:[{
+                                        id: req.body.iid,
+                                        quantity: req.body.quantity,
+                                    }]
+                                
+                                                   
                             // date: Date.now()
                         }
+                    }
+                },
+                { new: true },
+                (err, userInfo) => {
+                    if (err) return res.json({ success: false, err });
+                    res.status(200).json(userInfo.cart)
+                }
+            )
+        }
+        else {
+            Customer.findOneAndUpdate(
+                { _id: req.body.cid, "cart.id": req.body.rid},
+                {
+                    $push: {
+                        "cart.$.rest": {
+                                id: req.body.iid,
+                                quantity: req.body.quantity,
+                        }                          
+                            // date: Date.now()
                     }
                 },
                 { new: true },
@@ -178,10 +229,7 @@ exports.getCartItems = async(req, res) => {
             return item
         }) 
     }
-
     console.log("productIds", productIds)
-    var i = false;
-    var d = false;
     var resp = null;
     //we need to find the product information that belong to product Id 
     await Item.find({ '_id': { $in: productIds } }).select('-image')
@@ -190,41 +238,25 @@ exports.getCartItems = async(req, res) => {
                 resp = err;
             }
             else if (product){
-                // if (resp) {
-                //     for(var i; i<product; i++)
-                //         resp.push(product[i])
-                // }
-                // else resp = product
                 resp = product
             }
-            console.log('pro'+ product)
-            console.log('respin'+ resp)
-            i = true;
-        });
-    await Deal.find({ '_id': { $in: productIds } }).select('-image')
-        .exec((err, product) => {
-            if (err) {
-                resp = err;
-            }
-            else if (product)
-            {
-                if(product){
-                    if (resp) {
-                        // for(var i; i<product; i++)
-                        //     resp.push(product[i])
-                        resp = resp.concat(product)
-                    }
-                    else resp = product
+            Deal.find({ '_id': { $in: productIds } }).select('-image')
+            .exec((err, product) => {
+                if (err) {
+                    resp = err;
                 }
-            }
-            console.log('pro'+ product)
-            console.log('respin'+ resp)
-            d = true;
-            // while (!i && !d){
-
-            // }
-            return res.status(200).json(resp)
-            
+                else if (product)
+                {
+                    if(product){
+                        if (resp) {
+                            resp = resp.concat(product)
+                        }
+                        else resp = product
+                    }
+                }
+                return res.status(200).json(resp)
+                
+            });
         });
 
 };
@@ -233,79 +265,34 @@ exports.removeFromCart = async(req, res) => {
     let array; let cart; 
     // let x=true;
     await Customer.findOneAndUpdate(
-        { _id: req.body.cid },
-        {
-            "$pull":
-                { "cart": { "id": req.body.itemid } }
-        },
+        { _id: req.body.cid, "cart.id": req.body.rid},
+                {
+                    $pull: {
+                        "cart.$.rest": {
+                            id: req.body.iid,
+                        }                          
+                            // date: Date.now()
+                    }
+                },
         { new: true },
         (err, userInfo) => {
-            cart = userInfo.cart;
-            array = cart.map(item => {
-                return item.id
+            if(userInfo){
+                cart = userInfo.cart;
+                array = cart.map(item => {
+                    return item.id
+                })
+                return res.status(200).json({
+                    cart
+                })
+            }
+            console.log('userInfo '+userInfo)
+            return res.status(400).json({
+                err : 'no item to delete found'
             })
-            return res.status(200).json({
-                cart
-          })
         }
         
     )
     console.log(array)
-
-    // while (x){
-
-    // }
-            // Item.find({ '_id': { $in: array } })
-            //     .exec((err, cartDetail) => {
-            //         return res.status(200).json({
-            //             cartDetail,
-            //             cart
-            //         })
-            //     })
-    
-    // var i = false;
-    // var d = false;
-    // var resp = null;
-    // //we need to find the product information that belong to product Id 
-    // await Item.find({ '_id': { $in: array } }).select('-image')
-    //     .exec((err, product) => {
-    //         if (err) {
-    //             resp = err;
-    //         }
-    //         else if (product.length > 0){
-    //             if (resp) {
-    //                 resp = resp.concat(product)
-    //             }
-    //             else resp = product
-    //         }
-    //         console.log('pro'+ product)
-    //         console.log('respin'+ resp)
-    //         i = true;
-    //     });
-    // await Deal.find({ '_id': { $in: array } }).select('-image')
-    //     .exec((err, product) => {
-    //         if (err) {
-    //             resp = err;
-    //         }
-    //         else if (product.length > 0)
-    //         {
-    //             if (resp) {
-    //                 resp = resp.concat(product)
-    //             }
-    //             else resp = product
-    //         }
-    //         console.log('pro'+ product)
-    //         console.log('respin'+ resp)
-    //         d = true;
-    //         // while (!i && !d){
-
-    //         // }
-    //         return res.status(200).json({
-    //               cartDetail : resp,
-    //               cart
-    //       })
-    //     });
-    
 }
 
 

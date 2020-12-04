@@ -1,31 +1,49 @@
 Form {
-    margin: 8em;
+    margin: 10em;
 }
-Input {
-    margin: 5em;
+.Form Input {
+    margin-right: 10em;
     display: inline;
-    color: #111d2c;
+    color: var(--color3);
+}
+.ErrorMessage {
+    margin-left: 10em;
+    margin-bottom: 5em;
 }
 fieldset {
-    margin-left: 5em;
-    margin-right: 5em;
+    padding-left: 5em;
+   padding-right: 5em;
     margin-bottom: 2em;
 }
-button {
-    border: 1px solid var(--color10);
-    background-color: var(--color10);
+.pay-button {
+    border: none;
+    background-color: var(--color2);
     padding-left: 2em;
     padding-right: 2em;
+    margin-left: 5em;
     border-radius: 3px;
     color: white;
 }
 .form-containter {
-    border: 1px solid var(--color10);
     height: 40em;
     margin-top: 2.5em;
     padding-top: 5em;
+    padding-left: 10em;
+    padding-right: 10em;
 }
 label {
-    color: #111d2c;
+    color: var(--color3);
     font-weight: 600;
+}
+/* 
+.payment-heading {
+} */
+.payment-heading h3 {
+    text-align: center;
+    color: var(--color3);
+    text-decoration: none;
+}
+.checkout-form-container {
+    margin: 6em;
+    margin-top: 2em;
 }

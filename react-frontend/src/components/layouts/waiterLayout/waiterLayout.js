@@ -32,6 +32,7 @@ import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 // import './restaurantadminlayout.css';
 import WProfile from '../../waiter/wprofile';
 import WSettings from '../../waiter/wsettings';
+import Allorders from '../../waiter/wallorders';
 import './waiterLayout.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -106,8 +107,7 @@ class WaiterLayout extends React.Component
                                 
                                 </Menu.Item>
                                 <Menu.Item key="4" icon={<ContainerOutlined />}>
-                                Order History
-                               
+                                <Link className="link" to="/waiterallorders"> Order History</Link>
                                 </Menu.Item>
                         </SubMenu>
             
@@ -129,6 +129,8 @@ class WaiterLayout extends React.Component
                           <Route path="/waiterprofile" render={(props) => ( <WProfile {...props} user={this.state.user} />)}>
                           </Route>
                           <Route path="/waitersettings" render={(props) => ( <WSettings {...props} user={this.state.user} />)}>
+                          </Route>
+                          <Route path="/waiterallorders" render={() => ( <Allorders />)}>
                           </Route>
                         </Switch>
                         

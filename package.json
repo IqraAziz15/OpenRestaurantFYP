@@ -34,10 +34,13 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.0.1",
+    "pusher": "^4.0.1",
     "react-images-upload": "^1.2.8",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "socket.io": "^3.0.3",
+    "socket.io-client": "^3.0.3",
     "thunk": "0.0.1"
   },
   "devDependencies": {

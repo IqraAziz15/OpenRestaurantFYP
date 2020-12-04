@@ -123,7 +123,10 @@ exports.restaurantAdminLogin = (async (req, res) => {
           token,
           user: {
           id: user._id,
-          email: user.email
+          email: user.email,
+          name:user.name,
+          username: user.username,
+          phonenumber: user.phonenumber
         }
       });
     } catch (e) {

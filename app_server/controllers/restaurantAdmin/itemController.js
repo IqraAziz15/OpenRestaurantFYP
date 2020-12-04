@@ -56,6 +56,19 @@ exports.getAllItems = (function(req, res){
     .catch(err=>console.log(err));
 });
 
+exports.getAllItemsForRestaurant = (function(req, res){
+    var item =Item.find({rest_id: req.body.rid})
+    .select("-image")
+    .then((item)=>{
+        console.log("item");
+        console.log(item);
+        res.status(200).json(
+            item 
+        ); 
+    })
+    .catch(err=>console.log(err));
+});
+
 exports.itemPhoto = (req, res, next) => {
     if(req.profile.image.data){
         res.set(("Content-Type" , req.profile.image.contentType));

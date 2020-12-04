@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var http = require('http');
 var cors = require('cors');
 var config = require('config');
 var indexRouter = require('./app_server/routes/index');
@@ -37,17 +38,22 @@ var customerRestaurantRouter = require('./app_server/routes/customer/restaurant'
 var customerCartRouter = require('./app_server/routes/customer/cart')
 var customerCheckoutRouter = require('./app_server/routes/customer/checkout')
 var customerOrderRouter = require('./app_server/routes/customer/order')
+var transactionRouter = require('./app_server/routes/payment/transactionRoute')
 
 var app = express();
+
 
 //DB config
 const dB = config.get('mongoURI');
 
-const connection = mongoose.connect(dB, { useNewUrlParser: true, useUnifiedTopology: true });
+ mongoose.connect(dB, { useNewUrlParser: true, useUnifiedTopology: true });
+ const connection = mongoose.connection;
 var app = express();
 connection.then((db) => {
     console.log("Connected correctly to server");
+
 }, (err) => { console.log(err); });
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
@@ -94,6 +100,7 @@ app.use('/customer/restaurant', customerRestaurantRouter);
 app.use('/customer/cart', customerCartRouter);
 app.use('/customer/checkout', customerCheckoutRouter);
 app.use('/customer/order', customerOrderRouter);
+app.use('/api/transactions', transactionRouter);
 
 
 // catch 404 and forward to error handler

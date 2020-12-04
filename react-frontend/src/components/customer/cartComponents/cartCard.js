@@ -10,27 +10,32 @@ import RatingComponent from "../reviewRatingComponents/ratingComponent";
 import ReviewComponent from "../reviewRatingComponents/reviewComponent";
 // import ItemCounter from "../cartComponents/itemCounter";
 import ItemCounter from '../../layouts/customerLayout/counter'
+import { number } from "prop-types";
+import { Redirect } from "react-router-dom";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
 class Cart extends Component {
+
   state = {
     // itemId: '5f96df9e379eb6263093e39d',
     itemsDetails: [],
     item:"",
     quantity: 1,
-    loading: false,
+    loading: true,
     Total: 0,
     customerId: '5fa7fe33910c3a1810eccbc9',
     itemid: this.props.id,
     user:'',
+    cart_length: 0,
     showTotal: false,
-    quantity: 0,
+    redirect: false
+    
   };
 
-  onChange = (value) => {
-    this.setState({ quantity:value })
-  }
+  // onChange = (value) => {
+  //   this.setState({ quantity:value })
+  // }
 
 
   getCustomer = async() => {
@@ -46,6 +51,17 @@ class Cart extends Component {
     this.cartDisplay();
 
   }
+  
+  setCartLength = () => {
+    var count = 0;
+      if(this.state.user.cart.length > 0 ){
+      this.state.user.cart.forEach((rest) => {
+        count = count + rest.rest.length;
+      });
+      this.setState({ cart_length: count, redirect: true });
+    }
+  };
+
 
   componentDidMount() {
     this.getCustomer();
@@ -65,20 +81,26 @@ class Cart extends Component {
   }
 
   cartDisplay = async() => {
+    await this.setCartLength();
     var pointerToThis = this;
     let cartItems = [];
+    let userCart = [];
     // message.info('we are inside')
-        if (this.state.user && this.state.user.cart.length) {
+        if (this.state.user && this.state.cart_length) {
           // message.success('wooohooo')
           // console.log('a')
-            if (this.state.user.cart.length > 0) {
+            if (this.state.cart_length > 0) {
               // console.log('b')
-              this.state.user.cart.forEach(item => {
+              this.state.user.cart.forEach(rest => {
                 // console.log('c')
-                    cartItems.push(item.id)
+                  rest.rest.forEach(item => {
+                    cartItems.push(item.id);
+                    userCart.push({id: item.id, quantity:item.quantity})
+                  })
+                    
                 });
                 // console.log('d')
-                  await this.getCartItems(cartItems, this.state.user.cart)
+                  await this.getCartItems(cartItems, userCart)
                   // console.log('e')
                     if(this.state.itemsDetails)  {
                       // console.log('f')
@@ -139,11 +161,12 @@ class Cart extends Component {
 }
 
 
-removeFromCartNew = async (productId) => {
+removeFromCartNew = async (restId,productId) => {
   // var response = await this.removeCartItem(productId)
   const body2 = { 
     cid : this.state.customerId,
-    itemid : productId 
+    rid : restId,
+    iid : productId 
   }
   const request = await axios.post(`http://localhost:4000/customer/cart/removeFromCart`, body2)
       .then(response => {
@@ -156,10 +179,34 @@ removeFromCartNew = async (productId) => {
       });
 }
 
-  
-  onChange(value) {
-        // this.setState({Total: value});
+addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
+  console.log(quantity_new)
+  if(quantity_new){
+    var body =
+    {
+      cid: this.state.customerId,
+      iid: item_id,
+      quantity: quantity_new - quantity_old,
+      rid: rest_id
     }
+    var header= {
+      'Content-Type': 'application/json'
+    }
+    var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
+    )
+    if (res.status == 200) {
+      message.success('Added to cart')
+      this.getCustomer();
+    }
+    else  message.error('Try Again')
+    // this.setState({addCart: true});
+  }
+};
+  
+  // onChange = (e,i) => {
+  //   this.state.itemsDetails[i].quantity_new = e.target.value;
+        
+  //   }
 
   render() {
     const gridStyle = {
@@ -188,24 +235,29 @@ removeFromCartNew = async (productId) => {
         borderWidth: 0,
         
       };
-    return (
+      // if (!this.state.loading && this.state.user.cart.length < 1) return (<div><h1>Cart is Empty</h1><h3>Add food in the cart first</h3></div>)
+    if(this.state.cart_length == 0 && this.state.redirect)
+    {
+      return (<Redirect push to={'/emptycart'} />);
+    }
+      return (
       <div>
-        {this.state.loading ? (
-          <center>
+      { this.state.loading ? 
+         <center>
             <Spin
               className="spinner"
               tip="Loading...Please Wait"
               size="large"
             />
           </center>
-        ) : (
+      :
+      <div>
+      {/* {  this.state.cart_length > 0 ?   */}
           <div style={{ padding:'8em', paddingTop: '0.8em'}}>
               
               <h2 style={{padding: '0.8em'}} >FOOD CART</h2>
               {this.state.itemsDetails.map(item =>
             <Card className="view-card" style={{ height: "280px", marginBottom: '2em' }}>
-            
-            
               <Card.Grid hoverable={false} style={gridStyle1}>
                 <Image
                   className="image"
@@ -234,7 +286,7 @@ removeFromCartNew = async (productId) => {
                 <Space directon='Horizontal' size='large'>
                 <span>Quantity : </span>
                 {/* <ItemCounter default={item.quantity} min={1} max={20} onChange={this.onChange.bind(this)} /> */}
-                <InputNumber min={1} max={10} defaultValue={item.quantity} onChange={this.onChange} />
+                <InputNumber min={1} max={20}  defaultValue={item.quantity}  onChange={(value) => {item.quantity_new=value; item.update = true;}} />
                 </Space>
                 </Card><hr/>
                 <Card className="grid-card card1">
@@ -246,8 +298,16 @@ removeFromCartNew = async (productId) => {
                 </Card>
                 <hr/>
                 <span className='button-span'>
-            <Button className='button'  color={'#855b36'} onClick={()=>this.removeFromCartNew(item._id)}>Remove</Button>
+                  <Space direction={'horizontal'}>
+                {/* { item.update ?
+            <Button className='button'  color={'#855b36'} onClick={() => this.addToCart(item.rest_id, item._id, item.quantity_new, item.quantity)}>Update</Button> :
+            <Button className='button' disabled color={'#855b36'} onClick={() => this.addToCart(item.rest_id, item._id, item.quantity_new, item.quantity)}>Update</Button>
+            } */}
+            <Button className='button'  color={'#855b36'} onClick={() => this.addToCart(item.rest_id, item._id, item.quantity_new, item.quantity)}>Update</Button>
+          
+            <Button className='button'  color={'#855b36'} onClick={()=>this.removeFromCartNew(item.rest_id,item._id)}>Remove</Button>
             {/* onClick={()=>this.removeFromCartNew(item._id)} */}
+            </Space>
             </span>
 
               </Card.Grid>
@@ -286,7 +346,13 @@ removeFromCartNew = async (productId) => {
             <Button className='button' ghost style={{margin:'2em', color: '#855b36'}} color={'#fff'} >Continue Shopping</Button></a>
             </span>
           </div>
-        )}
+      {/* //  :
+      //  <div>
+      //     <Redirect push to={'/emptycart'}/>
+      //     </div>   
+      // } */}
+      </div>
+      }
       </div>
     );
   }

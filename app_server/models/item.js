@@ -38,7 +38,10 @@ var itemSchema = new Schema({
             ref: 'Review'
         }
     ],
-
+    rest_id:{
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Item', itemSchema)

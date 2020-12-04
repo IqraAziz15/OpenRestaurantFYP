@@ -19,12 +19,13 @@ class StripeCheckout extends React.Component{
         const { user } = this.props.auth;
   return (
       <div className="App-intro form-containter">
-      <h1>Checkout Form</h1>
-      <br></br>
+      <h3 className='payment-heading'><center>Checkout Form</center></h3>
+      <br/><br/>
+      <div className="checkout-form-container">
     <Elements stripe={stripePromise}>
-      <CheckoutForm>
+      <CheckoutForm orderId={this.props.orderId}>
       </CheckoutForm>
-    </Elements></div>
+    </Elements></div></div>
   );
 };
 }

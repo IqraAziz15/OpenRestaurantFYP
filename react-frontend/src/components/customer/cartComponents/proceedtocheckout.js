@@ -32,95 +32,114 @@ export default class Proceedtocheckout extends React.Component
         });
       };
       getCustomer = async() => {
-        const pointerToThis= this;
-        await fetch(`http://localhost:4000/userprofile/customer/getcustomer/${this.state.customerId}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        })
-        .then((response) => response.json())
-        .then((data) => pointerToThis.setState({ user: data, loading: false }));
-        this.cartDisplay();
-    
-      }
-      componentDidMount() {
+    const pointerToThis= this;
+    await fetch(`http://localhost:4000/userprofile/customer/getcustomer/${this.state.customerId}`, {
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    })
+    .then((response) => response.json())
+    .then((data) => pointerToThis.setState({ user: data, loading: false }));
+    this.cartDisplay();
+
+  }
+  
+  setCartLength = () => {
+    var count = 0;
+      if(this.state.user.cart.length > 0 ){
+      this.state.user.cart.forEach((rest) => {
+        count = count + rest.rest.length;
+      });
+      this.setState({ cart_length: count });
+    }
+  };
+
+
+    componentDidMount() {
         this.getCustomer();
        
       }
 
-      cartDisplay = async() => {
-        var pointerToThis = this;
-        let cartItems = [];
-        // message.info('we are inside')
-            if (this.state.user && this.state.user.cart.length) {
-              // message.success('wooohooo')
-              // console.log('a')
-                if (this.state.user.cart.length > 0) {
-                  // console.log('b')
-                  this.state.user.cart.forEach(item => {
-                    // console.log('c')
-                        cartItems.push(item.id)
-                    });
-                    // console.log('d')
-                      await this.getCartItems(cartItems, this.state.user.cart)
-                      // console.log('e')
-                        if(this.state.itemsDetails)  {
-                          // console.log('f')
-                          console.log(this.state.itemsDetails)
-                            if (this.state.itemsDetails.length > 0) {
-                              // console.log('g')
-                                pointerToThis.calculateTotal(this.state.itemsDetails)
-                                // console.log('h')
-                            }
-                        } 
-                }
-            }
-            // message.success('wooooohoooooo, we are out')
-      }
-    
-      getCartItems = async (cartItems, userCart) => {
-        const pointerToThis = this;
-        const body1 = { 
-            type : 'array',
-            id : cartItems
-        }
-        const request = await axios.post(`http://localhost:4000/customer/cart/getCartItems`, body1)
-            .then(response => {
-                console.log(response.data)
-                console.log(response)
-    
-                //Make CartDetail inside Redux Store 
-                // We need to add quantity data to Product Information that come from Product Collection. 
-    
-                userCart.forEach(cartItem => {
-                    response.data.forEach((productDetail, i) => {
-                        if (cartItem.id === productDetail._id) {
-                            response.data[i].quantity = cartItem.quantity;
+    cartDisplay = async() => {
+    await this.setCartLength();
+    var pointerToThis = this;
+    let cartItems = [];
+    let userCart = [];
+    // message.info('we are inside')
+        if (this.state.user && this.state.cart_length) {
+          // message.success('wooohooo')
+          // console.log('a')
+            if (this.state.cart_length > 0) {
+              // console.log('b')
+              this.state.user.cart.forEach(rest => {
+                // console.log('c')
+                  rest.rest.forEach(item => {
+                    cartItems.push(item.id);
+                    userCart.push({id: item.id, quantity:item.quantity})
+                  })
+                    
+                });
+                // console.log('d')
+                  await this.getCartItems(cartItems, userCart)
+                  // console.log('e')
+                    if(this.state.itemsDetails)  {
+                      // console.log('f')
+                      console.log(this.state.itemsDetails)
+                        if (this.state.itemsDetails.length > 0) {
+                          // console.log('g')
+                            pointerToThis.calculateTotal(this.state.itemsDetails)
+                            // console.log('h')
                         }
-                    })
+                    } 
+            }
+        }
+        // message.success('wooooohoooooo, we are out')
+  }
+  getCartItems = async (cartItems, userCart) => {
+    const pointerToThis = this;
+    const body1 = { 
+        type : 'array',
+        id : cartItems
+    }
+    const request = await axios.post(`http://localhost:4000/customer/cart/getCartItems`, body1)
+        .then(response => {
+            console.log(response.data)
+            console.log(response)
+
+            //Make CartDetail inside Redux Store 
+            // We need to add quantity data to Product Information that come from Product Collection. 
+
+            userCart.forEach(cartItem => {
+                response.data.forEach((productDetail, i) => {
+                    if (cartItem.id === productDetail._id) {
+                        response.data[i].quantity = cartItem.quantity;
+                    }
                 })
-                console.log(response.data)
-                pointerToThis.setState({itemsDetails: response.data});
-                return response.data;
-            });
-            console.log(request)
-        return request;
-    
-       
-    }
-    
-      calculateTotal = (cartDetail) => {
-        let total = 0;
-        console.log(cartDetail)
-        cartDetail.map(item => {
-          var itemprice = item.price ? item.price : item.total_bill
-            total += parseInt(itemprice, 10) * item.quantity
-            console.log('totalllll '+ total)
+            })
+            console.log(response.data)
+            pointerToThis.setState({itemsDetails: response.data});
+            return response.data;
         });
-        this.setState({Total: total})
-        this.setState({showTotal: true})
-    }
+        console.log(request)
+    return request;
+
+   
+}
+
+  calculateTotal = (cartDetail) => {
+    let total = 0;
+    console.log(cartDetail)
+    cartDetail.map(item => {
+      var itemprice = item.price ? item.price : item.total_bill
+        total += parseInt(itemprice, 10) * item.quantity
+        console.log('totalllll '+ total)
+    });
+
+    this.setState({Total: total})
+    this.setState({showTotal: true})
+}
+
 
     placeOrder = () =>{
       var pointerToThis = this;
@@ -176,7 +195,10 @@ export default class Proceedtocheckout extends React.Component
             justifyContent: "center",
             borderWidth: 0,
           };
-          if (this.state.redirect) {
+          if (this.state.redirect && this.state.value==1) {
+            return <Redirect push to={`/order/payment/${this.state.orderId}`} />;
+          }
+          else if (this.state.redirect  && this.state.value==2) {
             return <Redirect push to={`/place/order/${this.state.orderId}`} />;
           }
         return(
@@ -261,7 +283,7 @@ export default class Proceedtocheckout extends React.Component
                     name="giftcard"
                 />
                 <br/><br/>
-                {/* <h6>Payment</h6>
+                <h6>Payment</h6>
                 <Radio.Group onChange={this.onChange} value={this.state.value}>
                     <Radio style={radioStyle} value={1}>
                         Credit Card
@@ -269,7 +291,7 @@ export default class Proceedtocheckout extends React.Component
                     <Radio style={radioStyle} value={2}>
                         Cash on Delivery(COD)
                     </Radio>
-                </Radio.Group> */}
+                </Radio.Group>
                 <br/><br/>
                 <span className='button-span'>
                 {/* <a href={`/place/order/`}> */}

@@ -18,6 +18,7 @@ class Additem extends React.Component {
         user: this.props.user,
         name: '',
         price: '',
+        rest_id: '',
         decription: '',
         image: null,
         counter: 0,
@@ -49,7 +50,7 @@ class Additem extends React.Component {
             }
         })
             .then(response => response.json())
-            .then(data => pointerToThis.setState({ rest: data }));
+            .then(data => pointerToThis.setState({ rest: data, rest_id: data._id }));
     }
 
     componentWillUnmount() {
@@ -124,9 +125,9 @@ class Additem extends React.Component {
         e.preventDefault();
         // if (this.state.category === 'other') this.addSubmenu();
         var pointerToThis = this;
-        let { name, price, description, menu_id, image, subname } = this.state;
+        let { name, price, description, rest_id, menu_id, image, subname } = this.state;
         var data = {
-            name, price, description
+            name, price, description, rest_id
         }
         await axios.post(API, data, {
             headers: {

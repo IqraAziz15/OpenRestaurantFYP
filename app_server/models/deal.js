@@ -33,6 +33,10 @@ var dealSchema = new Schema({
             ref: 'Review'
         }
     ],
+    rest_id:{
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Deal', dealSchema)

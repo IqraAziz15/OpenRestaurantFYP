@@ -33,10 +33,14 @@ import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import SProfile from '../../staff/sprofile';
 import SSettings from '../../staff/ssettings';
 import Allorders from '../../staff/sallorders';
+import ReadyOrders from '../../staff/sreadyorders';
+import PendingOrders from '../../staff/spendingorders';
+import CompleteOrders from '../../staff/scompleteorders';
 import './staffLayout.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Logout from '../../userProfile/staff/logout';
+import {Spin} from 'antd';
 // import { Button } from 'reactstrap';
 // import logo from '../assets/images/logo.png';
 // import Title from 'antd/lib/skeleton/Title';
@@ -52,6 +56,7 @@ class WaiterLayout extends React.Component
         user: this.props.user,
         rest_id: '',
         rest: '',
+        loading: true
       };
 
 
@@ -74,6 +79,8 @@ class WaiterLayout extends React.Component
       })
         .then(response => response.json())
         .then(data => pointerToThis.setState({ rest: data}));
+        const { user } = this.props.auth;
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
 
 
     //     var body1 = JSON.stringify({id : this.state.rest_id});
@@ -90,16 +97,28 @@ class WaiterLayout extends React.Component
         
     }
 
+    componentWillUnmount() {
+      clearTimeout(this.id)
+    }
+
       onCollapse = collapsed => {
         console.log(collapsed);
-        this.setState({ collapsed });
-
-        
+        this.setState({ collapsed });        
       };
     
       render() {
         return (
             <div>
+                {this.state.loading ? (
+                  <center>
+                    <Spin
+                      className="spinner"
+                      tip="Loading...Please Wait"
+                      size="large"
+                    />
+                  </center>
+                ) :
+              <div>
                 <Header> 
                 <h2 style={{color: 'white'}}>Open Restaurant</h2>
                 {/* <img src= { logo } height = "45" width = "45"></img> */}
@@ -119,21 +138,22 @@ class WaiterLayout extends React.Component
                             {/* <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item> */}
                            
                                 <Menu.Item key="2" icon={<FileAddOutlined />}>
-                                Current Orders
-                                
+                                <Link className="link" to="/staff/staffpendingorders">Pending Orders</Link>
                                 </Menu.Item>
                                 <Menu.Item key="3" icon={<ContainerOutlined />}>
-                                Prepared Orders
-                                
+                                <Link className="link" to="/staff/staffreadyorders">Ready Orders</Link>
                                 </Menu.Item>
                                 <Menu.Item key="4" icon={<ContainerOutlined />}>
-                                <Link className="link" to="/staff/staffallorders">Completed Orders</Link>
+                                <Link className="link" to="/staff/staffcompleteorders">Complete Orders</Link>
+                                </Menu.Item>
+                                <Menu.Item key="5" icon={<ContainerOutlined />}>
+                                <Link className="link" to="/staff/staffallorders">All Orders</Link>
                                 </Menu.Item>
                         </SubMenu>
             
-                        <Menu.Item key="5" icon={<SettingOutlined />}><Link className="link" to="/staff/staffsettings">
+                        <Menu.Item key="6" icon={<SettingOutlined />}><Link className="link" to="/staff/staffsettings">
                             Settings</Link></Menu.Item>
-                        <Menu.Item key="6" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
+                        <Menu.Item key="7" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
                         
                         
                         
@@ -150,7 +170,13 @@ class WaiterLayout extends React.Component
                           </Route>
                           <Route path="/staff/staffsettings" render={(props) => ( <SSettings {...props} user={this.state.user} />)}>
                           </Route>
-                          <Route path="/staff/staffallorders" component = {Allorders}>
+                          <Route path="/staff/staffallorders" render={(props) => ( <Allorders {...props} user={this.state.user} />)}>
+                          </Route>
+                          <Route path="/staff/staffreadyorders" render={(props) => ( <ReadyOrders {...props} user={this.state.user} />)}>
+                          </Route>
+                          <Route path="/staff/staffpendingorders" render={(props) => ( <PendingOrders {...props} user={this.state.user} />)}>
+                          </Route>
+                          <Route path="/staff/staffcompleteorders" render={(props) => ( <CompleteOrders {...props} user={this.state.user} />)}>
                           </Route>
                         </Switch>
                         
@@ -159,6 +185,8 @@ class WaiterLayout extends React.Component
                     </Layout>
                 </Layout>
                 </Router>
+                </div>
+                }
             </div>
         );
       }
@@ -168,4 +196,4 @@ const mapStateToProps = (state) => ({
     auth: state.auth
   });
   
-  export default connect(mapStateToProps, null)(WaiterLayout);
+export default connect(mapStateToProps, null)(WaiterLayout);

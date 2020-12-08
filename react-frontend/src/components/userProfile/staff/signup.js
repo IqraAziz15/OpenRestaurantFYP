@@ -19,7 +19,7 @@ class RegisterModal extends Component {
         email : '',
         phonenumber : '',
         password : '',
-        msg : null
+        msg : null,
     }
 
   static propTypes = {
@@ -45,9 +45,9 @@ class RegisterModal extends Component {
   }
 
   registerStaff = async() => {
-    const {name, username, email, phonenumber, password, restid} = this.state
+    const {name, username, email, phonenumber, password,  restid} = this.state
     var data= {
-      name, username, email, phonenumber, password
+      name, username, email, phonenumber, password, rest_id: this.props.restid
   }
   var sid=''
     await axios
@@ -62,7 +62,7 @@ class RegisterModal extends Component {
         }) 
         .catch(err=>console.log(err)) 
 
-        const body1 = { restid, sid};
+        const body1 = { restid: this.props.restid, sid};
         console.log(body1)
         await axios
           .post('http://localhost:4000/restaurantadmin/restaurant/addstafftorestaurant', body1, data, {
@@ -70,8 +70,10 @@ class RegisterModal extends Component {
                 "content-type": "application/json"
               }
         }).then(res=>{
-            console.log(res); 
-        }) 
+            console.log(res);
+            alert('Staff Added to Restaurant Successfully')
+            document.getElementById("form").reset(); 
+        })
         .catch(err=>console.log(err)) 
   }
 
@@ -90,10 +92,11 @@ class RegisterModal extends Component {
 
   render(){
     return (
+      
       <div style={{textAlign: 'start'}}>
           {this.state.msg ? <Alert color="success">{ this.state.msg }</Alert> : null}
                 <center><h2>Add New Staff Memeber</h2></center>
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSubmit} id="form">
                     <div class = "form-group">
                         <label for="name">Name</label>
                         <input class="form-control" type="text" ref="name" name="name" placeholder="Enter name of staff" onChange={this.onChange} id="name"/>
@@ -133,6 +136,6 @@ const mapStateToProps = state => ({
   error: state.error
 });
 
-export default connect(mapStateToProps, { register, clearErrors }
+export default connect(mapStateToProps, {  clearErrors }
 )(RegisterModal);
 

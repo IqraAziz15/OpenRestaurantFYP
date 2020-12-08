@@ -24,9 +24,10 @@ class AddDeal extends React.Component {
 
     state = {
         // subid:this.props.rest.menu.submenus._id,
-        menu_id:this.props.rest.menu._id,
+       
         rest: this.props.rest,
         user: this.props.user,
+        menu_id:this.props.rest.menu._id,
         name:'',
         total_bill:'',
         decription:'',
@@ -34,7 +35,8 @@ class AddDeal extends React.Component {
         counter: 0,
         fileSize: 0,
         deal_id: '',
-        loading: true
+        loading: true,
+        rest_id: '',
         // category: '',
         // subname:'',
         // isOtherSelected: false
@@ -45,8 +47,7 @@ class AddDeal extends React.Component {
         this.id = setTimeout(() => this.setState({ loading: false }), 2000)
         this.getrest();
         this.setState({ menu_id: this.state.rest.menu._id })
-        console.log(this.props.rest.menu.submenus[0]._id)
-        console.log(this.props.rest)
+        
     }
 
     componentWillUnmount() {
@@ -64,7 +65,7 @@ class AddDeal extends React.Component {
             }
         })
             .then(response => response.json())
-            .then(data => pointerToThis.setState({ rest: data }));
+            .then(data => pointerToThis.setState({ rest: data ,rest_id: data._id }));
     }
 
     onChange = (e) => {
@@ -102,9 +103,9 @@ class AddDeal extends React.Component {
         this.addMenu();
         e.preventDefault();
         var pointerToThis = this;
-        let { name, total_bill, description, menu_id, image, subname } = this.state;
+        let { name, total_bill, description, rest_id, menu_id, image, subname } = this.state;
         var data = {
-            name, total_bill, description
+            name, total_bill, description, rest_id
         }
         await axios.post(API, data, {
             headers: {

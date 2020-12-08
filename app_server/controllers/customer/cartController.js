@@ -296,4 +296,13 @@ exports.removeFromCart = async(req, res) => {
 }
 
 
+exports.emptyCart = (function(req, res, next) {
+    Customer.findOneAndUpdate({_id:req.body.cid}, {cart: []}).then(function() {
+        Customer.findOne({_id:req.body.cid}).then(function(customer){
+            console.log(customer)
+             res.send(customer);
+         });
+    });
+});
+
 

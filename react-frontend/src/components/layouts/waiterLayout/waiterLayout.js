@@ -33,6 +33,8 @@ import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import WProfile from '../../waiter/wprofile';
 import WSettings from '../../waiter/wsettings';
 import Allorders from '../../waiter/wallorders';
+import ReadyOrders from '../../waiter/wpendingorders';
+import CompleteOrders from '../../waiter/wcompleteorders';
 import './waiterLayout.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -98,17 +100,15 @@ class WaiterLayout extends React.Component
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Order">
                             {/* <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item> */}
                            
-                                <Menu.Item key="2" icon={<FileAddOutlined />}>
-                                Current Order
-                                
+                                <Menu.Item key="2" icon={<FileAddOutlined />}>                                
+                                <Link className="link" to="/waiterreadyorders">Pending Orders</Link>
                                 </Menu.Item>
                                 <Menu.Item key="3" icon={<ContainerOutlined />}>
-                                Pending Order
-                                
+                                <Link className="link" to="/waitercompleteorders">Complete Orders</Link>
                                 </Menu.Item>
-                                <Menu.Item key="4" icon={<ContainerOutlined />}>
+                                {/* <Menu.Item key="4" icon={<ContainerOutlined />}>
                                 <Link className="link" to="/waiterallorders"> Order History</Link>
-                                </Menu.Item>
+                                </Menu.Item> */}
                         </SubMenu>
             
                         <Menu.Item key="5" icon={<SettingOutlined />}><Link className="link" to="/waitersettings">
@@ -130,7 +130,11 @@ class WaiterLayout extends React.Component
                           </Route>
                           <Route path="/waitersettings" render={(props) => ( <WSettings {...props} user={this.state.user} />)}>
                           </Route>
-                          <Route path="/waiterallorders" render={() => ( <Allorders />)}>
+                          {/* <Route path="/waiterallorders" render={() => ( <Allorders />)}>
+                          </Route> */}
+                          <Route path="/waiterreadyorders" render={(props) => ( <ReadyOrders {...props} user={this.state.user} />)}>
+                          </Route>
+                          <Route path="/waitercompleteorders" render={(props) => ( <CompleteOrders {...props} user={this.state.user} />)}>
                           </Route>
                         </Switch>
                         

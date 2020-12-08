@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+<import PropTypes from 'prop-types';
 import {Spin} from 'antd';
 import RegisterModal from '../../userProfile/waiter/signup';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -31,7 +30,9 @@ class AppNavbar extends Component{
     }
 
     componentDidMount() {
+        const { user } = this.props.auth;
         this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        console.log(user)
       }
     
       componentWillUnmount() {
@@ -48,6 +49,7 @@ class AppNavbar extends Component{
                     <div className="App-intro">
                             {/* <Route path="/dashboard" component={RaLayout} user={user}/> */}
                              <RaLayout user={user} />
+
 
                     </div>                
                    

@@ -1,10 +1,10 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import { Link, Redirect, BrowserRouter as Router, Switch, NavLink, Route, useRouteMatch } from "react-router-dom";
-//     import { withRouter } from "react-router";
-// import {useParams } from 'react-router';
 import axios from "axios";
-import { message } from "antd";
+import { message, Card } from "antd";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect, Link } from "react-router-dom";
 import img from '../../../assets/icons/rest.png';
 class P2Layout extends React.Component {
   state = {
@@ -13,9 +13,16 @@ class P2Layout extends React.Component {
     rest: "",
     loading: true,
     addCart: true,
-    customerId: '5fa7fe33910c3a1810eccbc9',
+    user: '',
+    redirect: false,
   };
     
+   static propTypes = {
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
+    // error : PropTypes.object.isRequired
+}
+
   componentDidMount = () => {
     var body = JSON.stringify({ id: this.state.rest_id });
     const pointerToThis = this;
@@ -30,33 +37,64 @@ class P2Layout extends React.Component {
       .then((data) => pointerToThis.setState({ rest: data, loading: false }));
   };
 
+
   addToCart = async(itemId) => {
-    this.setState({addCart: false});
-    var body =
-    {
-      cid: this.state.customerId,
-      iid: itemId,
-      quantity: 1
+    if(this.props.auth.user){
+      this.setState({addCart: false});
+      var body =
+      {
+        cid: this.props.auth.user._id,
+        iid: itemId,
+        quantity: 1,
+        rid: this.state.rest._id
+      }
+      var header= {
+        'Content-Type': 'application/json'
+      }
+      var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
+      )
+      if (res.status == 200){
+        message.success('Added to cart')
+        this.props.auth.user.cart = res.data;
+      } 
+      else  message.error('Try Again')
+      this.setState({addCart: true});
     }
-    var header= {
-      'Content-Type': 'application/json'
-    }
-    var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
-    )
-    if (res.status == 200) message.success('Added to cart')
-    else  message.error('Try Again')
-    this.setState({addCart: true});
+    else await this.setState({redirect: true});
     
 };
 
 
   render() {
+    const {isAuthenticated, user} = this.props.auth;
+    const gridStyle = {
+      width: "20%",
+      textAlign: "left",
+      justifyContent: "center",
+      borderWidth: 0,
+    };
+    const gridStyle2 = {
+      width: "65%",
+      textAlign: "left",
+      justifyContent: "center",
+      borderWidth: 0,
+    };
+    const gridStyle1 = {
+      padding: '2em',
+      width: "10%",
+      textAlign: "center",
+      justifyContent: "center",
+      borderWidth: 0,
+    };
+    if(!isAuthenticated && this.state.redirect) {
+      return (<Redirect push to='/login'/>)
+    }
     return (
       <div style={{ padding: "1.5em 1.5em" }}>
         {this.state.loading ? (
           ""
         ) : (
-          <div>
+          <div style={{paddingTop:"3em", justifyContent:'center'}}>
             <div href="#" class="list-group-item list-group-item-action">
               <div
                 style={{ alignContent: "space-between" }}
@@ -65,8 +103,8 @@ class P2Layout extends React.Component {
                 <img
                   src={img}
                   style={{ margin: "0.75em" }}
-                  width="350"
-                  height="350"
+                  width="250"
+                  height="250"
                   class="rounded-circle"
                 />
                 <div
@@ -74,7 +112,7 @@ class P2Layout extends React.Component {
                   style={{
                     display: "inline",
                     alignContent: "space-between",
-                    marginTop: "7em ",
+                    marginTop: "5em ",
                   }}
                 >
                   <h2 key={this.state.rest.name}>{this.state.rest.name}</h2>
@@ -94,57 +132,51 @@ class P2Layout extends React.Component {
             <hr/>
             {this.state.rest.menu ? 
             <div class="list-group">
-              
-              <h4>ITEMS MENU</h4>
               <div>
               {this.state.rest.menu.submenus.map((submenu) => (
                 <div>
-                  <a href="#" class="list-group-item list-group-item-action">
                     <div>
                       <h4 key={submenu.name}>{submenu.name}</h4>
                       <hr />
                     </div>
                     {submenu.items.map((item) => (
-                      <div>
-                        <div
-                          style={{ alignContent: "space-between" }}
-                          class="d-flex w-55 "
-                        >
-                        <a style={{ cursor:"pointer" }} href={`/view/${item._id}`} key={item._id}>
-                          <img
-                            src={`http://localhost:4000/restaurantadmin/item/image/${item._id}`}
-                            style={{ marginRight: "40px" }}
-                            width="110"
-                            height="110"
-                            class="rounded-circle"
-                          />
-                          <div
-                            class="justify-content-between"
-                            style={{
-                              display: "inline",
-                              alignContent: "space-between",
-                            }}
-                          >
-                            <h5 class="mb-1" key={item.name}>
-                              {item.name}
-                            </h5>
-                            <p class="mb-1" key={item.price}>
-                              Rs. {item.price}
-                            </p>
-                            <small key={item.description}>
-                              {item.description}
-                            </small>
-                            
+                      <div style={{justifyContent:'center' }}>
+                        <Card className="view-card" style={{ height: "12em" }}>
+                        <Card.Grid hoverable={false} style={gridStyle}>
+                            <Link style={{ cursor:"pointer" }} to={`/view/${item._id}`} key={item._id}>
+                            <img
+                              src={`http://localhost:4000/restaurantadmin/item/image/${item._id}`}
+                              style={{ marginRight: "40px" }}
+                              width="110"
+                              height="110"
+                              class="rounded-circle"
+                            />
+                            </Link>
+                          </Card.Grid>
+                          <Card.Grid hoverable={false} style={gridStyle2}>
+                            <Link style={{ cursor:"pointer" }} to={`/view/${item._id}`} key={item._id}>
+                            <div>
+                              <h5 class="mb-1" key={item.name}>
+                                {item.name}
+                              </h5>
+                              <h6 class="mb-1" key={item.price}>
+                                Rs. {item.price}
+                              </h6>
+                              <p key={item.description}>
+                                {item.description}
+                              </p>
+                            </div>
+                            </Link>
+                          </Card.Grid>
+                          <Card.Grid hoverable={false} style={gridStyle1}>
+                          <div style={{justifyContent:'center', padding: '2em'}}>
+                            <i style={{ cursor:"pointer" }} loading={!this.state.addCart} onClick={()=>this.addToCart(item._id)} class="material-icons">add_shopping_cart</i>
                           </div>
-                          </a>
-                          <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
-                          <i loading={!this.state.addCart} onClick={()=>this.addToCart(item._id)} class="material-icons">add_shopping_cart</i>
-                        </div>
-                        </div>
+                          </Card.Grid>
+                          </Card>
                         <hr />
                       </div>
                     ))}
-                  </a>
                   <br />
                 </div>
               ))}
@@ -154,23 +186,32 @@ class P2Layout extends React.Component {
                 <div class="list-group">
                 <h4>DEALS MENU</h4>
                     {this.state.rest.menu.deals.map(deal =>
-                      <div class="list-group-item list-group-item-action">
-                       
-                          <div style={{alignContent: 'space-between' }} class="d-flex w-55">
-                          <a style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
-                          <img src = {`http://localhost:4000/restaurantadmin/deal/image/${deal._id}`} style={{marginRight: '40px' }} width="100" height="100" />
-                          <div>
+                    <div>
+                    <Card className="view-card" style={{ height: "150px", justifyContent:'center' }}>
+                        <Card.Grid hoverable={false} style={gridStyle}>
+                            <Link style={{ cursor:"pointer" }} to={`/viewdeal/${deal._id}`}  key={deal._id}>
+                            <img src = {`http://localhost:4000/restaurantadmin/deal/image/${deal._id}`} 
+                            style={{marginRight: '40px' }} 
+                            width="100" 
+                            height="100" 
+                            />
+                            </Link>
+                          </Card.Grid>
+                          <Card.Grid hoverable={false} style={gridStyle2}>
+                            <Link style={{ cursor:"pointer" }} to={`/viewdeal/${deal._id}`}  key={deal._id}>
+                            <div>
                               <h5 class="mb-1" key={deal.name}>{deal.name}</h5>
                               <p class="mb-1" key={deal.total_bill}>{deal.total_bill}</p>
                               <small key={deal.description}>{deal.description}</small>
                           </div>
-                          </a> 
-                          <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
-                            <i loading={!this.state.addCart} onClick={()=>this.addToCart(deal._id)} class="material-icons" >add_shopping_cart</i>
-                          </div>
-                          </div>
-                         
-                    </div>
+                            </Link>
+                          </Card.Grid>
+                          <Card.Grid hoverable={false} style={gridStyle1}>
+                            <i style={{ cursor:"pointer" }} loading={!this.state.addCart} onClick={()=>this.addToCart(deal._id)} class="material-icons" >add_shopping_cart</i>
+                      </Card.Grid>
+                    </Card>
+                  <hr />
+                  </div>
                 )}
                 </div>      
               </div>
@@ -183,4 +224,8 @@ class P2Layout extends React.Component {
   }
 }
 
-export default (P2Layout);
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, null)(P2Layout);

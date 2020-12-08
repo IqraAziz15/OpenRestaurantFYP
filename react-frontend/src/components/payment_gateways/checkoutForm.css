@@ -1,16 +1,20 @@
-Form {
-    margin: 10em;
+.pay-Form {
+    margin: 5em;
+    margin-top: 2em;
 }
 .Form Input {
     margin-right: 10em;
     display: inline;
     color: var(--color3);
 }
+.FormRowInput:disabled{
+    color:#555;
+}
 .ErrorMessage {
     margin-left: 10em;
     margin-bottom: 5em;
 }
-fieldset {
+.FormGroup {
     padding-left: 5em;
    padding-right: 5em;
     margin-bottom: 2em;
@@ -31,15 +35,17 @@ fieldset {
     padding-left: 10em;
     padding-right: 10em;
 }
-label {
+.label-form {
     color: var(--color3);
     font-weight: 600;
 }
 /* 
 .payment-heading {
 } */
-.payment-heading h3 {
+.payment-heading {
     text-align: center;
+    margin-left: 8.5em;
+    margin-right: 8.5em;
     color: var(--color3);
     text-decoration: none;
 }

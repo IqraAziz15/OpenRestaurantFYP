@@ -7,7 +7,10 @@ import Image from "react-bootstrap/Image";
 import RatingComponent from "../reviewRatingComponents/ratingComponent";
 import ReviewComponent from "../reviewRatingComponents/reviewComponent";
 // import ItemCounter from "../cartComponents/itemCounter";
-import ItemCounter from '../../layouts/customerLayout/counter'
+// import ItemCounter from '../../layouts/customerLayout/counter'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from "react-router-dom";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
@@ -18,31 +21,43 @@ class ViewItem extends Component {
     item: "",
     loading: true,
     addCart: true,
-    customerId: '5fa7fe33910c3a1810eccbc9',
-    quantity:1
+    user: '',
+    quantity:1,
+    redirect: false,
+    isauth: true
   };
-
+  static propTypes = {
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
+    // error : PropTypes.object.isRequired
+}
   onChange = (value) => {
     this.setState({ quantity:value })
   }
 
   addToCart = async() => {
-    this.setState({addCart: false});
-    var body =
-    {
-      cid: this.state.customerId,
-      iid: this.state.itemId,
-      quantity: this.state.quantity,
-      rid: this.state.rest._id
+    if(this.props.auth.user){
+      this.setState({addCart: false});
+      var body =
+      {
+        cid: this.props.auth.user._id,
+        iid: this.state.itemId,
+        quantity: this.state.quantity,
+        rid: this.state.rest._id
+      }
+      var header= {
+        'Content-Type': 'application/json'
+      }
+      var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
+      )
+      if (res.status == 200){
+        message.success('Added to cart')
+        this.props.auth.user.cart = res.data;
+      } 
+      else  message.error('Try Again')
+      this.setState({addCart: true});
     }
-    var header= {
-      'Content-Type': 'application/json'
-    }
-    var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
-    )
-    if (res.status == 200) message.success('Added to cart')
-    else  message.error('Try Again')
-    this.setState({addCart: true});
+    else await this.setState({redirect: true});
     
 };
 
@@ -59,7 +74,7 @@ class ViewItem extends Component {
       }
     )
       .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ item: data, loading:false }));
+      .then((data) => pointerToThis.setState({ item: data, loading: false }));
     var body = JSON.stringify({ id: this.state.item.rest_id });
     await fetch("http://localhost:4000/restaurantadmin/restaurant/getrestaurant/", {
         method: "POST",
@@ -73,6 +88,7 @@ class ViewItem extends Component {
   }
 
   render() {
+    const {isAuthenticated, user} = this.props.auth;
     const gridStyle = {
       width: "45%",
       textAlign: "left",
@@ -91,6 +107,9 @@ class ViewItem extends Component {
       justifyContent: "center",
       borderWidth: 0,
     };
+    if(!isAuthenticated && this.state.redirect) {
+      return (<Redirect push to='/login'/>)
+    }
     return (
       <div>
         {this.state.loading ? (
@@ -102,7 +121,7 @@ class ViewItem extends Component {
             />
           </center>
         ) : (
-          <div style={{ paddingTop:'1.5em'}}>
+          <div style={{ paddingTop:'4em'}} >
             <Card className="view-card" style={{ height: "280px" }}>
               <Card.Grid hoverable={false} style={gridStyle1}>
                 <Image
@@ -172,4 +191,8 @@ class ViewItem extends Component {
   }
 }
 
-export default ViewItem;
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, null) (ViewItem);

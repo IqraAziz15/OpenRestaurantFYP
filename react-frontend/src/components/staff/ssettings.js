@@ -2,18 +2,23 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Image, Container, Row, Col, Figure, FigureImage, FigureCaption } from 'react-bootstrap';
 import { Avatar } from 'antd';
-import {Spin} from 'antd';
+import {Spin,message} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import 'material-design-icons/iconfont/material-icons.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import {Alert} from 'reactstrap';
 
 class SSettings extends React.Component {
 
     state = {
         user: this.props.user,
         rest:'',
-        loading: true
+        loading: true,
+        password:'',
+        npassword:'',
+        nnpassword:'',
+        msg: null,
     };
 
     static propTypes = {
@@ -100,31 +105,40 @@ class SSettings extends React.Component {
               
         } 
 
-        changePassword = (rid) =>
+        changePassword = (rid, e) =>
         {
+            e.preventDefault();
+            var pointerToThis=this;
             let password=this.refs.password.value;
+            let npassword = this.refs.npassword.value;
+            let nnpassword = this.refs.nnpassword.value;
             fetch('http://localhost:4000/staff/setting/editpassword/'+rid, {
                 method:'PUT',
                 headers:{
                     'Content-Type':'application/json'
                 },
                 body:JSON.stringify({
-                    password,
+                    password: password,
+                    newpassword: npassword,
+                    confirmnewpassword: nnpassword,
                 })
             })
             .then(function(response) {
               if (response.ok) {
-                alert('Password Updated Successfully')
-                window.location.reload(false);
-                return true;
+                message.success('Password Updated Successfully')
+                document.getElementById("form").reset()
+
                     } else {
+                        message.error('hahahahahaha')
                 var error = new Error(response.statusText)
                 error.response = response
-                throw error
+                console.log(error)
+                pointerToThis.setState({msg: error.response})
                   }
               })
                 
           } 
+  
 
     componentDidMount = async () => {
         this.id = setTimeout(() => this.setState({ loading: false }), 2000)
@@ -152,6 +166,8 @@ class SSettings extends React.Component {
     componentWillUnmount() {
         clearTimeout(this.id)
     }
+
+    handleForm=(e)=> { e.preventDefault(); } 
 
     render() {
         return (
@@ -185,10 +201,10 @@ class SSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
+                            <form class = "form-group">
                                 <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="username" name="username" placeholder="Enter new username here" id="username"/>
                                 <button type="submit" class="btn btn-dark"  onClick={()=>this.changeUsername(this.props.user.id)}>Save Changes</button>
-                            </div> 
+                            </form> 
                         </div>
                         <br/>
                         <div href="#" class="list-group-item list-group-item-action">
@@ -200,10 +216,10 @@ class SSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
+                            <form class = "form-group" id="form">
                                 <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="email" name="email" placeholder="Enter new email here" id="email"/>
                                 <button type="submit" class="btn btn-dark" onClick={()=>this.changeEmail(this.props.user.id)}>Save Changes</button>
-                            </div> 
+                            </form> 
                         </div>
                         <br/>
                         <div href="#" class="list-group-item list-group-item-action">
@@ -215,10 +231,10 @@ class SSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
+                            <form class = "form-group" id="form">
                                 <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="phonenumber" name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
                                 <button type="submit" class="btn btn-dark"  onClick={()=>this.changePhoneNumber(this.props.user.id)}>Save Changes</button>
-                            </div> 
+                            </form> 
                         </div>
                         <br/>
                         <div href="#" class="list-group-item list-group-item-action">
@@ -230,12 +246,18 @@ class SSettings extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <div class = "form-group">
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="password" name="password" placeholder="Enter previous password here" id="password"/>
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="npassword" name="npassword" placeholder="Enter new password here" id="npassword"/>
-                                {/* <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/> */}
-                                <button type="submit" class="btn btn-dark"  onClick={()=>this.changePassword(this.props.user.id)}>Save Changes</button>
-                            </div> 
+                            
+                            {this.state.msg ? <Alert color="danger">{ this.state.msg }</Alert> : null}
+
+                                <form id="form" onsubmit="return false">
+                                    <div class = "form-group">
+                                        <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="password" name="password" placeholder="Enter previous password here" id="password"/> 
+                                        <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="npassword" name="npassword" placeholder="Enter new password here" id="npassword"/>
+                                        <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/>
+                                        <button type="submit" class="btn btn-dark" onClick={()=>this.changePassword(this.props.user.id)}>Save Changes</button>
+                                    </div>
+                                </form> 
+                            
                         </div>
                     </div>
                     : ''}

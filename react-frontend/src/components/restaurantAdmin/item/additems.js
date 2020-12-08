@@ -29,6 +29,11 @@ class Additem extends React.Component {
         isOtherSelected: false,
         loading: true
     }
+    static propTypes = {
+        auth : PropTypes.object.isRequired,
+        isAuthenticated : PropTypes.bool,
+        // error : PropTypes.object.isRequired
+    }
 
     componentDidMount = async () => {
         this.itemData = new FormData();
@@ -37,6 +42,7 @@ class Additem extends React.Component {
         // this.setState({ menu_id: this.state.rest.menu._id })
         // console.log(this.props.rest.menu.submenus[0]._id)
         console.log(this.props.rest)
+       
     }
 
     getrest = async () => {
@@ -71,6 +77,7 @@ class Additem extends React.Component {
         this.setState({ category: e.target.value });
         this.state.category === 'other' ? this.setState({ isOtherSelected: true })
             : this.setState({ isOtherSelected: false });
+        console.log(this.state.subid)
     };
 
     uploadImage = (name) => (event) => {
@@ -123,7 +130,8 @@ class Additem extends React.Component {
     }
     itemHandler = async (e) => {
         e.preventDefault();
-        // if (this.state.category === 'other') this.addSubmenu();
+        // if (this.state.category === 'other')
+         this.addSubmenu();
         var pointerToThis = this;
         let { name, price, description, rest_id, menu_id, image, subname } = this.state;
         var data = {
@@ -191,7 +199,7 @@ class Additem extends React.Component {
 
                                 <label for="submenu">Select Category </label>&nbsp;&nbsp;
                         {/* <input list="submenus" name="subid" id="submenu" onChange={this.onCategoryChange} />  */}
-                                <select name="subid" id="submenu" onChange={this.onCategoryChange}>
+                                <select name="subid" id="submenu" onChange={()=> this.onCategoryChange}>
 
                                     {this.state.rest.menu.submenus.map(submenu =>
                                         <option value={submenu._id} key={submenu._id} >{submenu.name}</option>

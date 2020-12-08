@@ -10,5 +10,26 @@ router.post('/viewOrder/', orderController.viewOrder);
 
 router.get("/getallorders", orderController.getAllOrders);
 
+router.post('/viewcustomerorder', orderController.viewCustomerOrder);
+
+router.post('/viewallcustomerorders', orderController.viewAllCustomerOrders);
+
+router.post('/getallrestorders', orderController.viewAllRestOrders);
+
+router.post('/viewordercustomer', orderController.viewOrderCustomer);
+
+router.post('/getallrestorderscurrent', orderController.viewAllRestOrdersCurrent);
+
+router.post('/getallrestordersprepared', orderController.viewAllRestOrdersPrepared);
+
+router.post('/getallrestorderscomplete', orderController.viewAllRestOrdersComplete);
+
+router.post('/setstatus', orderController.setStatus);
+
+router.post('/waiterreadyorders', orderController.waiterReadyOrders);
+
+router.post('/waitercompleteorders', orderController.waiterCompleteOrders);
+
+router.post('/setdeliveredstatus', orderController.setDeliveredStatus);
 
 module.exports = router;

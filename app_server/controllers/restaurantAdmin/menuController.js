@@ -28,7 +28,7 @@ exports.addSubmenuToMenu = ((req, res, next) => {
     });   
 });
 
-exports.addDealsToMenu = ((req, res) => {
+exports.addDealsToMenu = ((req, res, next) => {
     Menu.findOneAndUpdate({ _id: req.body.mid }, {
         "$push": {
             "deals": req.body.did

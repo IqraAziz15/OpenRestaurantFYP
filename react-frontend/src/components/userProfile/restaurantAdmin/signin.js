@@ -138,7 +138,7 @@ class LoginModal extends Component {
             <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.onSubmit}>
               Log in
             </Button>
-            Or <a href="">register now!</a>
+            
           </Form.Item>
         </Form>
 

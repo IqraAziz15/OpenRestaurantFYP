@@ -36,7 +36,6 @@ var superAdminRestaurantAdminRouter = require('./app_server/routes/superadmin/re
 var customerItemRouter = require('./app_server/routes/customer/item')
 var customerRestaurantRouter = require('./app_server/routes/customer/restaurant')
 var customerCartRouter = require('./app_server/routes/customer/cart')
-var customerCheckoutRouter = require('./app_server/routes/customer/checkout')
 var customerOrderRouter = require('./app_server/routes/customer/order')
 var transactionRouter = require('./app_server/routes/payment/transactionRoute')
 
@@ -98,7 +97,6 @@ app.use('/superadmin/restaurantadmin', superAdminRestaurantAdminRouter);
 app.use('/customer/item', customerItemRouter);
 app.use('/customer/restaurant', customerRestaurantRouter);
 app.use('/customer/cart', customerCartRouter);
-app.use('/customer/checkout', customerCheckoutRouter);
 app.use('/customer/order', customerOrderRouter);
 app.use('/api/transactions', transactionRouter);
 

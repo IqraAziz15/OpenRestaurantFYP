@@ -7,6 +7,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Button, ButtonToolbar} from 'react-bootstrap';
+import { Spin } from 'antd';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 const API = 'http://localhost:4000/restaurantadmin/staff/viewstaff';
 const API1 = 'http://localhost:4000/restaurantadmin/staff/removestaff/';
@@ -16,15 +19,27 @@ class ViewStaff extends React.Component {
     super(props);
     this.state = {
       rest: this.props.rest,
-      restaurant_staff: []
+      restaurant_staff: [],
+      loading: true
     }
   }
+  static propTypes = {
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
+    // error : PropTypes.object.isRequired
+}
 
   componentDidMount() {
     // fetch(API)
     //   .then(response => response.json())
     //   .then(data => this.setState({staffs: data }));
     console.log(this.state.rest);
+    this.id = setTimeout(() => this.setState({ loading: false }), 2000)  
+    
+  }
+
+    componentWillUnmount() {
+      clearTimeout(this.id)
   }
 
   delstaff(id)
@@ -53,6 +68,17 @@ class ViewStaff extends React.Component {
   render() {
     // const { staffs} = this.state;
     return (
+      <div>
+         {this.state.loading ? (
+                    <center>
+                        <Spin
+                            className="spinner"
+                            tip="Loading...Please Wait"
+                            size="large"
+                        />
+                    </center>
+                ) :
+      
       <div style={{marginTop:"50px", marginBottom:"50px"}}>
         <center>
          <TableContainer component={Paper} style={{width:"50%", border:"1"}}>
@@ -65,7 +91,7 @@ class ViewStaff extends React.Component {
           </TableRow>
         </TableHead>
         <TableBody>
-        {this.state.rest.restaurant_staff.map(staff =>
+        {this.props.rest.restaurant_staff.map(staff =>
             <TableRow key={staff._id}>
               <TableCell align="none">{staff.username}</TableCell>
               <TableCell align="none">{staff.email}</TableCell>
@@ -78,9 +104,17 @@ class ViewStaff extends React.Component {
     </center>
 
       </div>
+    } 
+      </div>
     );
 
   }
 }
 
-export default ViewStaff;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error
+});
+
+export default connect(mapStateToProps, null
+)(ViewStaff);

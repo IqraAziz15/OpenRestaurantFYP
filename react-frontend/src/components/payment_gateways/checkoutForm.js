@@ -123,10 +123,10 @@ const CheckoutForm = (props) => {
       <Redirect push to={`/place/order/${props.orderId}`} />;
     </div>
   ) : (
-    <Form className="Form" onSubmit={handleSubmit}>
+    <Form className="pay-Form Form" onSubmit={handleSubmit}>
       <fieldset className="FormGroup">
         <div className="FormRow">
-          <label htmlFor="amount" className="FormRowLabel">
+          <label htmlFor="amount" className="label-form FormRowLabel">
             Amount Rs.
           </label>
           <Input
@@ -135,14 +135,14 @@ const CheckoutForm = (props) => {
             type="number"
             placeholder="00.00"
             required
-            value={AmountDetails.amount}
-            onChange={(e) => { setAmount({...AmountDetails, amount: e.target.value})}}
+            disabled
+            value={props.amount}
           />
         </div>
       </fieldset>
       <fieldset className="FormGroup">
         <div className="FormRow">
-          <label htmlFor="name" className="FormRowLabel">
+          <label htmlFor="name" className="label-form FormRowLabel">
             Name
           </label>
           <Input

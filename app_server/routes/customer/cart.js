@@ -12,6 +12,9 @@ router.post('/getCartItems', cartController.getCartItems);
 
 router.post('/removeFromCart', cartController.removeFromCart);
 
+router.post('/emptycart', cartController.emptyCart)
+
+
 // router.post('/additemtocart', cartController.addItemsToCart);
 
 // router.post('/adddealstocart', cartController.addDealsToCart);

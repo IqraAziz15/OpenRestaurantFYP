@@ -54,7 +54,7 @@ exports.staffLogin = (async (req, res) => {
  */
 
 exports.staffRegister = (async (req, res) => {
-    const { name, username, email, phonenumber, password } = req.body;
+    const { name, username, email, phonenumber, password, rest_id } = req.body;
   
     // Simple validation
     if (!name || !username || !email || !phonenumber || !password) {
@@ -76,7 +76,8 @@ exports.staffRegister = (async (req, res) => {
         username,
         email,
         phonenumber,
-        password: hash
+        password: hash,
+        rest_id
       });
   
       const savedStaff = await newStaff.save();
@@ -93,7 +94,8 @@ exports.staffRegister = (async (req, res) => {
           name: savedStaff.name,
           username : savedStaff.username,
           email: savedStaff.email,
-          phonenumber: savedStaff.phonenumber
+          phonenumber: savedStaff.phonenumber,
+          rest_id: savedStaff.rest_id
         }
       });
     } catch (e) {
@@ -116,7 +118,8 @@ exports.staffProfile = async (req, res) => {
           name: user.name,
           username : user.username,
           email: user.email,
-          phonenumber: user.phonenumber
+          phonenumber: user.phonenumber,
+          rest_id: user.rest_id
         }));
     }
     catch (e) {

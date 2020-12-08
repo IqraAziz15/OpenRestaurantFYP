@@ -20,6 +20,7 @@ class RegisterModal extends Component {
         phonenumber : '',
         password : '',
         msg : null,
+        
     }
 
   static propTypes = {
@@ -32,7 +33,7 @@ class RegisterModal extends Component {
   registerWaiter = async() => {
     const {name, username, email, phonenumber, password, restid} = this.state
     var data= {
-      name, username, email, phonenumber, password
+      name, username, email, phonenumber, password, rest_id: this.props.restid
   }
   var wid=''
     await axios
@@ -47,7 +48,7 @@ class RegisterModal extends Component {
         }) 
         .catch(err=>console.log(err)) 
 
-        const body1 = { restid, wid};
+        const body1 = { restid:this.props.restid, wid};
         console.log(body1)
         await axios
           .post('http://localhost:4000/restaurantadmin/restaurant/addwaitertorestaurant', body1, data, {
@@ -56,6 +57,8 @@ class RegisterModal extends Component {
               }
         }).then(res=>{
             console.log(res); 
+            alert('Waiter Added to Restaurant Successfully')
+            document.getElementById("form").reset();
         }) 
         .catch(err=>console.log(err)) 
   }
@@ -74,10 +77,11 @@ class RegisterModal extends Component {
 
   render(){
     return (
+      
       <div style={{textAlign: 'start' }}>
           {this.state.msg ? <Alert color="success">{ this.state.msg }</Alert> : null}
                 <center><h2>Add New Waiter</h2></center>
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSubmit} id="form">
                     <div class = "form-group">
                         <label for="name">Name</label>
                         <input class="form-control" type="text" ref="name" name="name" placeholder="Enter name of waiter" onChange={this.onChange} id="name"/>
@@ -108,6 +112,7 @@ class RegisterModal extends Component {
                     </div>
                 </form>
             </div>
+         
     );
   };
 }
@@ -117,5 +122,6 @@ const mapStateToProps = state => ({
   error: state.error
 });
 
-export default (RegisterModal);
+export default connect(mapStateToProps, { clearErrors }
+  )(RegisterModal);
 

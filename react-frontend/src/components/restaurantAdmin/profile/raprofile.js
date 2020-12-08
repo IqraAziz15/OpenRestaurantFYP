@@ -24,6 +24,7 @@ class RaProfile extends React.Component {
 
     componentDidMount = async () => {
         this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        console.log(this.state.user)
     }
 
     componentWillUnmount() {

@@ -65,10 +65,10 @@ class DLayout extends React.Component {
             />
           </center>
         ) : (
-          <div className="item-card-div">
+          <div className="item-card-div" style={{paddingTop:"2em"}}>
             <Divider className="divider" orientation="left" />
             {this.state.deals.map((deal) => (
-              <a style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
+              <Link style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
               <Card.Grid hoverable={false} style={gridStyle}>
                 <a
                   style={{ cursor: "pointer" }}
@@ -83,7 +83,7 @@ class DLayout extends React.Component {
                     />
                 </a>
               </Card.Grid>
-              </a>
+              </Link>
             ))}
           </div>
         )}

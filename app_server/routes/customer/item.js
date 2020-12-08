@@ -6,4 +6,6 @@ const itemController = require('../../controllers/customer/itemController');
 
 router.get('/restaurants', itemController.findItem);
 
+router.post('/getorderitems', itemController.getOrderItems);
+
 module.exports = router;

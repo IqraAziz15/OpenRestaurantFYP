@@ -65,41 +65,19 @@ class CLayout extends React.Component {
             />
           </center>
         ) : (
-          <div className="rest-card-div">
+          <div className="rest-card-div" style={{paddingTop:"2em"}}>
             <Divider className="divider" orientation="left" />
             {this.state.rests.map((rest) => (
-              <a style={{ cursor:"pointer" }} href={`/restaurantview/${rest._id}`} key={rest._id}>
+              <Link style={{ cursor:"pointer" }} to={`/restaurantview/${rest._id}`} key={rest._id}>
               <Card.Grid hoverable={false} style={gridStyle}>
-                <a
-                  style={{ cursor: "pointer" }}
-                  onMouseDown={() => this.toggleStateRest(rest.name, rest._id)}
-                >
                   <RestaurantCard
                     name={rest.name}
                     location={rest.location}
                     ratings={rest.average_ratings}
                     count={rest.rating_count}
                   />
-                </a>
               </Card.Grid>
-              </a>
-            ))}
-            {this.state.rests.map((rest) => (
-              <a style={{ cursor:"pointer" }} href={`/restaurantview/${rest._id}`} key={rest._id}>
-              <Card.Grid hoverable={false} style={gridStyle}>
-                <a
-                  style={{ cursor: "pointer" }}
-                  onMouseDown={() => this.toggleStateRest(rest.name, rest._id)}
-                >
-                  <RestaurantCard
-                    name={rest.name}
-                    location={rest.location}
-                    ratings={rest.average_ratings}
-                    count={rest.rating_count}
-                  />
-                </a>
-              </Card.Grid>
-              </a>
+              </Link>
             ))}
           </div>
         )}

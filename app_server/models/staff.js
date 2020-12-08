@@ -31,6 +31,10 @@ var staffSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    rest_id: {
+        type: String,
+        required: true
+    },
     orders: [
         {
             type: mongoose.Types.ObjectId,

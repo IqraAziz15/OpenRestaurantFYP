@@ -13,8 +13,11 @@ var orderSchema = new Schema({
         type: String,
     },
     customer_id: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Customer',
+        type: String,
+        required: true
+    },
+    rest_id: {
+        type: String,
         required: true
     },
     ordered_food : {
@@ -36,8 +39,16 @@ var orderSchema = new Schema({
         type:String,
         default: "Pending"
     },
+    delivered:{
+        type: Boolean,
+        default: false
+    },
     payment_method: {
         type: String,
+    },
+    paid: {
+        type: Boolean,
+        default: false
     }
 });
 

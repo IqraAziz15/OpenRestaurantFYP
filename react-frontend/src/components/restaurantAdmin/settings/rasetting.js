@@ -274,6 +274,7 @@ import { Image, Container, Row, Col, Figure, FigureImage, FigureCaption } from '
 import { Avatar } from 'antd';
 import { CameraOutlined, UserOutlined } from '@ant-design/icons';
 import 'material-design-icons/iconfont/material-icons.css';
+import {Alert} from 'reactstrap';
 import {Spin} from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -286,12 +287,17 @@ class RaSetting extends React.Component {
     
     state = {
         user: this.props.user,
+        user_id: this.props.user.id,
         rest: '',
         fileList: [],
         file: '',
         image: null,
         uploading: false,
-        loading: true
+        loading: true,
+        msg: null,
+        password:'',
+        npassword:'',
+        nnpassword:''
     };
 
     static propTypes = {
@@ -347,6 +353,7 @@ class RaSetting extends React.Component {
             }
         }).then(res => {
             console.log(res);
+            this.setState({user_id: this.state.user_id})
             message.success('Photo Added Successfully')
         })
             .catch(err => console.log(err))
@@ -367,6 +374,7 @@ class RaSetting extends React.Component {
         .then(function(response) {
           if (response.ok) {
             message.success('Username updated Successfully')
+            document.getElementById("form").reset()
             
                 } else {
             var error = new Error(response.statusText)
@@ -391,6 +399,7 @@ class RaSetting extends React.Component {
         .then(function(response) {
           if (response.ok) {
             message.success('Email Updated Successfully')
+            document.getElementById("form").reset()
             
                 } else {
             var error = new Error(response.statusText)
@@ -416,7 +425,7 @@ class RaSetting extends React.Component {
           .then(function(response) {
             if (response.ok) {
                 message.success('PhoneNumber Updated Successfully')
-              
+                document.getElementById("form").reset()
                   } else {
               var error = new Error(response.statusText)
               error.response = response
@@ -429,23 +438,30 @@ class RaSetting extends React.Component {
         changePassword = (rid) =>
         {
             let password=this.refs.password.value;
+            let npassword = this.refs.npassword.value;
+            let nnpassword = this.refs.nnpassword.value;
             fetch('http://localhost:4000/restaurantadmin/setting/editpassword/'+rid, {
                 method:'PUT',
                 headers:{
                     'Content-Type':'application/json'
                 },
                 body:JSON.stringify({
-                    password,
+                    password: password,
+                    newpassword: npassword,
+                    confirmnewpassword: nnpassword,
                 })
             })
             .then(function(response) {
               if (response.ok) {
                 message.success('Password Updated Successfully')
+                document.getElementById("form").reset()
 
                     } else {
+                        message.error('hahahahahaha')
                 var error = new Error(response.statusText)
                 error.response = response
-                throw error
+                console.log(error)
+                this.setState({msg: error.response})
                   }
               })
                 
@@ -482,7 +498,7 @@ class RaSetting extends React.Component {
               format: percent => `${parseFloat(percent.toFixed(2))}%`,
             },
           };
-        const photoUrl = this.state.user.id ? `http://localhost:4000/userprofile/restaurantadmin/image/${this.state.user.id}` : null;
+        const photoUrl = this.state.user.id ? `http://localhost:4000/userprofile/restaurantadmin/image/${this.state.user_id}` : null;
         return (
             <div>
                 {this.state.loading ? (
@@ -505,12 +521,16 @@ class RaSetting extends React.Component {
                             type="file"
                             id="image"
                             accept="image/*"
-                            class="form-control" style={{display: 'none'}}>
-                        </input> 
-                        <Button icon={<CameraOutlined />}></Button>
-                            <Button  onClick={() => {this.saveImage()}}>Save Profile Picture</Button>
-                            
+                            class="form-control"
+                            style={{marginTop:'1.5em'}}
+                            />
+                        <br/>
+                        {/* <Button icon={<CameraOutlined/>}></Button> */}
+                        <form class = "form-group">
+                            <button type="submit"  class="btn btn-dark" onClick={() => {this.saveImage()}}>Save Profile Picture</button>
+                        </form>
                         </div>
+                        <br/>
                         <div href="#" class="list-group-item list-group-item-action">
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
@@ -528,7 +548,7 @@ class RaSetting extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <form>
+                            <form id="form">
                                 <div class = "form-group">
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="username" name="username" placeholder="Enter new username here" id="username"/>
                                     <button type="submit" class="btn btn-dark" onClick={()=>this.changeUsername(this.props.user.id)}>Save Changes</button>
@@ -545,7 +565,7 @@ class RaSetting extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <form>
+                            <form id="form">
                                 <div class = "form-group">
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="email" name="email" placeholder="Enter new email here" id="email"/>
                                     <button type="submit" class="btn btn-dark" onClick={()=>this.changeEmail(this.props.user.id)}>Save Changes</button>
@@ -562,7 +582,7 @@ class RaSetting extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <form>
+                            <form id="form">
                                 <div class = "form-group">
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="phonenumber" name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
                                     <button type="submit" class="btn btn-dark" onClick={()=>this.changePhoneNumber(this.props.user.id)}>Save Changes</button>
@@ -580,14 +600,15 @@ class RaSetting extends React.Component {
                                     <i class="material-icons" style={{marginRight: '40px' }} >edit</i>
                                 </div>
                             </div>
-                            <form>
-                                <div class = "form-group">
+                            
+                            {this.state.msg ? <Alert color="danger">{ this.state.msg }</Alert> : null}
+                                <form class = "form-group" id='form'>
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="password" name="password" placeholder="Enter previous password here" id="password"/> 
                                     <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="npassword" name="npassword" placeholder="Enter new password here" id="npassword"/>
-                                    {/* <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/> */}
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="password" ref="nnpassword" name="nnpassword" placeholder="Enter new password here again" id="nnpassword"/>
                                     <button type="submit" class="btn btn-dark" onClick={()=>this.changePassword(this.props.user.id)}>Save Changes</button>
-                                </div> 
-                            </form>
+                                </form> 
+                            
                         </div>
                     </div>
                 : ''}
@@ -604,21 +625,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, null)(RaSetting);
 
 
-
-
-                            
-                            
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            
+                          

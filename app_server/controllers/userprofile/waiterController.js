@@ -39,7 +39,8 @@ exports.waiterLogin = (async (req, res) => {
           token,
           user: {
           id: user._id,
-          email: user.email
+          email: user.email,
+          rest_id: user.rest_id
         }
       });
     } catch (e) {
@@ -54,7 +55,7 @@ exports.waiterLogin = (async (req, res) => {
  */
 
 exports.waiterRegister = (async (req, res) => {
-    const { name, username, email, phonenumber, password } = req.body;
+    const { name, username, email, phonenumber, password, rest_id } = req.body;
   
     // Simple validation
     if (!name || !username || !email || !phonenumber || !password) {
@@ -76,7 +77,8 @@ exports.waiterRegister = (async (req, res) => {
         username,
         email,
         phonenumber,
-        password: hash
+        password: hash,
+        rest_id
       });
   
       const savedWaiter = await newWaiter.save();
@@ -93,7 +95,8 @@ exports.waiterRegister = (async (req, res) => {
           name: savedWaiter.name,
           username : savedWaiter.username,
           email: savedWaiter.email,
-          phonenumber: savedWaiter.phonenumber
+          phonenumber: savedWaiter.phonenumber,
+          rest_id: savedWaiter.rest_id
         }
       });
     } catch (e) {
@@ -116,7 +119,8 @@ exports.waiterProfile = (async (req, res) => {
           name: user.name,
           username : user.username,
           email: user.email,
-          phonenumber: user.phonenumber
+          phonenumber: user.phonenumber,
+          rest_id: user.rest_id
         }));
     }
     catch (e) {

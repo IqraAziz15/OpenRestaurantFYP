@@ -58,8 +58,8 @@ render(){
         return <AppNavbar2/>
     }
     else if(this.state.visible3){
-        // return <AppNavbar3/>
-        return (<Router><Redirect push to = {'/staff'}/></Router>);
+        return <AppNavbar3/>
+        // return (<Router><Redirect push to = {'/staff'}/></Router>);
     }
     return(
  

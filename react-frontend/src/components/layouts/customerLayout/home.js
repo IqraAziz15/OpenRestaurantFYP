@@ -13,7 +13,7 @@ import { Spin } from "antd";
 import CallViewItem from "../../customer/viewComponent/callViewItem";
 // import P2Layout from "../../customer/viewComponent/viewRestaurant";
 import ViewRest from "../../customer/viewComponent/callViewRest";
-import { Link, Redirect, BrowserRouter as Router, Switch, NavLink, Route,  useParams, useRouteMatch } from "react-router-dom";
+import { Link } from "react-router-dom";
 const { Meta } = Card;
 const { Search } = Input;
 
@@ -138,9 +138,8 @@ class Home extends React.Component {
             />
           </center>
         ) : (
-            <Router>
           <div className="rest-card App-intro">
-            <Divider className="divider" orientation="left" />
+            {/* <Divider className="divider" orientation="left" /> */}
             <Card
               className="all-rest-card"
               title="All Restaurants"
@@ -148,38 +147,30 @@ class Home extends React.Component {
             >
               <Slider {...settings}>
                 {this.state.rests.map((rest) => (
-                  <a style={{ cursor:"pointer" }} href={`/restaurantview/${rest._id}`} key={rest._id}>
+                  <Link style={{ cursor:"pointer" }} to={`/restaurantview/${rest._id}`} key={rest._id}>
                   <RestaurantCard
                     name={rest.name}
                     location={rest.location}
                     ratings={rest.average_ratings}
                     count={rest.rating_count}
-                  /></a>
+                  /></Link>
                 ))}
                 {this.state.rests.map((rest) => (
-                  <a style={{ cursor:"pointer" }} href={`/restaurantview/${rest._id}`} key={rest._id}>
+                  <Link style={{ cursor:"pointer" }} to={`/restaurantview/${rest._id}`} key={rest._id}>
                   <RestaurantCard
                     name={rest.name}
                     location={rest.location}
                     ratings={rest.average_ratings}
                     count={rest.rating_count}
-                  /></a>
-                ))}
-                {this.state.rests.map((rest) => (
-                  <a style={{ cursor:"pointer" }} href={`/restaurantview/${rest._id}`} key={rest._id}>
-                  <RestaurantCard
-                    name={rest.name}
-                    location={rest.location}
-                    ratings={rest.average_ratings}
-                    count={rest.rating_count}
-                  /></a>
+                  />
+                  </Link>
                 ))}
               </Slider>
             </Card>
             {/* {this.state.viewRest ? 
             ViewRestLink
             : ''} */}
-            <Divider className="divider" orientation="left" />
+            {/* <Divider className="divider" orientation="left" /> */}
             <Card
               className="all-rest-card"
               title="All Items"
@@ -187,7 +178,7 @@ class Home extends React.Component {
             >
               <Slider {...settings}>
                 {this.state.items.map((item) => (
-                  <a style={{ cursor:"pointer" }} href={`/view/${item._id}`} key={item._id}>
+                  <Link style={{ cursor:"pointer" }} to={`/view/${item._id}`} key={item._id}>
                     <ItemCard style={{ cursor:"pointer" }}
                       name={item.name}
                       description={item.description}
@@ -196,7 +187,7 @@ class Home extends React.Component {
                       count={item.rating_count}
                       img_url={item._id}
                     />
-                  </a>
+                  </Link>
                 ))}
               </Slider>
             </Card>
@@ -210,8 +201,7 @@ class Home extends React.Component {
             >
               <Slider {...settings1}>
                 {this.state.deals.map((deal) => (
-                <a style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
-                  <a style={{ cursor:"pointer" }} >
+                <Link style={{ cursor:"pointer" }} to={`/viewdeal/${deal._id}`} key={deal._id}>
                     <DealCard style={{ cursor:"pointer" }}
                       name={deal.name}
                       description={deal.description}
@@ -220,19 +210,11 @@ class Home extends React.Component {
                       count={deal.rating_count}
                       img_url={deal._id}
                     />
-                  </a>
-                </a>
+                </Link>
                 ))}
               </Slider>
             </Card>
-            {/* <Switch>
-            <Route path='/allrestaurants' component={AllRestaurantsCard}/>
-            <Route path='/allfoods' component={AllItemsCard}/>
-            <Route path='/restaurantview/:id' component={ViewRest}/>
-            <Route path='/view/:id' component={CallViewItem}/>
-            </Switch> */}
           </div>
-          </Router>
         )}
       </div>
     );

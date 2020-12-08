@@ -40,6 +40,10 @@ var waiterSchema = new Schema({
             ref: 'Order'
         }
     ],
+    rest_id: {
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Waiter', waiterSchema)

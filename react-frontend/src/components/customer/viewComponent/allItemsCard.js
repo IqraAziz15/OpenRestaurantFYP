@@ -65,10 +65,10 @@ class CLayout extends React.Component {
             />
           </center>
         ) : (
-          <div className="item-card-div">
+          <div className="item-card-div" style={{paddingTop:"2em"}}>
             <Divider className="divider" orientation="left" />
             {this.state.items.map((item) => (
-              <a style={{ cursor:"pointer" }} href={`/view/${item._id}`} key={item._id}>
+              <Link style={{ cursor:"pointer" }} to={`/view/${item._id}`} key={item._id}>
               <Card.Grid hoverable={false} style={gridStyle}>
                 <a
                   style={{ cursor: "pointer" }}
@@ -83,7 +83,7 @@ class CLayout extends React.Component {
                     />
                 </a>
               </Card.Grid>
-              </a>
+              </Link>
             ))}
           </div>
         )}

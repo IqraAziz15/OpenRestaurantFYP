@@ -132,7 +132,9 @@ class ViewItems extends React.Component
         <hr></hr>
         <div class="list-group">
         {this.state.rest.menu.submenus.map(submenu =>
+        
               <a href="#" class="list-group-item list-group-item-action">
+                
                 <div style={{alignContent: 'space-between' }} class="d-flex w-55 ">
                   <h4 key={submenu.name}>{submenu.name}</h4>
                 <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>
@@ -141,7 +143,9 @@ class ViewItems extends React.Component
                   </div>
                 </div>
                 <hr/>
+                
                 {submenu.items.map(item =>
+                <div>
                 <div style={{alignContent: 'space-between' }} class="d-flex w-55 ">
                   <img src = {`http://localhost:4000/restaurantadmin/item/image/${item._id}`} style={{marginRight: '40px' }} width="100" height="100" />
                   <div>
@@ -168,7 +172,11 @@ class ViewItems extends React.Component
                     submenu_id={ submenu_id }>
                   </EditSubmenu>
                 </div>
+                <hr/>
+                </div>
                 )}
+                
+                
               </a>
                  
         )}

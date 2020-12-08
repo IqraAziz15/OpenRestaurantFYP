@@ -5,13 +5,15 @@ import { Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip, message, Input
 import Image from "react-bootstrap/Image";
 import '../customer.css';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import Checkout from './proceedtocheckout';
 import RatingComponent from "../reviewRatingComponents/ratingComponent";
 import ReviewComponent from "../reviewRatingComponents/reviewComponent";
 // import ItemCounter from "../cartComponents/itemCounter";
-import ItemCounter from '../../layouts/customerLayout/counter'
-import { number } from "prop-types";
-import { Redirect } from "react-router-dom";
+// import ItemCounter from '../../layouts/customerLayout/counter';
+import EmptyCart from './emptycart';
+import { connect } from 'react-redux';
+import { Link,Redirect } from "react-router-dom";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
@@ -24,64 +26,57 @@ class Cart extends Component {
     quantity: 1,
     loading: true,
     Total: 0,
-    customerId: '5fa7fe33910c3a1810eccbc9',
+    // customerId: '5fa7fe33910c3a1810eccbc9',
     itemid: this.props.id,
     user:'',
     cart_length: 0,
+    update: false,
     showTotal: false,
-    redirect: false
+    redirect1: false,
+    redirect2: false,
+    isauth: true
     
   };
+
+  static propTypes = {
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
+    // error : PropTypes.object.isRequired
+}
+
 
   // onChange = (value) => {
   //   this.setState({ quantity:value })
   // }
-
-
-  getCustomer = async() => {
-    const pointerToThis= this;
-    await fetch(`http://localhost:4000/userprofile/customer/getcustomer/${this.state.customerId}`, {
-    method: "GET",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    })
-    .then((response) => response.json())
-    .then((data) => pointerToThis.setState({ user: data, loading: false }));
-    this.cartDisplay();
-
-  }
   
   setCartLength = () => {
     var count = 0;
+    if(this.state.user){
       if(this.state.user.cart.length > 0 ){
-      this.state.user.cart.forEach((rest) => {
-        count = count + rest.rest.length;
-      });
-      this.setState({ cart_length: count, redirect: true });
+        this.state.user.cart.forEach((rest) => {
+          count = count + rest.rest.length;
+        });
+        this.setState({ cart_length: count, redirect2: true });
+      }
+      else{
+        this.setState({  redirect2: true });
+      }
     }
+    console.log(this.state.cart_length)
   };
 
 
-  componentDidMount() {
-    this.getCustomer();
-    // var pointerToThis = this;
-    // fetch(
-    //   `http://localhost:4000/restaurantadmin/item/viewitem/${this.state.itemId}`,
-    //   {
-    //     method: "GET",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   }
-    // )
-    //   .then((response) => response.json())
-    //   .then((data) => pointerToThis.setState({ item: data }));
-
+  componentDidMount = async() => {
+    while (this.props.auth.isLoading){}
+    await this.setState({user: this.props.auth.user, redirect1:true, isauth: this.props.auth.isAuthenticated})
+    this.cartDisplay();
+    console.log(this.props.auth)
   }
 
+
   cartDisplay = async() => {
-    await this.setCartLength();
+    // this.setState({user: this.props.auth.user})
+    this.setCartLength();
     var pointerToThis = this;
     let cartItems = [];
     let userCart = [];
@@ -138,7 +133,7 @@ class Cart extends Component {
                 })
             })
             console.log(response.data)
-            pointerToThis.setState({itemsDetails: response.data});
+            pointerToThis.setState({ loading: false,itemsDetails: response.data});
             return response.data;
         });
         console.log(request)
@@ -164,7 +159,7 @@ class Cart extends Component {
 removeFromCartNew = async (restId,productId) => {
   // var response = await this.removeCartItem(productId)
   const body2 = { 
-    cid : this.state.customerId,
+    cid : this.props.auth.user._id,
     rid : restId,
     iid : productId 
   }
@@ -172,8 +167,8 @@ removeFromCartNew = async (restId,productId) => {
       .then(response => {
           if (response.status == 200 ){
             var user = this.state.user;
-            user.cart = response.data.cart;
-            this.setState({user: user});
+            this.props.auth.user.cart = response.data.cart;
+            this.setState({user: this.props.auth.user});
             this.cartDisplay();
           } 
       });
@@ -184,7 +179,7 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
   if(quantity_new){
     var body =
     {
-      cid: this.state.customerId,
+      cid: this.props.auth.user._id,
       iid: item_id,
       quantity: quantity_new - quantity_old,
       rid: rest_id
@@ -194,10 +189,11 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
     }
     var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
     )
-    if (res.status == 200) {
-      message.success('Added to cart')
-      this.getCustomer();
-    }
+    if (res.status == 200){
+        message.success('Added to cart')
+        this.props.auth.user.cart = res.data;
+        this.cartDisplay();
+      } 
     else  message.error('Try Again')
     // this.setState({addCart: true});
   }
@@ -235,10 +231,14 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
         borderWidth: 0,
         
       };
+
+    if(!this.state.isauth && this.state.redirect1) {
+      return (<Redirect push to='/login'/>)
+    }
       // if (!this.state.loading && this.state.user.cart.length < 1) return (<div><h1>Cart is Empty</h1><h3>Add food in the cart first</h3></div>)
-    if(this.state.cart_length == 0 && this.state.redirect)
+    if(this.state.cart_length == 0 && this.state.redirect2)
     {
-      return (<Redirect push to={'/emptycart'} />);
+      return (<EmptyCart/>);
     }
       return (
       <div>
@@ -253,7 +253,7 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
       :
       <div>
       {/* {  this.state.cart_length > 0 ?   */}
-          <div style={{ padding:'8em', paddingTop: '0.8em'}}>
+          <div style={{ padding:'8em', paddingTop: '2em'}}>
               
               <h2 style={{padding: '0.8em'}} >FOOD CART</h2>
               {this.state.itemsDetails.map(item =>
@@ -286,7 +286,19 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
                 <Space directon='Horizontal' size='large'>
                 <span>Quantity : </span>
                 {/* <ItemCounter default={item.quantity} min={1} max={20} onChange={this.onChange.bind(this)} /> */}
-                <InputNumber min={1} max={20}  defaultValue={item.quantity}  onChange={(value) => {item.quantity_new=value; item.update = true;}} />
+                <InputNumber 
+                min={1} 
+                max={20}  
+                value={item.quantity_new ? item.quantity_new: item.quantity}  
+                onChange={(value) => {
+                  item.quantity_new=value; 
+                  item.update = true; 
+                  // this.setState(prevState => ({
+                  //   update: !prevState.update
+                  // }));
+                  this.setState({update: false})
+                }} 
+                />
                 </Space>
                 </Card><hr/>
                 <Card className="grid-card card1">
@@ -299,11 +311,11 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
                 <hr/>
                 <span className='button-span'>
                   <Space direction={'horizontal'}>
-                {/* { item.update ?
+                { this.state.update || item.update ?
             <Button className='button'  color={'#855b36'} onClick={() => this.addToCart(item.rest_id, item._id, item.quantity_new, item.quantity)}>Update</Button> :
             <Button className='button' disabled color={'#855b36'} onClick={() => this.addToCart(item.rest_id, item._id, item.quantity_new, item.quantity)}>Update</Button>
-            } */}
-            <Button className='button'  color={'#855b36'} onClick={() => this.addToCart(item.rest_id, item._id, item.quantity_new, item.quantity)}>Update</Button>
+            }
+            {/* <Button className='button'  color={'#855b36'} onClick={() => this.addToCart(item.rest_id, item._id, item.quantity_new, item.quantity)}>Update</Button> */}
           
             <Button className='button'  color={'#855b36'} onClick={()=>this.removeFromCartNew(item.rest_id,item._id)}>Remove</Button>
             {/* onClick={()=>this.removeFromCartNew(item._id)} */}
@@ -336,14 +348,14 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
                   </p>
                   <hr/>
                   <span className='button-span'>
-                  <Button className='button' style={{marginTop: '1em'}} color={'#855b36'} ><a href="/order/checkout" > Proceed to Checkout</a></Button>
+                  <Button className='button' style={{marginTop: '1em'}} color={'#855b36'} ><Link to="/order/checkout" > Proceed to Checkout</Link></Button>
                   </span>
                 {/* </Card> */}
               {/* </Card.Grid> */}
              </Card> 
             <span className='button-span'>
-            <a href={`/home`}>
-            <Button className='button' ghost style={{margin:'2em', color: '#855b36'}} color={'#fff'} >Continue Shopping</Button></a>
+            <Link to={`/home`}>
+            <Button className='button' ghost style={{margin:'2em', color: '#855b36'}} color={'#fff'} >Continue Shopping</Button></Link>
             </span>
           </div>
       {/* //  :
@@ -358,4 +370,8 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
   }
 }
 
-export default Cart;
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, null)(Cart);

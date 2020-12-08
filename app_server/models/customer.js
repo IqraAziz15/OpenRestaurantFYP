@@ -8,10 +8,15 @@ var customerSchema = new Schema({
         unique: true
     },
 
-    // customer_id: {
-    //     type: String,
-    //     required: true
-    // },
+    name: {
+        type: String,
+        required: true
+    },
+
+   password:{
+        type:String,
+        required: true
+    },
 
     cart: {
         type: Array,

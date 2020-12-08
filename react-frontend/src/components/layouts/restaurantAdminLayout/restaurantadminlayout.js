@@ -38,6 +38,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Logout from '../../userProfile/restaurantAdmin/logout';
 import { Button } from 'reactstrap';
+import {Spin} from 'antd';
 // import logo from '../assets/images/logo.png';
 // import Title from 'antd/lib/skeleton/Title';
 const { Header, Content, Footer, Sider } = Layout;
@@ -52,6 +53,7 @@ class RaLayout extends React.Component
         user: this.props.user,
         rest_id: '',
         rest: '',
+        loading: true
       };
 
 
@@ -75,6 +77,10 @@ class RaLayout extends React.Component
       })
         .then(response => response.json())
         .then(data => pointerToThis.setState({ rest: data, rest_id: data._id}));
+        const { user } = this.props.auth;
+        this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        console.log(this.state.rest)
+        console.log(this.state.user)
 
 
     //     var body1 = JSON.stringify({id : this.state.rest_id});
@@ -91,6 +97,11 @@ class RaLayout extends React.Component
         
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.id)
+      }
+
+
       onCollapse = collapsed => {
         console.log(collapsed);
         this.setState({ collapsed });   
@@ -98,6 +109,16 @@ class RaLayout extends React.Component
     
       render() {
         return (
+            <div>
+                {this.state.loading ? (
+          <center>
+            <Spin
+              className="spinner"
+              tip="Loading...Please Wait"
+              size="large"
+            />
+          </center>
+        ) :
             <div style={{backgroundColor: 'white'}}>
                 <Header> 
                 <h2 style={{color: 'white'}}>Open Restaurant</h2>
@@ -224,6 +245,8 @@ class RaLayout extends React.Component
                     </Layout>
                 </Layout>
                 </Router>
+            </div>
+            }
             </div>
         );
       }

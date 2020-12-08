@@ -1,0 +1,86 @@
+.Login-container2 {
+ 
+    background:beige;
+    color: black;
+    font-family: Times, "Times New Roman", serif;
+    text-align: center;
+    margin-top: 245px;
+    margin-bottom: 100px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    border-radius: 50px;
+    border: 2px solid black;
+    padding: 20px;
+    width: 400px;
+    height: 650px;
+}
+
+h1 {
+padding-top: 0%;
+text-decoration: overline;
+float: none;
+}
+   
+.para{
+text-decoration-line: underline;
+}
+input[type="submit"]{
+background-color: transparent;
+border: 1px solid black;
+padding-left: 1.5em;
+padding-right: 1.5em;
+padding-top: 0.5em;
+padding-bottom: 0.5em;
+transition-duration: 0.4s;
+border-radius: 50px;
+margin-bottom: 30px;
+color:black ;
+
+}
+
+.mycheck{
+float: none;
+
+}
+
+input[type="submit"]:hover {
+background-color: black;
+color: white;
+}
+
+/* body
+{
+
+
+ background-image: url('../../../assets/images/2813143.jpg'); 
+
+
+background-size: 100%;
+
+
+
+}
+ */
+
+.mypw {
+
+
+    padding-left: 90px;
+    
+    
+
+}  
+
+.myemail {
+padding-left: 90px;
+
+
+
+
+
+}  
+
+.para1{
+font-weight: bold;
+
+}

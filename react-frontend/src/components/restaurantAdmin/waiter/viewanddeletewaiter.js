@@ -7,6 +7,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Button, ButtonToolbar} from 'react-bootstrap';
+import { Spin } from 'antd';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 const API = 'http://localhost:4000/restaurantadmin/waiter/viewwaiter';
 const API1 = 'http://localhost:4000/restaurantadmin/waiter/removewaiter/';
@@ -17,14 +20,17 @@ class ViewWaiter extends React.Component {
     this.state = {
       rest: this.props.rest,
       restaurant_waiter: [],
+      loading: true
     }
   }
+  
 
   componentDidMount() {
     // fetch(API)
     //   .then(response => response.json())
     //   .then(data => this.setState({waiters: data }));
     console.log(this.state.rest);
+    this.id = setTimeout(() => this.setState({ loading: false }), 2000) 
   }
 
   delwaiter(id)
@@ -54,7 +60,18 @@ class ViewWaiter extends React.Component {
     render() {
         // const { waiters} = this.state;
         return (
+          <div>
+          {this.state.loading ? (
+                     <center>
+                         <Spin
+                             className="spinner"
+                             tip="Loading...Please Wait"
+                             size="large"
+                         />
+                     </center>
+                 ) :
         <div style={{marginTop:"50px", marginBottom:"50px"}}>
+
             <center>
               
                 <TableContainer component={Paper} style={{width:"50%", border:"1"}}>
@@ -70,7 +87,7 @@ class ViewWaiter extends React.Component {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {this.state.rest.restaurant_waiter.map(waiter => 
+                    {this.props.rest.restaurant_waiter.map(waiter => 
                         <TableRow key={waiter._id}>
                         <TableCell align="none">{waiter.username}</TableCell>
                         <TableCell align="none">{waiter.email}</TableCell>
@@ -84,9 +101,17 @@ class ViewWaiter extends React.Component {
               </TableContainer>
             </center>
         </div>
+    }
+    </div>
         );
 
     }
 }
 
-export default ViewWaiter;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error
+});
+
+export default connect(mapStateToProps, null
+)(ViewWaiter);

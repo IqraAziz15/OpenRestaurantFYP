@@ -165,6 +165,7 @@ exports.extractWordsOrder = (function(req, res, next) {
             var items = await Item.find({ '_id': { $in: Items } }).select('name description')
             var deals = await Deal.find({ '_id': { $in: Items } }).select('name description')
             var list = items.concat(deals);
+            var StringsList = []
             list.forEach(item =>{
                 item.name = item.name.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
                 item.description = item.description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()

@@ -290,7 +290,7 @@ class CLayout extends React.Component {
                   <Route path="/view/:id" component={CallViewItem} />
                   <Route path="/viewdeal/:id" component={CallViewDeals} />
                   <Route path="/pending/order/:orderId" component={CallViewOrder} />
-                  <Route path="/currentorders" component={CurrentOrders} />
+                  {/* <Route path="/currentorders" component={CurrentOrders} /> */}
                   <Route path="/ordershistory" component={OrdersHistory} />
                   {/* <Route path="/place/order/:orderId" component={Successmsg} /> */}
                   {/* <Route path='/emptycart' component={EmptyCart} /> */}

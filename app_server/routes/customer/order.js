@@ -32,4 +32,8 @@ router.post('/waitercompleteorders', orderController.waiterCompleteOrders);
 
 router.post('/setdeliveredstatus', orderController.setDeliveredStatus);
 
+router.get('/getordersCSV/:restid', orderController.getOrdersForCSV);
+
+router.post('/extractstringsfromorders', orderController.extractWordsOrder);
+
 module.exports = router;

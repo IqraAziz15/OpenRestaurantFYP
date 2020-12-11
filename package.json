@@ -10,6 +10,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.4.0",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
@@ -24,6 +25,7 @@
     "fs": "^0.0.1-security",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "json2csv": "^5.0.5",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.21",
     "mongoose-autopopulate": "^0.12.2",
@@ -39,7 +41,6 @@
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "@sendgrid/mail": "^7.4.0",
     "socket.io": "^3.0.3",
     "socket.io-client": "^3.0.3",
     "thunk": "0.0.1"

@@ -28,6 +28,7 @@ import { Provider } from 'react-redux';
 // import store from './flux/store/store_staff';
 import store from './flux/store/store_customer';
 // import store from './flux/store/store_waiter';
+import Graph from './components/restaurantAdmin/restaurantStatistics/itemstats';
 import EditItem from './components/restaurantAdmin/item/edititem';
 // import { loadUser } from './flux/actions/restaurantAdmin/authActions';
 // import { loadUser } from './flux/actions/superAdmin/authActions';
@@ -63,19 +64,20 @@ const stripePromise = loadStripe("pk_test_51HEBkBAA6YnKro0mXZpOZTmOQOMYTdMlZnvkf
 
 class App extends React.Component {
 
-  componentDidMount() {
-    store.dispatch(loadUser());
-  }
+  // componentDidMount() {
+  //   store.dispatch(loadUser());
+  // }
   render() {
     return (
       <div className="App" >
+        <Graph/>
         {/* <P2Layout/> */}
-        <Elements stripe={stripePromise}>
+        {/* <Elements stripe={stripePromise}>
           <Provider store={store}>
             <CLayout />
-            {/* <MainPageLayout /> */}
+            <MainPageLayout />
           </Provider>
-        </Elements> 
+        </Elements>  */}
         {/* <CLayout/> */}
         {/* <RaLayout/> */}
         {/* <CartLayout/> */}

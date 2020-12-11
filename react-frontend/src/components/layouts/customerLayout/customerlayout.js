@@ -26,9 +26,9 @@ import Cart from "../../customer/cartComponents/cartCard";
 import ViewRest from "../../customer/viewComponent/callViewRest";
 import CallViewItem from "../../customer/viewComponent/callViewItem";
 import CallViewDeals from "../../customer/viewComponent/callViewDeals";
-import MyOrders from '../../customer/orderComponents/myorder';
-import OrdersHistory from '../../customer/orderComponents/ordershistory';
 import EmptyCart from '../../customer/cartComponents/emptycart';
+import CurrentOrders from '../../customer/cartComponents/currentorders';
+import OrdersHistory from '../../customer/cartComponents/ordershistory';
 import PaymentGateway from "../../payment_gateways/call_payment_methods";
 import LoginForm from '../../userProfile/customer/loginform'
 import Logout from '../../userProfile/customer/logout';
@@ -58,12 +58,12 @@ class CLayout extends React.Component {
     loading: true
   };
 
-
+  
   static propTypes = {
-    auth: PropTypes.object.isRequired,
-    isAuthenticated: PropTypes.bool,
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
     // error : PropTypes.object.isRequired
-  }
+}
 
 
   async componentDidMount() {
@@ -71,29 +71,29 @@ class CLayout extends React.Component {
     window.addEventListener("resize", this.updateWindowDimensions());
     // console.log(this.state.user)
     this.id = setTimeout(() => {
-      if (!this.props.auth.isLoading) {
-        this.setState({ loading: false })
+      if(!this.props.auth.isLoading) {
+        this.setState({ loading: false }) 
         this.setCartLength();
       }
     }, 3000)
-    if (!this.state.loading) await this.setCartLength();
+    if(!this.state.loading) await this.setCartLength();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer) {
-      this.setState({
-        loading: false
-      })
-      if (!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
-    }
-  }
+  componentDidUpdate(prevProps){
+      if(this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer){
+         this.setState({
+            loading: false
+         })
+         if(!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
+      }
+   }
 
 
 
   // async isLoading(){
   //   while(this.props.auth.isLoading){}
   // }
-
+  
   // componentDidUpdate(){
   //   if(this.props.auth.user){
   //     this.setCartLength();
@@ -111,7 +111,7 @@ class CLayout extends React.Component {
 
   setCartLength = () => {
     var count = 0;
-    if (this.props.isAuthenticated) {
+    if(this.props.isAuthenticated){
       if (this.props.auth.cart.length > 0) {
         this.props.auth.cart.forEach((rest) => {
           count = count + rest.rest.length;
@@ -216,25 +216,24 @@ class CLayout extends React.Component {
                     </Link>
                       </NavDropdown.Item>
                     </NavDropdown>
-
                     <NavDropdown
                       title="Orders"
                       id="collasible-nav-dropdown"
                       style={{ paddingRight: "2em" }}
+                      disabled={this.props.auth.isAuthenticated ? false: true }
                     >
                       <NavDropdown.Item href="">
-                        <Link className="link" to="/myorders">
-                          My Orders
+                        <Link className="link" to="/currentorders">
+                          Current Orders
                     </Link>
                       </NavDropdown.Item>
                       <NavDropdown.Divider />
                       <NavDropdown.Item href="">
                         <Link className="link" to="/ordershistory">
-                          Orders History
+                          History
                     </Link>
                       </NavDropdown.Item>
                     </NavDropdown>
-
                   </Nav>
                   {/* <Form inline>
                             <i class="material-icons" style={{paddingRight:'2.5em'}}> <Link className="link" to="/cart" >shopping_cart</Link></i>
@@ -278,24 +277,24 @@ class CLayout extends React.Component {
                 className="App-intro"
                 style={{ marginRight: "1em", marginLeft: "1em" }}
               >
-                {/* <Redirect push to='/'/> */}
+              {/* <Redirect push to='/'/> */}
                 <Switch>
                   <Route exact path="/" component={Home} />
                   <Route path="/home" component={Home} />
                   <Route path="/allrestaurants" component={AllRestaurantsCard} />
                   <Route path="/allfoods" component={AllItemsCard} />
                   <Route path="/alldeals" component={AllDealsCard} />
-                  <Route path="/myorders" component={MyOrders} />
-                  <Route path="/ordershistory" component={OrdersHistory} />
                   <Route path="/cart" component={Cart} />
                   <Route path="/order/checkout" component={Checkout} />
                   <Route path="/restaurantview/:id" component={ViewRest} />
                   <Route path="/view/:id" component={CallViewItem} />
                   <Route path="/viewdeal/:id" component={CallViewDeals} />
                   <Route path="/pending/order/:orderId" component={CallViewOrder} />
+                  <Route path="/currentorders" component={CurrentOrders} />
+                  <Route path="/ordershistory" component={OrdersHistory} />
                   {/* <Route path="/place/order/:orderId" component={Successmsg} /> */}
                   {/* <Route path='/emptycart' component={EmptyCart} /> */}
-                  <Route path='/login' component={LoginForm} />
+                  <Route path='/login' component={LoginForm}/>
                   {/* <Route
                     path="/order/payment/:orderId"
                     component={PaymentGateway}
@@ -313,4 +312,4 @@ class CLayout extends React.Component {
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
-export default connect(mapStateToProps, null)(CLayout);
+export default connect(mapStateToProps, null) (CLayout);

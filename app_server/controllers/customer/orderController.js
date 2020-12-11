@@ -135,13 +135,46 @@ exports.viewAllRestOrdersComplete = (function(req, res, next) {
     });
 });
 
+
 exports.viewOrder = (function(req, res, next) {
-    Order.findOne({orderid:req.body.orderId}).exec(function(error, results) {
+    Order.find({orderid:req.body.orderId}).exec(function(error, results) {
         if (error) {
             return next(error);
         }
         // Respond with valid data
         res.json(results);
+    });
+});
+
+exports.extractWordsOrder = (function(req, res, next) {
+    Order.find({customer_id: req.body.cid, orderid:req.body.orderId}).exec(async (error, results) => {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        let Items = [];
+        // message.info('we are inside')
+        if(results){
+            results.forEach(rest => {
+                // console.log('c')
+                rest.ordered_food.forEach(item => {
+                    Items.push(item.id);
+                })
+
+            });
+            var items = await Item.find({ '_id': { $in: Items } }).select('name description')
+            var deals = await Deal.find({ '_id': { $in: Items } }).select('name description')
+            var list = items.concat(deals);
+            list.forEach(item =>{
+                item.name = item.name.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
+                item.description = item.description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
+                StringsList = StringsList.concat(item.name.split(' '));
+                StringsList = StringsList.concat(item.description.split(' '));
+            })
+            res.json(StringsList);
+        }
+        res.json(null);
+
     });
 });
 

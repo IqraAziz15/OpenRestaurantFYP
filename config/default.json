@@ -1,9 +1,9 @@
 {
-    "mongoURI" : "mongodb+srv://iqraazizkhan:lkjhgf@clusterfyp.xoiqz.mongodb.net/open_restaurant?retryWrites=true&w=majority",
-    "jwtSecret" : "or_myjwtsecretkey",
-    "JWT_ACCOUNT_ACTIVATION": "or_mymagickeyforactivation",
+    "mongoURI" : "mongodb+srv://iqra******:******@clusterfyp.xoiqz.mongodb.net/open_restaurant?retryWrites=true&w=majority",
+    "jwtSecret" : "SECRET_KEY",
+    "JWT_ACCOUNT_ACTIVATION": "JWT_SECRET",
     "client_url": "http://localhost:4000",
-    "MAIL_KEY": "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",
+    "MAIL_KEY": "YOUR_SECRET_KEY",
 
-    "email_from": "openrestaurantfyp@gmail.com"
+    "email_from": "YOUR_EMAIL"
 }

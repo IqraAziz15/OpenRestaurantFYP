@@ -150,7 +150,7 @@ class ViewItems extends React.Component
                   <img src = {`http://localhost:4000/restaurantadmin/item/image/${item._id}`} style={{marginRight: '40px' }} width="100" height="100" />
                   <div>
                       <h5 class="mb-1" key={item.name}>{item.name}</h5>
-                      <p class="mb-1" key={item.price}>{item.price}</p>
+                      <p class="mb-1" key={item.price}>Rs. {item.price}</p>
                       <small key={item.description}>{item.description}</small>
                   </div>
                   <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>

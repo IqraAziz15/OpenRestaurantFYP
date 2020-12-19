@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "./viewItem.css";
-import { message, Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip, InputNumber } from "antd";
+import { Pagination, message, Divider, Tabs, Spin, Rate, Space, Card, Button, Tooltip, InputNumber } from "antd";
 import Image from "react-bootstrap/Image";
 import RatingComponent from "../reviewRatingComponents/ratingComponent";
 import ReviewComponent from "../reviewRatingComponents/reviewComponent";
@@ -19,8 +19,9 @@ class ViewDeals extends Component {
     dealId: this.props.id,
     rest: '',
     deal: "",
-    loading: false,
+    loading: true,
     addCart: true,
+    likedreviews: [],
     redirect: false,
     quantity:1
   };
@@ -41,9 +42,10 @@ class ViewDeals extends Component {
     
     var pointerToThis = this;
     await fetch(
-      `http://localhost:4000/restaurantadmin/deal/viewdeal/${this.state.dealId}`,
+      `http://localhost:4000/api/ratings/getratings-reviews-item`,
       {
-        method: "GET",
+        method: "POST",
+        body: JSON.stringify({ deal: this.state.dealId}),
         headers: {
           "Content-Type": "application/json",
         },
@@ -145,8 +147,8 @@ addToCart = async() => {
                     <span className="price">Rs. {this.state.deal.total_bill}</span><hr/>
                   </p>
                   <RatingComponent
-                    ratings={3.9}
-                    count={this.state.deal.rating_count}
+                    ratings={this.state.deal.avg_rating}
+                    count={this.state.deal.count}
                     type="inner"
                   />
                 </Card>
@@ -154,11 +156,11 @@ addToCart = async() => {
               <Card.Grid hoverable={false} style={gridStyle}>
                 <Card className="grid-card card1">
                 <p>{this.state.rest.name}</p>
-                  <RatingComponent
+                  {/* <RatingComponent
                     ratings={4.1}
                     count={32}
                     type="inner"
-                  />
+                  /> */}
                 </Card>
                 <hr/>
                 <Card className="button-card">
@@ -174,16 +176,119 @@ addToCart = async() => {
             <Card>
             <Tabs className='review-tabs' defaultActiveKey="1">
               <TabPane tab="Top Reviews" key="1">
-                <ReviewComponent likes={100} dislikes={12} review="loving it!"/>
-                <ReviewComponent likes={230} dislikes={7} review="It was amazing!"/>
-                <ReviewComponent likes={50} dislikes={2} review="My experience was just okay!"/>
-                <ReviewComponent likes={10} dislikes={1} review="Too bad. Horrible taste!"/>
+              {this.state.deal.reviews.map(review =>
+              (this.state.likedreviews.length>0 ? 
+              <>
+                {this.state.likedreviews.map(review_id => 
+                  review_id.review == review._id ?
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
+                  disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />
+                  :
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />)
+                }
+                </>
+                :
+                <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />
+              )
+              )}
               </TabPane>
               <TabPane tab="Positive Reviews" key="2">
-                Content of Tab Pane 2
+                {this.state.deal.reviews.map(review =>
+                review.good_review == 1 ?
+                <>
+                {this.state.likedreviews.length>0 ?
+                this.state.likedreviews.map(review_id => 
+                  review_id.review == review._id ?
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
+                  disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />
+                  :
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />)
+                
+                :
+                <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />
+                }
+                </>
+                : ''
+              )}
               </TabPane>
               <TabPane tab="Negative Reviews" key="3">
-                Content of Tab Pane 3
+                {this.state.deal.reviews.map(review =>
+                review.good_review == 0 ?
+                <>
+                  {this.state.likedreviews.length>0 ?
+                    this.state.likedreviews.map(review_id => 
+                  review_id.review == review._id ?
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
+                  disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />
+                  :
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />)
+                
+                :
+                <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.deal._id}
+                  />
+                }
+                </>
+                : ''
+              )}
               </TabPane>
             </Tabs>
             </Card>

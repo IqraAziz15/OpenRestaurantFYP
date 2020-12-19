@@ -1,19 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var Review = require('../../models/review');
-
+var LikedReview = require('../../models/liked_review');
 
 /* post reviews */
-exports.addReview = ( function(req, res, next) {
-    Review.create(req.body)
-            .then((review) => {
-            console.log('Review done', review);
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(review);
-        }, (err) => next(err))
-        .catch((err) => next(err));;
-
+exports.addReview = ( async(req, res, next) => {
+    var review = await Review.findOneAndUpdate({customer: req.body.customer, item: req.body.item}, {description: req.body.description},{
+        new: true,
+        upsert: true 
+        });
+        
+        res.json(review)
 });
 
 /* update reviews */
@@ -70,44 +67,112 @@ exports.getReviewsCustomer = ( function(req, res, next) {
         res.json(results);
   })});
 
+/* get  all review of an item */
+exports.getReviewsItem = ( function(req, res, next) {
+    Review.find({ item: req.body.id }, function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+  })});
+
+/* get review of a customer for an item */
+exports.getItemReviewCustomer = ( function(req, res, next) {
+    Review.find({ customer: req.body.id, item:req.body.iid }).exec(function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+     })});
+
 /* thumbsup */
 exports.thumbsUp = ( function(req, res, next) {
-    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsup: 1 }}),function(error, results) {
+    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsup: 1 }}).exec(function(error, results) {
     if (error) {
     return next(error);
     }
     // Respond with valid data
-    res.json(results);
-   }});
+    var likedreview = {
+        customer: req.body.cid,
+        item: req.body.itemid,
+        review:req.body._id,
+        like_dislike: 1
+    }
+    LikedReview.create(likedreview).then((liked) => {
+            console.log('Liked has been Added ', liked);
+            res.json(results);
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    
+   })});
 
 
 /* remove thumbsup */
 exports.decThumbsUp = ( function(req, res, next) {
-    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsup: -1 }}),function(error, results) {
+    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsup: -1 }}).exec(function(error, results) {
     if (error) {
     return next(error);
     }
     // Respond with valid data
+    LikedReview.deleteOne({customer: req.body.cid, item: req.body.itemid, review:req.body._id}).exec(function(error, rest) {
+    if (error) {
+    return next(error);
+    }
+    console.log('Liked has been Deleted', rest);
     res.json(results);
-}});
+    })
+    
+})});
 
 
 /* thumbsdown */
 exports.thumbsDown = ( function(req, res, next) {
-    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsdown: 1 }}),function(error, results) {
+    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsdown: 1 }}).exec(function(error, results) {
     if (error) {
     return next(error);
     }
     // Respond with valid data
-    res.json(results);
-}});
+    var likedreview = {
+        customer: req.body.cid,
+        item: req.body.itemid,
+        review:req.body._id,
+        like_dislike: -1
+    }
+    LikedReview.create(likedreview).then((liked) => {
+            console.log('Liked has been Added ', liked);
+            res.json(results);
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    
+})});
 
 /* remove thumbsdown */
 exports.decThumbsDown = ( function(req, res, next) {
-    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsdown: -1 }}),function(error, results) {
+    Review.findOneAndUpdate({_id:req.body._id},{ $inc: { thumbsdown: -1 }}).exec(function(error, results) {
+    if (error) {
+    return next(error);
+    }
+    LikedReview.deleteOne({customer: req.body.cid, item: req.body.itemid, review:req.body._id}).exec(function(error, rest) {
+    if (error) {
+    return next(error);
+    }
+    console.log('Liked has been Deleted', rest);
+    res.json(results);
+    })
+    // Respond with valid data
+    
+})});
+
+
+exports.getCustomerReviewsLikedForItem = ( function(req,res,next) {
+    LikedReview.find({customer: req.body.cid, item: req.body._id}).exec(function(error, result) {
     if (error) {
     return next(error);
     }
     // Respond with valid data
-    res.json(results);
-}});
+    res.json(result);
+    })
+})
+

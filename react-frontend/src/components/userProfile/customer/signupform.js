@@ -1,31 +1,25 @@
 import React,{Component} from 'react';
-/* import "./Fontawsomeicons/index.js"; */
 import axios from 'axios';
 import "antd/dist/antd.css";
 import './signupform.css';
-import { Form, Input, Button, Checkbox, Alert } from "antd";
-
-/* import {FontAwesomeIcon} from "@fortawesome/react-fontawesome" */
-
-
-import logo1 from '../../../assets/images/logo1.png';  
+import { Form, Input, Alert, message } from "antd";
+import {
+  Link
+} from "react-router-dom";
+import { Redirect } from 'react-router';
 import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import { register } from '../../../flux/actions/customer/authActions';
 import { clearErrors } from '../../../flux/actions/customer/errorActions';
  
-
-
-
-
 class SignupCustomer extends Component{
     state = {
         
         name : '',
         email : '',
         password : '',
-        msg : null
+        msg : null,
+        redirect: false
     }
 
   static propTypes = {
@@ -46,6 +40,7 @@ class SignupCustomer extends Component{
       else
       {
         this.setState({ msg : "success" })
+        this.setState({redirect: true})
       }
     }
   }
@@ -64,7 +59,8 @@ class SignupCustomer extends Component{
         }).then(res=>{
             console.log(res);
             cid = res.data.user.id
-            alert('Customer registered')     
+            message.success('Customer registered')
+            this.setState({redirect: true})     
         }) 
         .catch(err=>console.log(err)) 
 
@@ -86,6 +82,13 @@ class SignupCustomer extends Component{
 
 
 render(){
+  const { isAuthenticated } = this.props;
+    if (isAuthenticated){
+      return (<Redirect push to='/'/>)
+    }
+    else if (this.state.redirect){
+      return (<Redirect push to='/'/>)
+    }
     return( 
         <center>
         <div className="Login-container2">
@@ -96,89 +99,38 @@ render(){
           remember: true,
         }}>
             <div>
-               {  <img src={logo1} alt="Logo" /> }
+               {/* {  <img src={logo1} alt="Logo" /> } */}
                <br>
                </br> 
                <br></br>
                 <h1>Sign up</h1>
                 </div>
+                  {this.state.msg ? <Alert color="danger" type="error" closable message={this.state.msg}></Alert> : null}
 
-
-
-
-
-            
-                    <Form.Item container spacing={1} alignItems="flex-end">
-                    
-             
-                    
-                    <Form.Item>
-                        
+                    <Form.Item container spacing={1} alignItems="flex-end">    
+                    <Form.Item>                      
                         <Input prefix={  <UserOutlined className="site-form-item-icon" />}placeholder="Enter your name" id="input-with-icon-grid" name="name" onChange={this.onChange}  type="text"/>
                     </Form.Item>
                     </Form.Item>
-            
-
                     <Form.Item container spacing={1} alignItems="flex-end">
-                    
-             
-                    
-                    <Form.Item>
-                        
+                  <Form.Item>                      
                         <Input prefix={  <MailOutlined className="site-form-item-icon" />}placeholder="Enter your email" id="input-with-icon-grid" name="email" onChange={this.onChange} type="text"/>
                     </Form.Item>
-                    </Form.Item>
-              
-
-               
-                    
-               
-                    <Form.Item container spacing={1} alignItems="flex-end">
-                    
-             
-                    
-                    <Form.Item>
-                        
+                    </Form.Item>              
+                    <Form.Item container spacing={1} alignItems="flex-end">                  
+                    <Form.Item>                      
                         <Input prefix={  <LockOutlined className="site-form-item-icon" />}placeholder="Enter your password" type="password" id="input-with-icon-grid" name="password" onChange={this.onChange} />
                     </Form.Item>
                     </Form.Item>
-         
-
-             
-                  {/*   <Form.Item container spacing={1} alignItems="flex-end">
-                    
-             
-                    
-                    <Form.Item>
-                        
-                        <Input prefix={  <LockOutlined className="site-form-item-icon" />}placeholder="Confirm your password" id="input-with-icon-grid"  name="password2" onChange={this.onChange} type="text"/>
-                    </Form.Item>
-                    </Form.Item> */}
-        
-
-            
-            
                 <input className="butn" type="submit" value="Sign up" onClick={this.onSubmit}></input>
+                <div>
+                  <p>Already have an account? &nbsp;
+                  <Link className="link" to="/login" onClick={this.Load}>
+                      <span style={{ color: 'blue', fontWeight: 'bold', textDecorationLine: 'underline' }}>Sign In</span></Link></p>
 
-                <div>
-            
-               
-                <div>
-                 
-                  
-    
-                   
-                   
-                
-      </div>
                 </div>
-            
-        
-                
-
-               
-	
                 </Form>
+
 
 
         </div>

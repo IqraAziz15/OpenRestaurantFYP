@@ -320,6 +320,8 @@ class Proceedtocheckout extends React.Component {
             placeholder="Name"
             type="text"
             name="name"
+            value={this.props.auth.user.name}
+            disabled
           />
           <br /><br />
           <h6>Email</h6>

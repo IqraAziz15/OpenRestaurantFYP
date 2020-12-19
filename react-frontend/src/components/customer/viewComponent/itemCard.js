@@ -25,7 +25,7 @@ class ItemCard extends Component {
               src={`http://localhost:4000/restaurantadmin/item/image/${this.state.img}`} roundedCircle/>}>
             <Meta className="card-meta" title={this.state.name}  />
             <span className="price">Rs. {this.state.price}</span> 
-            <RatingComponent ratings={3.9} count={this.state.count} type="inner"/>
+            <RatingComponent ratings={this.state.ratings} count={this.state.count} type="inner"/>
         </Card>
     );
   }

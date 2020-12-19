@@ -17,7 +17,7 @@ export const loadUser = () => (dispatch, getState) => {
     dispatch({ type: USER_LOADING });
     const body1 = null;
     axios
-      .put('/api/superadmin/auth/ ', body1, tokenConfig(getState))
+      .put('http://localhost:4000/api/superadmin/auth/ ', body1, tokenConfig(getState))
       .then(res =>
         dispatch({
           type: USER_LOADED,

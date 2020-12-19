@@ -104,7 +104,7 @@ class ViewDeals extends React.Component
                 <img src = {`http://localhost:4000/restaurantadmin/deal/image/${deal._id}`} style={{marginRight: '40px' }} width="100" height="100" />
                 <div>
                     <h5 class="mb-1" key={deal.name}>{deal.name}</h5>
-                    <p class="mb-1" key={deal.total_bill}>{deal.total_bill}</p>
+                    <p class="mb-1" key={deal.total_bill}>Rs. {deal.total_bill}</p>
                     <small key={deal.description}>{deal.description}</small>
                 </div>
                 <div class="ml-auto justify-content-between" style={{ display: 'inline', alignContent: 'space-between'}}>

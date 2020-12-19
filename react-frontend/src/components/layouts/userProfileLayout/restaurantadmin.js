@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-<import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {Spin} from 'antd';
 import RegisterModal from '../../userProfile/waiter/signup';
 import 'bootstrap/dist/css/bootstrap.min.css';

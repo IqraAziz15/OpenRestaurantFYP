@@ -3,6 +3,21 @@ var router = express.Router();
 const waiterController = require('../../controllers/userprofile/waiterController');
 var auth = require('../../../middleware/auth')
 
+/////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
+
+router.get('/viewwaiter/:waiterId', waiterController.viewWaiter);
+
+router.get("/image/:waiterId", waiterController.waiterPhoto);
+
+router.get("/getallwaiter", waiterController.getAllWaiter);
+
+/////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
+
+router.put('/addphoto/:waiterId', waiterController.addPhoto);
+
+/////////////////////////////////////////////        PARAM OPERATIONS        //////////////////////////////////////////////
+
+router.param("waiterId", waiterController.WaiterById);
 
 /**
  * @route   POST routes/user/loginwaiter

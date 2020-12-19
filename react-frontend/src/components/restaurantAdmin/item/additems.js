@@ -130,8 +130,7 @@ class Additem extends React.Component {
     }
     itemHandler = async (e) => {
         e.preventDefault();
-        // if (this.state.category === 'other')
-         this.addSubmenu();
+        if (this.state.category === 'other') this.addSubmenu();
         var pointerToThis = this;
         let { name, price, description, rest_id, menu_id, image, subname } = this.state;
         var data = {
@@ -199,7 +198,7 @@ class Additem extends React.Component {
 
                                 <label for="submenu">Select Category </label>&nbsp;&nbsp;
                         {/* <input list="submenus" name="subid" id="submenu" onChange={this.onCategoryChange} />  */}
-                                <select name="subid" id="submenu" onChange={()=> this.onCategoryChange}>
+                                <select name="subid" id="submenu" value={this.state.subid} onChange={this.onCategoryChange}>
 
                                     {this.state.rest.menu.submenus.map(submenu =>
                                         <option value={submenu._id} key={submenu._id} >{submenu.name}</option>

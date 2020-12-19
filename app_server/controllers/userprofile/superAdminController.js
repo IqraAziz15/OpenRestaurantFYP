@@ -8,7 +8,7 @@ var bcrypt = require('bcryptjs');
 router.use(bodyParser.json());
 
 /* GET users listing. */
-exports.allusers = ( authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
+exports.allusers = ( function(req, res, next) {
     SuperAdmin.find({})
         .then((user) => {
             res.statusCode = 200;
@@ -18,8 +18,7 @@ exports.allusers = ( authenticate.verifyUser, authenticate.verifyAdmin, function
         .catch((err) => next(err));
 });
 
-exports.loggedinuser = ( authenticate.verifyUser, authenticate.verifyAdmin, async (req, res, next) => {
-    console.log(req.headers.authorization);
+exports.loggedinuser = ( async (req, res, next) => {
     await SuperAdmin.findOne({})
         .then((user) => {
             res.statusCode = 200;
@@ -27,7 +26,6 @@ exports.loggedinuser = ( authenticate.verifyUser, authenticate.verifyAdmin, asyn
             res.json(user);
         }, (err) => next(err))
         .catch((err) => next(err));
-    console.log(res);
 });
 
 exports.signup = ( (req, res, next) => {

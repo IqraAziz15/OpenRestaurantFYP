@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var http = require('http');
 var cors = require('cors');
+var passport = require('passport');
 var config = require('config');
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
@@ -37,7 +38,12 @@ var customerItemRouter = require('./app_server/routes/customer/item')
 var customerRestaurantRouter = require('./app_server/routes/customer/restaurant')
 var customerCartRouter = require('./app_server/routes/customer/cart')
 var customerOrderRouter = require('./app_server/routes/customer/order')
+var customerComplainRouter = require('./app_server/routes/customer/complain')
 var transactionRouter = require('./app_server/routes/payment/transactionRoute')
+var reviewsRouter = require('./app_server/routes/reviews/reviews')
+var ratingsRouter = require('./app_server/routes/ratings/ratings')
+var criticalReviewsRouter = require('./app_server/routes/reviews/criticalReviews')
+var positiveReviewsRouter = require('./app_server/routes/reviews/positiveReviews')
 
 var app = express();
 
@@ -67,7 +73,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-
+app.use(passport.initialize());
+app.use(passport.session()); 
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -98,7 +105,12 @@ app.use('/customer/item', customerItemRouter);
 app.use('/customer/restaurant', customerRestaurantRouter);
 app.use('/customer/cart', customerCartRouter);
 app.use('/customer/order', customerOrderRouter);
+app.use('/customer/complain', customerComplainRouter);
 app.use('/api/transactions', transactionRouter);
+app.use('/api/reviews', reviewsRouter);
+app.use('/api/ratings', ratingsRouter);
+app.use('/api/criticalreviews', criticalReviewsRouter);
+app.use('/api/positivereviews', positiveReviewsRouter);
 
 
 // catch 404 and forward to error handler

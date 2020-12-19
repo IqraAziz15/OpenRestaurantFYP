@@ -24,6 +24,7 @@ class ViewItem extends Component {
     user: '',
     quantity:1,
     redirect: false,
+    likedreviews: [],
     isauth: true
   };
   static propTypes = {
@@ -64,17 +65,19 @@ class ViewItem extends Component {
   componentDidMount= async() => {
     
     var pointerToThis = this;
+    var body1 = JSON.stringify({ item: this.state.itemId})
     await fetch(
-      `http://localhost:4000/restaurantadmin/item/viewitem/${this.state.itemId}`,
+      `http://localhost:4000/api/ratings/getratings-reviews-item`,
       {
-        method: "GET",
+        method: "POST",
+        body: JSON.stringify({ item: this.state.itemId}),
         headers: {
           "Content-Type": "application/json",
         },
       }
     )
       .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ item: data, loading: false }));
+      .then((data) => pointerToThis.setState({ item: data }));
     var body = JSON.stringify({ id: this.state.item.rest_id });
     await fetch("http://localhost:4000/restaurantadmin/restaurant/getrestaurant/", {
         method: "POST",
@@ -84,7 +87,24 @@ class ViewItem extends Component {
         },
       })
         .then((response) => response.json())
-        .then((data) => pointerToThis.setState({ rest: data, loading: false }));
+        .then((data) => pointerToThis.setState({ rest: data}));
+        if(this.props.auth.isAuthenticated){
+          await fetch("http://localhost:4000/api/reviews/review-liked-customer-item", {
+              method: "POST",
+              body:JSON.stringify({ 
+                cid: this.props.auth.user._id, 
+                _id: this.state.item._id 
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if(data) pointerToThis.setState({ review_like: data.like_dislike, likedreviews: data, loading: false });
+              });
+    }
+    else pointerToThis.setState({ review_like: 0, loading: false });
   }
 
   render() {
@@ -142,8 +162,8 @@ class ViewItem extends Component {
                     <span className='price'>Rs. {this.state.item.price}</span><hr/>
                   </p>
                   <RatingComponent
-                    ratings={3.9}
-                    count={this.state.item.rating_count}
+                    ratings={this.state.item.avg_rating}
+                    count={this.state.item.count}
                     type="inner"
                   />
                 </Card>
@@ -151,11 +171,11 @@ class ViewItem extends Component {
               <Card.Grid hoverable={false} style={gridStyle}>
                 <Card className="grid-card card1">
                   <p>{this.state.rest.name}</p>
-                  <RatingComponent
+                  {/* <RatingComponent
                     ratings={4.1}
                     count={32}
                     type="inner"
-                  />
+                  /> */}
                 </Card>
                 <hr/>
                 <Card className="button-card">
@@ -171,16 +191,119 @@ class ViewItem extends Component {
             <Card>
             <Tabs className='review-tabs' defaultActiveKey="1">
               <TabPane tab="Top Reviews" key="1">
-                <ReviewComponent likes={100} dislikes={12} review="loving it!"/>
-                <ReviewComponent likes={230} dislikes={7} review="It was amazing!"/>
-                <ReviewComponent likes={50} dislikes={2} review="My experience was just okay!"/>
-                <ReviewComponent likes={10} dislikes={1} review="Too bad. Horrible taste!"/>
+              {this.state.item.reviews.map(review =>
+              (this.state.likedreviews.length>0 ? 
+              <>
+                {this.state.likedreviews.map(review_id => 
+                  review_id.review == review._id ?
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
+                  disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />
+                  :
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />)
+                }
+                </>
+                :
+                <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />
+              )
+              )}
               </TabPane>
               <TabPane tab="Positive Reviews" key="2">
-                Content of Tab Pane 2
+                {this.state.item.reviews.map(review =>
+                review.good_review == 1 ?
+                <>
+                {this.state.likedreviews.length>0 ?
+                this.state.likedreviews.map(review_id => 
+                  review_id.review == review._id ?
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
+                  disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />
+                  :
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />)
+                
+                :
+                <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />
+                }
+                </>
+                : ''
+              )}
               </TabPane>
               <TabPane tab="Negative Reviews" key="3">
-                Content of Tab Pane 3
+                {this.state.item.reviews.map(review =>
+                review.good_review == 0 ?
+                <>
+                  {this.state.likedreviews.length>0 ?
+                    this.state.likedreviews.map(review_id => 
+                  review_id.review == review._id ?
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
+                  disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />
+                  :
+                  <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />)
+                
+                :
+                <ReviewComponent 
+                  likes={review.likes} 
+                  review_id={review._id} 
+                  primary='false'
+                  disprimary='false' 
+                  dislikes={review.dislikes} review={review.review} 
+                  item_id={this.state.item._id}
+                  />
+                }
+                </>
+                : ''
+              )}
               </TabPane>
             </Tabs>
             </Card>

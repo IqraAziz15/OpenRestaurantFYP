@@ -65,8 +65,7 @@ class CLayout extends React.Component {
             />
           </center>
         ) : (
-          <div className="rest-card-div" style={{paddingTop:"2em"}}>
-            <Divider className="divider" orientation="left" />
+          <div className="rest-card-div" style={{marginTop:"5em"}}>
             {this.state.rests.map((rest) => (
               <Link style={{ cursor:"pointer" }} to={`/restaurantview/${rest._id}`} key={rest._id}>
               <Card.Grid hoverable={false} style={gridStyle}>

@@ -20,6 +20,7 @@ import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Signupra from './restaurantadmin';
 import viewanddeleterestaurant from '../../superAdmin/restaurant/viewanddeleterestaurant';
 import RegisterModal from '../../userProfile/restaurantAdmin/signup';
+import Complains from '../../customer/complainComponents/viewcomplains';
 import Logout from '../../userProfile/superAdmin/logout';
 import './superadminlayout.css';
 import { connect } from 'react-redux';
@@ -84,7 +85,9 @@ class SaLayout extends React.Component
                         
                         <Menu.Item key="2" icon={<FileAddOutlined />}><Link className="link" to="/signup" >Add Restaurant</Link></Menu.Item>
                         <Menu.Item key="3"icon={<ContainerOutlined />}><Link className="link" to="/viewanddeleterestaurant" >View Restaurants</Link></Menu.Item>
-                        <Menu.Item key="4" icon={<SettingOutlined />}></Menu.Item>
+                        <Menu.Item key="4" icon={<FormOutlined />}>
+                            <Link className="link" to="/customercomplain" >Customer Complaints</Link>
+                        </Menu.Item>
                         <Menu.Item key="5" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
                         
                         
@@ -100,7 +103,7 @@ class SaLayout extends React.Component
                         <Switch>
                             <Route path="/viewanddeleterestaurant" component={viewanddeleterestaurant}/>
                             <Route exact path="/signup" component={Signupra}/>
-                            
+                            <Route exact path="/customercomplain" component={Complains}/>
                         </Switch>
                         
                     </Content>

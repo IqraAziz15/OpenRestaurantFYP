@@ -332,6 +332,7 @@ class RaSetting extends React.Component {
 
 
             console.log(this.state.rest)
+            console.log(this.state.user)
     }
 
     componentWillUnmount() {
@@ -357,6 +358,9 @@ class RaSetting extends React.Component {
             message.success('Photo Added Successfully')
         })
             .catch(err => console.log(err))
+            console.log(this.state.user_id)
+            console.log(this.state.user.id)
+
     }
 
     changeUsername = (rid) =>
@@ -535,6 +539,7 @@ class RaSetting extends React.Component {
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
                                     <p><b>Name: </b>{this.state.user.name}  </p>
+                                    
                                 </div>
                             </div>
                         </div>

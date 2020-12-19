@@ -32,15 +32,15 @@ class DLayout extends React.Component {
   };
 
   componentDidMount = () => {
-    const pointerToThis = this;
-    fetch("http://localhost:4000/restaurantadmin/deal/getalldeals/", {
+    var pointerToThis = this;
+    fetch("http://localhost:4000/api/ratings/allratingswithitems/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ deals: data, loading: false }));
+      .then((data) => pointerToThis.setState({ deals: data.deals, loading: false }));
   };
 
   render() {
@@ -65,10 +65,9 @@ class DLayout extends React.Component {
             />
           </center>
         ) : (
-          <div className="item-card-div" style={{paddingTop:"2em"}}>
-            <Divider className="divider" orientation="left" />
+          <div className="item-card-div" style={{marginTop:"5em"}}>
             {this.state.deals.map((deal) => (
-              <Link style={{ cursor:"pointer" }} href={`/viewdeal/${deal._id}`} key={deal._id}>
+              <Link style={{ cursor:"pointer" }} to={`/viewdeal/${deal._id}`} key={deal._id}>
               <Card.Grid hoverable={false} style={gridStyle}>
                 <a
                   style={{ cursor: "pointer" }}
@@ -77,8 +76,8 @@ class DLayout extends React.Component {
                       name={deal.name}
                       description={deal.description}
                       price={deal.total_bill}
-                      ratings={deal.rating}
-                      count={deal.rating_count}
+                      ratings={deal.avg_rating}
+                      count={deal.count}
                       img_url={deal._id}
                     />
                 </a>
@@ -87,6 +86,7 @@ class DLayout extends React.Component {
             ))}
           </div>
         )}
+        <br/><br/>
       </div>
     );
   }

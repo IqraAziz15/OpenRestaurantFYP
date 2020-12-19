@@ -24,12 +24,10 @@ var waiterSchema = new Schema({
         type: String,
         required: true
     },
-    // status: {
-    //     type: String,
-    // },
-    // picture: {
-    //     type: Buffer,
-    // },
+    image: {
+        data: Buffer,
+        contentType: String
+    },
     register_date: {
         type: Date,
         default: Date.now

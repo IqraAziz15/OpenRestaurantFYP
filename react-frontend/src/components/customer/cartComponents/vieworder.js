@@ -237,6 +237,7 @@ class Orderhistory extends React.Component {
                         <h4 className='price' style={{float: 'right'}}>PKR. {this.state.Total}</h4>
                     </p>
                 </Card>
+                <br/> <br/>
                 </div>
                 )}
             </div>

@@ -14,7 +14,8 @@ import {
     ContainerOutlined,
     AppstoreAddOutlined,
     FileAddOutlined,
-    WindowsOutlined
+    WindowsOutlined,
+    GroupOutlined
 } from '@ant-design/icons';
 import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Additem from '../../restaurantAdmin/item/additems';
@@ -22,8 +23,6 @@ import ViewItems from '../../restaurantAdmin/item/viewanddeleteitem';
 import EditItem from '../../restaurantAdmin/item/edititem';
 import AddDeal from '../../restaurantAdmin/deal/adddeals';
 import ViewDeals from '../../restaurantAdmin/deal/viewanddeletedeal';
-import restaurantstatistics from '../../restaurantAdmin/restaurantStatistics/restaurantstatistics';
-import adminstatistics from '../../restaurantAdmin/restaurantStatistics/adminstatistics';
 // import addstaff from '../../restaurantAdmin/staff/addstaff';
 import Signupstaff from './signupstaff';
 import ViewStaff from '../../restaurantAdmin/staff/viewanddeletestaff';
@@ -37,6 +36,7 @@ import RaSettings from '../../restaurantAdmin/settings/rasetting';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Logout from '../../userProfile/restaurantAdmin/logout';
+import SalesStats from '../../restaurantAdmin/restaurantStatistics/itemstats'
 import { Button } from 'reactstrap';
 import {Spin} from 'antd';
 // import logo from '../assets/images/logo.png';
@@ -132,13 +132,16 @@ class RaLayout extends React.Component
                     <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
-                        <Menu.Item key="1" icon={<UserOutlined />}><Link className="link" to="/userprofile">
+                        <Menu.Item key="1" icon={<GroupOutlined/>}><Link className="link" to="/dashboard">
+                            Dashboard</Link>
+                        </Menu.Item>
+                        <Menu.Item key="2" icon={<UserOutlined />}><Link className="link" to="/userprofile">
                             User Profile</Link>
                         </Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Restaurant Team">
                             {/* <Menu.Item key="2" icon={<UserOutlined />}>Waiter</Menu.Item> */}
                             <SubMenu key="sub3" title="Manage Waiter" icon={<UserOutlined />}>
-                                <Menu.Item key="2" icon={<FileAddOutlined />}><Link className="link" to="/addwaiter">
+                                <Menu.Item key="3" icon={<FileAddOutlined />}><Link className="link" to="/addwaiter">
                                 Add Waiters
                                 </Link>
                                 </Menu.Item>
@@ -193,9 +196,9 @@ class RaLayout extends React.Component
                         </SubMenu>
                         
                         <Menu.Item key="12" icon={<SettingOutlined />}><Link className="link" to="/usersettings" >Settings</Link></Menu.Item>
-                        <Menu.Item key="13" icon={<LineChartOutlined />}>
+                        {/* <Menu.Item key="13" icon={<LineChartOutlined />}>
                             <Link className="link" to="/adminstatistics" >Statistics</Link>
-                            </Menu.Item>
+                            </Menu.Item> */}
                         <Menu.Item key="14" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
                         
                         
@@ -217,8 +220,6 @@ class RaLayout extends React.Component
                             </Route>
                             <Route path="/viewanddeletedeal" render={(props) => ( <ViewDeals {...props} rest={this.state.rest} user={this.state.user} />)}>
                             </Route>
-                            <Route path="/adminstatistics" component={ adminstatistics }>
-                            </Route>
                             <Route path="/addstaff" render={(props) => ( <Signupstaff {...props} restid={this.state.rest_id} />)}>
                             </Route>
                             <Route path="/viewanddeletestaff" render={(props) => ( <ViewStaff {...props} rest={this.state.rest} />)}>
@@ -230,6 +231,8 @@ class RaLayout extends React.Component
                             <Route path="/userprofile" render={(props) => ( <RaProfile {...props} user={this.state.user} />)}>
                             </Route>
                             <Route path="/usersettings" render={(props) => ( <RaSettings {...props} user={this.state.user} />)}>
+                            </Route>
+                            <Route path="/dashboard" render={(props) => ( <SalesStats {...props} user={this.state.user} restid={this.state.rest_id} />)}>
                             </Route>
                         </Switch>
                         

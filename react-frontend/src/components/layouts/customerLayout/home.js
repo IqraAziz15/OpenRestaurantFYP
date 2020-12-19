@@ -32,7 +32,7 @@ class Home extends React.Component {
   };
 
 
-  componentDidMount = () => {
+  componentWillMount = () => {
     const pointerToThis = this;
     fetch("http://localhost:4000/customer/restaurant/viewrestaurant/", {
       method: "GET",
@@ -43,25 +43,15 @@ class Home extends React.Component {
       .then((response) => response.json())
       .then((data) => pointerToThis.setState({ rests: data, loading: false }));
 
-    fetch("http://localhost:4000/restaurantadmin/item/getallitems/", {
+    fetch("http://localhost:4000/api/ratings/allratingswithitems/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ items: data }));
-
-    fetch("http://localhost:4000/restaurantadmin/deal/getalldeals/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ deals: data }));
-  };
-
+      .then((data) => pointerToThis.setState({ items: data.items, deals: data.deals }));
+  }
 
   render() {
     const settings = {
@@ -183,8 +173,8 @@ class Home extends React.Component {
                       name={item.name}
                       description={item.description}
                       price={item.price}
-                      ratings={item.rating}
-                      count={item.rating_count}
+                      ratings={item.avg_rating}
+                      count={item.count}
                       img_url={item._id}
                     />
                   </Link>
@@ -206,8 +196,8 @@ class Home extends React.Component {
                       name={deal.name}
                       description={deal.description}
                       price={deal.total_bill}
-                      ratings={deal.rating}
-                      count={deal.rating_count}
+                      ratings={deal.avg_rating}
+                      count={deal.count}
                       img_url={deal._id}
                     />
                 </Link>

@@ -9,7 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import {Button, ButtonToolbar} from 'react-bootstrap';
 import {EditRestaurant} from './editrestaurant';
 import {EditRestaurantAdmin} from '../reastaurantAdmin/editrestaurantadmin'; 
-
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 const API = 'http://localhost:4000/superadmin/restaurant/restaurants';
 const API1= 'http://localhost:4000/superadmin/restaurant/delrestaurant/'; 
 
@@ -23,6 +24,11 @@ class Viewrestaurant extends React.Component {
       changeresadminModalshow:false
     }
   }
+
+  static propTypes = {
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
+}
   
   componentDidMount() {
     fetch(API)
@@ -159,4 +165,8 @@ class Viewrestaurant extends React.Component {
   }
 }
 
-export default Viewrestaurant;
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, null)(Viewrestaurant);

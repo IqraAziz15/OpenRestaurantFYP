@@ -3,6 +3,91 @@ var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var Waiter = require('../../models/waiter')
 const JWT_SECRET = config.get('jwtSecret');
+var multer = require('multer');
+var _ = require('lodash');
+var formidable = require('formidable');
+const fs = require('fs');
+const storage = multer.diskStorage({
+    destination: function (req, res, cb) {
+        cb(null, 'uploads/')
+    }
+});
+const upload = multer({ storage: storage }); 
+
+/////////////////////////////////////////////       PARAM OPERATIONS        //////////////////////////////////////////////
+
+exports.WaiterById = (req, res, next, id)=>{
+  Waiter.findById(id).exec((err, waiter)=>{
+      if(err || !waiter){
+          return res.status(400).json({
+              error: "Waiter not found"
+          });
+      }
+      req.profile = waiter;
+      next();
+  });
+};
+
+/////////////////////////////////////////////        GET OPERATIONS        //////////////////////////////////////////////
+
+exports.viewWaiter = (function(req, res) {
+  return res.json(req.profile);
+});
+
+exports.getAllWaiter = (function(req, res){
+  var Waiter =Waiter.find()
+  .select("-image")
+  .then((waiter)=>{
+      console.log("waiter");
+      console.log(waiter);
+      res.status(200).json(
+        waiter 
+      );
+  })
+  .catch(err=>console.log(err));
+});
+
+exports.waiterPhoto = (req, res, next) => {
+  if(req.profile.image.data){
+      res.set(("Content-Type" , req.profile.image.contentType));
+      return res.send(req.profile.image.data)
+  }
+  next();
+}
+
+/////////////////////////////////////////////        PUT OPERATIONS        //////////////////////////////////////////////
+
+exports.addPhoto = ((req,res,next) =>{
+  let form = new formidable.IncomingForm()
+   form.keepExtensions = true
+   form.parse(req, (err, fields, files)=>{
+       console.log("form parsed")
+       if(err) {
+           return res.status(400).json({
+               error: "Photo could not be uploaded"
+           })
+       }
+       console.log("Fids",fields)
+       console.log(files)
+       let Waiter = req.profile
+       Waiter= _.extend(Waiter, fields)
+
+       if(files.image){
+        Waiter.image.data =fs.readFileSync(files.image.path)
+        Waiter.image.contentType = files.image.type
+       }
+       Waiter.save((err, result)=>{
+           if(err){ 
+               return res.status(400).json({
+                   error: err
+               })
+           }
+           res.json(Waiter)
+       })
+   }) 
+});
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,8 +139,8 @@ exports.waiterLogin = (async (req, res) => {
  * @access  Public
  */
 
-exports.waiterRegister = (async (req, res) => {
-    const { name, username, email, phonenumber, password, rest_id } = req.body;
+exports.waiterRegister = (upload.single('image'),async (req, res) => {
+    const { name, username, email, phonenumber, password, rest_id, image } = req.body;
   
     // Simple validation
     if (!name || !username || !email || !phonenumber || !password) {
@@ -78,7 +163,8 @@ exports.waiterRegister = (async (req, res) => {
         email,
         phonenumber,
         password: hash,
-        rest_id
+        rest_id,
+        image
       });
   
       const savedWaiter = await newWaiter.save();
@@ -96,7 +182,8 @@ exports.waiterRegister = (async (req, res) => {
           username : savedWaiter.username,
           email: savedWaiter.email,
           phonenumber: savedWaiter.phonenumber,
-          rest_id: savedWaiter.rest_id
+          rest_id: savedWaiter.rest_id,
+          image: savedWaiter.image,
         }
       });
     } catch (e) {

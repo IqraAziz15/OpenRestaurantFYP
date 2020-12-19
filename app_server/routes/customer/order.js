@@ -36,4 +36,12 @@ router.get('/getordersCSV/:restid', orderController.getOrdersForCSV);
 
 router.post('/extractstringsfromorders', orderController.extractWordsOrder);
 
+router.post('/getordersJSON', orderController.getOrdersJSON);
+
+router.post('/getordersbydate', orderController.getOrdersByDates);
+
+router.post('/viewallcustomerorders/complete', orderController.viewAllCustomerOrdersComplete);
+
+router.post('/viewallcustomerorders/pending', orderController.viewAllCustomerOrdersPending);
+
 module.exports = router;

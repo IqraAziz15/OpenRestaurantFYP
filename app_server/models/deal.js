@@ -16,7 +16,7 @@ var dealSchema = new Schema({
     },
 
     total_bill: {
-        type: String,
+        type: Number,
         required: true
     },
     ratings: 

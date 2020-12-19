@@ -1,7 +1,14 @@
 import React,{Component} from 'react';
 import RegisterModal from '../../userProfile/restaurantAdmin/signup';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class Signupra extends Component {
+
+  static propTypes = {
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
+}
     render()
     {
         return (
@@ -18,4 +25,8 @@ class Signupra extends Component {
     ;
   }
   
-  export default Signupra;
+  const mapStateToProps = (state) => ({
+    auth: state.auth
+  });
+  
+  export default connect(mapStateToProps, null) (Signupra);

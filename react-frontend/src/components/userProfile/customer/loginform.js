@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import "antd/dist/antd.css";
 /* import "./Fontawsomeicons/index.js"; */
 import './loginform.css';
 import { Form, Input, Button, Checkbox, Alert, Spin } from "antd";
@@ -44,13 +45,14 @@ class Logincustomer extends Component {
   };
 
 
-  componentDidUpdate  = async(prevProps) => {
+  componentDidUpdate = async (prevProps) => {
     const { error, isAuthenticated } = this.props;
     this.id = setTimeout(() => this.setState({ loading: false }), 3000)
     if (error !== prevProps.error) {
       //check for register error
       if (error.id === "LOGIN_FAIL") {
-        this.setState({ msg: error.msg.msg });
+        console.log(error)
+        this.setState({ msg: error.msg });
       } else {
         this.setState({ msg: null });
       }
@@ -74,15 +76,15 @@ class Logincustomer extends Component {
     };
     //Attempt to login
     this.props.login(user);
-    this.setState({redirect:true})
+    if (this.props.isAuthenticated) this.setState({ redirect: true })
     // login(user)
-        // .then(() => {
-        //   this.setState({redirect: true});
-        //   window.location.reload();
-        // })
-        // .catch(() => {
-        //   window.location.reload();
-        // });
+    // .then(() => {
+    //   this.setState({redirect: true});
+    //   window.location.reload();
+    // })
+    // .catch(() => {
+    //   window.location.reload();
+    // });
   };
 
   Load = () => {
@@ -91,17 +93,17 @@ class Logincustomer extends Component {
   render() {
     const { isAuthenticated } = this.props;
     if (this.state.visible) {
-      return <Signup />
+      return (<Redirect push to='/signup' />)
     }
-    else if (isAuthenticated){
-      return (<Redirect push to='/'/>)
+    else if (isAuthenticated) {
+      return (<Redirect push to='/' />)
     }
-    else if (this.state.redirect){
-      return (<Redirect push to='/'/>)
+    else if (this.state.redirect) {
+      return (<Redirect push to='/' />)
     }
     return (
       <div className="mybody">
-      {this.state.loading ? (
+        {this.state.loading ? (
           <center>
             <Spin
               className="spinner"
@@ -110,68 +112,55 @@ class Logincustomer extends Component {
             />
           </center>
         ) :
-        <center>
-          <div className="Login-container1">
-            {this.state.msg ? <Alert color="danger">{this.state.msg}</Alert> : null}
-            <Form onSubmit={this.onSubmit}
-              name="normal_login"
-
-              initialValues={{
-                remember: true,
-              }}>
-              <div>
-                {<img src={logo1} alt="Logo" />}
-                <br>
-                </br>
-                <br></br>
-                <h1 className="myheading">Sign in</h1>
-              </div>
-
-              <Form.Item container spacing={1} alignItems="flex-end">
-                <Form.Item rules={[
-                  {
-                    required: true,
-                    message: "Please input your Password!",
-                  },
-                ]}
-                >
-
-
-                  <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Enter Email Id" className="input-with-icon-grid1" name="email" type="text" onChange={this.onChange} />
-                </Form.Item>
-              </Form.Item>
-
-
-
-
-              <Form.Item container spacing={1} alignItems="flex-end">
-
-
-                <Form.Item rules={[
-                  {
-                    required: true,
-                    message: "Please input your Password!",
-                  },
-                ]}
-                >
-                  <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Enter Password" className="input-with-icon-grid1" name="password" type="text" onChange={this.onChange} />
-                </Form.Item>
-              </Form.Item>
-              <input className="butn" type="submit" value="Sign in" onClick={this.onSubmit}></input>
-              <div>
-                <p>Don't have an account yet?</p>
+          <center>
+            <div className="Login-container1">
+              <Form onSubmit={this.onSubmit}
+                name="normal_login"
+                initialValues={{
+                  remember: true,
+                }}>
                 <div>
-
-                  <Router>
-                    <Link className="link" to="/signup" onClick={this.Load}>sign up</Link>
-
-                  </Router>
+                  {/* {<img src={logo1} alt="Logo" />} */}
+                  {/* <br>
+                </br> */}
+                  <br></br>
+                  <h1 className="myheading">Sign in</h1>
                 </div>
-              </div>
-            </Form>
-          </div>
-        </center>
-  }
+                {this.state.msg ? <Alert color="danger" type="error" closable message={this.state.msg}></Alert> : null}
+                <br />
+                <Form.Item container spacing={1} alignItems="flex-end">
+                  <Form.Item rules={[
+                    {
+                      required: true,
+                      message: "Please input your Password!",
+                    },
+                  ]}
+                  >
+                    <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Enter Email Id" className="input-with-icon-grid1" name="email" type="text" onChange={this.onChange} />
+                  </Form.Item>
+                </Form.Item>
+                <Form.Item container spacing={1} alignItems="flex-end">
+                  <Form.Item rules={[
+                    {
+                      required: true,
+                      message: "Please input your Password!",
+                    },
+                  ]}
+                  >
+                    <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Enter Password" className="input-with-icon-grid1" name="password" type="text" onChange={this.onChange} />
+                  </Form.Item>
+                </Form.Item>
+                <input className="butn" type="submit" value="Sign in" onClick={this.onSubmit}></input>
+                <div>
+                  <p>Don't have an account yet? &nbsp;
+                  <Link className="link" to="/signup" onClick={this.Load}>
+                      <span style={{ color: 'blue', fontWeight: 'bold', textDecorationLine: 'underline' }}>Sign Up</span></Link></p>
+
+                </div>
+              </Form>
+            </div>
+          </center>
+        }
       </div>
     );
   }

@@ -33,14 +33,14 @@ class CLayout extends React.Component {
 
   componentDidMount = () => {
     const pointerToThis = this;
-    fetch("http://localhost:4000/restaurantadmin/item/getallitems/", {
+    fetch("http://localhost:4000/api/ratings/allratingswithitems/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
-      .then((data) => pointerToThis.setState({ items: data, loading: false }));
+      .then((data) => pointerToThis.setState({ items: data.items, loading:false }));
   };
 
   render() {
@@ -55,7 +55,7 @@ class CLayout extends React.Component {
     };
 
     return (
-      <div className='app-container'>
+      <div className='app-container' >
         {this.state.loading ? (
           <center>
             <Spin
@@ -65,8 +65,8 @@ class CLayout extends React.Component {
             />
           </center>
         ) : (
-          <div className="item-card-div" style={{paddingTop:"2em"}}>
-            <Divider className="divider" orientation="left" />
+          <div className="item-card-div" style={{marginTop:"5em"}}>
+            <br/>
             {this.state.items.map((item) => (
               <Link style={{ cursor:"pointer" }} to={`/view/${item._id}`} key={item._id}>
               <Card.Grid hoverable={false} style={gridStyle}>
@@ -77,8 +77,8 @@ class CLayout extends React.Component {
                       name={item.name}
                       description={item.description}
                       price={item.price}
-                      ratings={item.rating}
-                      count={item.rating_count}
+                      ratings={item.avg_rating}
+                      count={item.count}
                       img_url={item._id}
                     />
                 </a>

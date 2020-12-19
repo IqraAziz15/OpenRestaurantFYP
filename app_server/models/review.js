@@ -2,8 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var reviewSchema = new Schema({
     customer: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Customer',
+        type: String,
+        required: true
+    },
+    item: {
+        type: String, 
         required: true
     },
     description: {
@@ -20,6 +23,9 @@ var reviewSchema = new Schema({
         default:0
         // required: true 
     },
+    good_review: {
+        type: Number
+    }
 
 });
 

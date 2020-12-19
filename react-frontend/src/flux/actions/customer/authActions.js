@@ -80,15 +80,16 @@ export const login = ({ name, email, password }) => (
 
   axios
     .post('http://localhost:4000/userprofile/customer/logincustomer', body, config)
-    .then(res =>
+    .then(res => {
+      console.log(res)
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data
       })
-    )
+    })
     .catch(err => {
       dispatch(
-        returnErrors(err.data, err.status, 'LOGIN_FAIL')
+        returnErrors(err.response.data.msg, err.response.status, 'LOGIN_FAIL')
       );
       dispatch({
         type: LOGIN_FAIL

@@ -109,7 +109,7 @@ class Allorders extends React.Component {
     this.id = setTimeout(() => this.setState({ loading: false }), 2000)
     Pusher.logToConsole = true;
 
-    var pusher = new Pusher('98bd0af8e51670d6785d', {
+    var pusher = new Pusher('id', {
       cluster: 'ap2'
     });
     console.log(this.props.user)

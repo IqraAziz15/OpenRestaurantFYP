@@ -1,7 +1,9 @@
 :root {
-  --color1: #ffdab9;
+  --color1:#ffcfa4;
   --color2: #bb8c63;
   --color3: #855b36;
+  --color4: #553921;
+  --color5:#bb8c63;
 }
 
 .rest-card {
@@ -12,13 +14,16 @@
 }
 .app-container {
   background-color: var(--color1);
-  min-height: 1200px;
-  height: max-content;
+  /* overflow: hidden;
+  height: auto;
+  width: 100%; */
 
 }
-.App{
-  min-height: 1200px;
-  height: max-content;
+.App-intro{
+  overflow: hidden;
+  height: auto;
+  width: 100%;
+  /* height: fit-content; */
 }
 
 .link {
@@ -30,8 +35,38 @@ a {
   color: black;
 }
 
-a:hover {
+Nav .link{
+  color: #bb8c63;
+  font-weight: 700;
+}
+
+NavDropdown .link {
+  color: #bb8c63;
+  font-weight: 700;
+}
+
+/* #disabled {
+  color: #5c0909;
+  font-weight: 400;
+} */
+
+#collasible-nav-dropdown, #collasible-nav-dropleft {
+  color: #bb8c63;
+  font-weight: 700;
+}
+
+Nav a {
+  color: #bb8c63;
+}
+
+.link:hover {
   text-decoration: none;
+  background-color: none;
+}
+a:hover {
+  color: black;
+  text-decoration: none;
+  background-color: none;
   font-weight: 700;
 }
 

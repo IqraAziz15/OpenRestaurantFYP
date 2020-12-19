@@ -4,9 +4,9 @@ var Deal = require('../../models/deal');
 const Pusher = require("pusher");
 const { Parser } = require('json2csv');
 const pusher = new Pusher({
-    appId: "1114675",
-    key: "98bd0af8e51670d6785d",
-    secret: "e3f7e65a4e8e33458696",
+    appId: "appid",
+    key: "key",
+    secret: "secret",
     cluster: "ap2",
     useTLS: true
 });
@@ -148,15 +148,15 @@ exports.viewOrder = (function (req, res, next) {
 });
 
 
-exports.extractWordsOrder = (function(req, res, next) {
-    Order.find({customer_id: req.body.cid, orderid:req.body.orderId}).exec(async (error, results) => {
+exports.extractWordsOrder = (function (req, res, next) {
+    Order.find({ customer_id: req.body.cid, orderid: req.body.orderId }).exec(async (error, results) => {
         if (error) {
             return next(error);
         }
         // Respond with valid data
         let Items = [];
         // message.info('we are inside')
-        if(results){
+        if (results) {
             results.forEach(rest => {
                 // console.log('c')
                 rest.ordered_food.forEach(item => {
@@ -167,15 +167,16 @@ exports.extractWordsOrder = (function(req, res, next) {
             var items = await Item.find({ '_id': { $in: Items } }).select('name description')
             var deals = await Deal.find({ '_id': { $in: Items } }).select('name description')
             var list = items.concat(deals);
-            list.forEach(item =>{
-                item.name = item.name.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
-                item.description = item.description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
+            var StringsList = []
+            list.forEach(item => {
+                item.name = item.name.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase()
+                item.description = item.description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase()
                 StringsList = StringsList.concat(item.name.split(' '));
                 StringsList = StringsList.concat(item.description.split(' '));
             })
             res.json(StringsList);
         }
-        res.json(null);
+       else  res.json(null);
 
     });
 });
@@ -246,91 +247,91 @@ exports.getOrdersForCSV = (function (req, res, next) {
                 if (err) {
                     return next(err);
                 }
-            results.forEach(order => {
-                order.ordered_food.forEach(item => {
-                    itemres.forEach(i => {
-                        if (item.id == i._id) {
-                            order.iid=item.id;
-                            order.item_name=i.name;
-                            order.price=i.price;
-                            order.quantity=item.quantity;
-                            orderData.push(order);
-                        }
-                    })
-                    dealres.forEach(d => {
-                        if (item.id == d._id) {
-                            order.did=item.id;
-                            order.deal_name=d.name;
-                            order.dealprice=d.total_bill;
-                            order.dealquantity=item.quantity;
-                            orderData.push(order);
-                        }
+                results.forEach(order => {
+                    order.ordered_food.forEach(item => {
+                        itemres.forEach(i => {
+                            if (item.id == i._id) {
+                                order.iid = item.id;
+                                order.item_name = i.name;
+                                order.price = i.price;
+                                order.quantity = item.quantity;
+                                orderData.push(order);
+                            }
+                        })
+                        dealres.forEach(d => {
+                            if (item.id == d._id) {
+                                order.did = item.id;
+                                order.deal_name = d.name;
+                                order.dealprice = d.total_bill;
+                                order.dealquantity = item.quantity;
+                                orderData.push(order);
+                            }
+                        })
+
                     })
 
                 })
-
+                const fields = [
+                    {
+                        label: 'OrderID',
+                        value: 'orderid'
+                    },
+                    {
+                        label: 'Id',
+                        value: '_id'
+                    },
+                    {
+                        label: 'RestID',
+                        value: 'rest_id'
+                    },
+                    {
+                        label: 'ItemId',
+                        value: 'iid'
+                    },
+                    {
+                        label: 'ItemName',
+                        value: 'item_name'
+                    },
+                    {
+                        label: 'ItemPrice',
+                        value: 'price'
+                    },
+                    {
+                        label: 'ItemQuantity',
+                        value: 'quantity'
+                    },
+                    {
+                        label: 'DealId',
+                        value: 'did'
+                    },
+                    {
+                        label: 'DealName',
+                        value: 'deal_name'
+                    },
+                    {
+                        label: 'DealPrice',
+                        value: 'dealtotal'
+                    },
+                    {
+                        label: 'DealQuantity',
+                        value: 'dealquantity'
+                    },
+                    {
+                        label: 'TotalBill',
+                        value: 'total_bill'
+                    },
+                    {
+                        label: 'OrderTime',
+                        value: 'ordertime'
+                    },
+                    {
+                        label: 'Payment Method',
+                        value: 'payment_method'
+                    }
+                ];
+                // Respond with valid data
+                return downloadResource(res, 'orders.csv', fields, orderData);
             })
-            const fields = [
-                {
-                    label: 'OrderID',
-                    value: 'orderid'
-                },
-                {
-                    label: 'Id',
-                    value: '_id'
-                },
-                {
-                    label: 'RestID',
-                    value: 'rest_id'
-                },
-                {
-                    label: 'ItemId',
-                    value: 'iid'
-                },
-                {
-                    label: 'ItemName',
-                    value: 'item_name'
-                },
-                {
-                    label: 'ItemPrice',
-                    value: 'price'
-                },
-                {
-                    label: 'ItemQuantity',
-                    value: 'quantity'
-                },
-                {
-                    label: 'DealId',
-                    value: 'did'
-                },
-                {
-                    label: 'DealName',
-                    value: 'deal_name'
-                },
-                {
-                    label: 'DealPrice',
-                    value: 'dealtotal'
-                },
-                {
-                    label: 'DealQuantity',
-                    value: 'dealquantity'
-                },
-                {
-                    label: 'TotalBill',
-                    value: 'total_bill'
-                },
-                {
-                    label: 'OrderTime',
-                    value: 'ordertime'
-                },
-                {
-                    label: 'Payment Method',
-                    value: 'payment_method'
-                }
-            ];
-            // Respond with valid data
-            return downloadResource(res, 'orders.csv', fields, orderData);
-        })
         })
     });
 });
@@ -343,81 +344,238 @@ downloadResource = (res, fileName, fields, data) => {
     return res.send(csv);
 }
 
-exports.getOrdersJSON = (function (req, res, next) {
+exports.getOrdersJSON = (async (req, res, next) =>{
     Order.find({ rest_id: req.body.restid, status: "Complete" }).exec(function (error, results) {
         if (error) {
             return next(error);
         }
-        var itemres = Item.find();
-        var dealres = Deal.find();
-        var ordersarray = [], itemsarray=[]
-        results.forEach(order => {
-            var pm = order.payment_method
-            ordersarray.push(pm)
-            var ot = order.ordertime
-            ordersarray.push(ot)
-            var tb = order.total_bill
-            ordersarray.push(tb)
-            order.ordered_food.forEach(item => {
-                var totalitems=0, totaldeals=0
-                itemres.forEach(i => {
-                    if (item.id == i._id) {
-                        order.iid=item.id;
-                        order.item_name=i.name;
-                        order.price=i.price;
-                        order.quantity=item.quantity;
-                        totalitems = (order.price * order.quantity) +totalitems
-                        itemsarray.push(order);
-                    }
+        Item.find({ rest_id: req.body.restid }).exec(async (err, itemres) => {
+            if (err) {
+                return next(err);
+            }
+            Deal.find({ rest_id: req.body.restid }).exec(async (err, dealres) => {
+                if (err) {
+                    return next(err);
+                }
+                var ordersarray = [], itemsarray = []
+                await results.forEach(async(order) => {
+                    var o = {};
+                    o.payment_method = order.payment_method
+                    o.ordertime = order.ordertime
+                    o.total_bill = order.total_bill
+                    o.orderid = order.orderid
+                    ordersarray.push(o)
+                    itemsarray = itemsarray.concat(order.ordered_food)
+                    console.log('ordersarray' + ordersarray)
+                    console.log('itemsarray' + itemsarray)
                 })
-                dealres.forEach(d => {
-                    if (item.id == d._id) {
-                        order.did=item.id;
-                        order.deal_name=d.name;
-                        order.dealprice=d.total_bill;
-                        order.dealquantity=item.quantity;
-                        totaldeals = (order.price * order.quantity) +totaldeals
-                        itemsarray.push(order);
+                var ItemsSummaryList = []
+                var k = {};
+                await itemres.forEach(async(item) => {
+                    var quan = 0;
+                    itemsarray.forEach(i => {
+                        if (item._id == i.id) {
+                            quan += i.quantity
+                        }
+                    })
+                    k.id = item._id;
+                    k.name = item.name;
+                    k.price = item.price;
+                    k.quantity = quan;
+                    k.total = (item.price * quan)
+                    ItemsSummaryList.push(k)
+                    console.log('items' + ItemsSummaryList)
+                    k = {}
+
+                })
+                await dealres.forEach(async(item) => {
+                    var quan = 0;
+                    itemsarray.forEach(i => {
+                        if (item._id == i.id) {
+                            quan += i.quantity
+                        }
+                    })
+                    k.id = item._id;
+                    k.name = item.name;
+                    k.price = item.total_bill;
+                    k.quantity = quan;
+                    k.total = (item.total_bill * quan)
+                    ItemsSummaryList.push(k)
+                    console.log('deals' + ItemsSummaryList)
+                    k = {}
+                })
+                var cod = 0, card = 0;
+                ordersarray.forEach(async(order) => {
+                    if (order.payment_method == 'cod') {
+                        cod += 1
                     }
+                    else {
+                        card += 1
+                    }
+                    console.log('ccc'+cod+'ooooo'+ card)
                 })
 
-            })
-        })
 
-        for(var i=0; i<ordersarray.length;i++)
-        {
-            var cod=0, card=0;
-            ordersarray.forEach(order => {
-                if(order.payment_method == 'cod')
-                {
-                    cod=+cod
+
+                //total no of orders
+                var totalNoOfOrders = ordersarray.length
+
+                //total amount earned by these orders
+                var totalEarning = 0
+                await ItemsSummaryList.forEach((item) => {
+                    totalEarning = totalEarning + item.total
+                    console.log('dsffsdfsdf'+totalEarning)
+                })
+
+                // Respond with valid data
+               summary = {
+                            totalNoOfOrders,
+                            totalEarning,
+                            totalCODOrders: cod,
+                            totalCardOrders: card,
+                            ordersarray,
+                            ItemsSummaryList
+                        } 
+                        // res.json(summary);
+                        return res.status(200).json( summary );
+        
+
+            });
+        });
+    });
+})
+
+exports.getOrdersByDates = (async (req, res, next) =>{
+    Order.find({ rest_id: req.body.restid, status: "Complete", ordertime: {
+        $gte: new Date(req.body.date1), 
+        $lt: new Date(req.body.date2)
+    }
+ }).exec(function (error, results) {
+        if (error) {
+            return next(error);
+        }
+
+        Item.find({ rest_id: req.body.restid }).exec(async (err, itemres) => {
+            if (err) {
+                return next(err);
+            }
+            Deal.find({ rest_id: req.body.restid }).exec(async (err, dealres) => {
+                if (err) {
+                    return next(err);
                 }
-                else
-                {
-                    card=+card
-                }
-            })
-            var quantity=0,price=0,total_bill=0
-            itemsarray.forEach(item => {
-                if(item.quantity)
-                {
-                    quantity=+item.quantity
-                }
-                else if(item.price)
-                {
-                    price=+item.price
-                }
-                else if(item.total_bill)
-                {
-                    total_bill=+item.total_bill
-                }
-            })
-            
+                var ordersarray = [], itemsarray = []
+                await results.forEach(async(order) => {
+                    var o = {};
+                    o.payment_method = order.payment_method
+                    o.ordertime = order.ordertime
+                    o.total_bill = order.total_bill
+                    o.orderid = order.orderid
+                    ordersarray.push(o)
+                    itemsarray = itemsarray.concat(order.ordered_food)
+                    console.log('ordersarray' + ordersarray)
+                    console.log('itemsarray' + itemsarray)
+                })
+                var ItemsSummaryList = []
+                var k = {};
+                await itemres.forEach(async(item) => {
+                    var quan = 0;
+                    itemsarray.forEach(i => {
+                        if (item._id == i.id) {
+                            quan += i.quantity
+                        }
+                    })
+                    k.id = item._id;
+                    k.name = item.name;
+                    k.price = item.price;
+                    k.quantity = quan;
+                    k.total = (item.price * quan)
+                    ItemsSummaryList.push(k)
+                    console.log('items' + ItemsSummaryList)
+                    k = {}
+
+                })
+                await dealres.forEach(async(item) => {
+                    var quan = 0;
+                    itemsarray.forEach(i => {
+                        if (item._id == i.id) {
+                            quan += i.quantity
+                        }
+                    })
+                    k.id = item._id;
+                    k.name = item.name;
+                    k.price = item.total_bill;
+                    k.quantity = quan;
+                    k.total = (item.total_bill * quan)
+                    ItemsSummaryList.push(k)
+                    console.log('deals' + ItemsSummaryList)
+                    k = {}
+                })
+                var cod = 0, card = 0;
+                ordersarray.forEach(async(order) => {
+                    if (order.payment_method == 'cod') {
+                        cod += 1
+                    }
+                    else {
+                        card += 1
+                    }
+                    console.log('ccc'+cod+'ooooo'+ card)
+                })
+
+
+
+                //total no of orders
+                var totalNoOfOrders = ordersarray.length
+
+                //total amount earned by these orders
+                var totalEarning = 0
+                await ItemsSummaryList.forEach((item) => {
+                    totalEarning = totalEarning + item.total
+                    console.log('dsffsdfsdf'+totalEarning)
+                })
+
+                // Respond with valid data
+               summary = {
+                            totalNoOfOrders,
+                            totalEarning,
+                            totalCODOrders: cod,
+                            totalCardOrders: card,
+                            ordersarray,
+                            ItemsSummaryList
+                        } 
+                    
+
+
+        return res.status(200).json(summary)
+    })
+})
+ })
+
+})
+
+exports.viewAllCustomerOrdersComplete = (function(req, res, next) {
+    Order.find({ customer_id: req.body.cid, status: "Complete" }).exec(function(error, results) {
+        if (error) {
+            return next(error);
         }
         // Respond with valid data
         res.json(results);
     });
-})
+});
+
+exports.viewAllCustomerOrdersPending = (function(req, res, next) {
+    Order.find({ customer_id: req.body.cid, status: { $in: ['Ready', 'Pending'] } }).exec(function(error, results) {
+        if (error) {
+            return next(error);
+        }
+        // Respond with valid data
+        res.json(results);
+    });
+});
+
+
+
+
+
 
 //first you will get all orders
 //next you will remove ordered_food array from orders and concat it to new array of items
@@ -433,4 +591,27 @@ exports.getOrdersJSON = (function (req, res, next) {
 //note that price for deals and items has different names, so first, before doing all this work, merge deals and items in one array, with same name for same attribute.
 //I think thats enough for now
 //Au revior
+
+
+// exports.getOrdersJSON = (function (res, req, next) {
+//     Order.find({ rest_id: req.body.restid, status: "Complete" }).exec(function (error, results) {
+//         if (error) {
+//             return next(error);
+//         }
+
+//         var ordersarray = [], itemsarray = []
+//         results.forEach(async (order) => {
+//             var o={}
+//             o.payment_method = order.payment_method
+//             o.ordertime = order.ordertime
+//             o.total_bill = order.total_bill
+//             o.orderid = order.orderid
+//             ordersarray.push(o)
+//             itemsarray = itemsarray.concat(order.ordered_food)
+//             console.log('ordersarray' + ordersarray)
+//         })
+//         return res.status(200).json({ data: ordersarray });
+
+//     })
+// })
 

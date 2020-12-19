@@ -21,11 +21,14 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
     
     SuperAdmin.findOne({username: jwt_payload.username}, function(err, user) {
         if (err) {
+            console.log('err1')
             return done(err, false);
         }
         if (user) {
+            console.log('err2')
             return done(null, user);
         } else {
+            console.log('err3')
             return done(null, false);
             // or you could create a new account
         }

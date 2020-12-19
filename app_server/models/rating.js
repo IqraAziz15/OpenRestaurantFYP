@@ -2,14 +2,17 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ratingSchema = new Schema({
     customer: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Customer',
+        type: String,
+        required: true
+    },
+    item: {
+        type: String, 
         required: true
     },
     stars: {
         type: Number,
         required: true ,
-        min: 1,
+        min: 0.5,
         max: 5
     },
 });

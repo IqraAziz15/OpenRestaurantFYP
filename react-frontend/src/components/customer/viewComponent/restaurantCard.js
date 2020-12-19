@@ -32,7 +32,7 @@ class RestaurantCard extends Component {
             
             <Meta className="card-meta" title={this.state.name}  />
             <span className="location">Shop Location: {this.state.location}</span>
-            <RatingComponent ratings={3.9} count={this.state.count} type="inner"/>
+            {/* <RatingComponent ratings={3.9} count={this.state.count} type="inner"/> */}
         </Card>
     );
   }

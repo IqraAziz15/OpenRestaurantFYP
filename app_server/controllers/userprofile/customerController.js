@@ -6,7 +6,8 @@ var Customer = require('../../models/customer')
 const sgMail =require('@sendgrid/mail');
 const JWT_SECRET = config.get('jwtSecret');
 const CLIENT_URL = config.get('client_url'); 
-sgMail.setApiKey(YOUR_SECRECT_KEY)
+sgMail.setApiKey('secret key')
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,15 +37,15 @@ exports.customerLogin = (async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw Error('Invalid credentials');
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: 3600 });
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '8760d' });
     if (!token) throw Error('Couldnt sign the token');
 
     res.status(200).json({
         token,
         user: {
-        id: user._id,
+        _id: user._id,
         email: user.email,
-        // name: user.name,
+        name: user.name,
         cart: user.cart
       }
     });
@@ -93,7 +94,7 @@ exports.customerRegister = (async (req, res) => {
       password,
       name
     },
-    JWT_SECRET,
+    "or_mymagickeyforactivation",
     {
       expiresIn:'15m'
     }
@@ -102,15 +103,14 @@ exports.customerRegister = (async (req, res) => {
     res.status(200).json({
       token,
       user: {
-      id: savedCustomer.id,
+      _id: savedCustomer.id,
       name: savedCustomer.name,
       email: savedCustomer.email,
     }
   });
 
     const emailData={
-      from:  YOUR_EMAIL,
-
+      from:  "contactemail@gmail.com",
       to: email,
       subject:"Account activation link",
       html:`<h1> click to activate </h1>
@@ -118,11 +118,6 @@ exports.customerRegister = (async (req, res) => {
       <hr/>
       <p>This email contains sensitive content</p>
       <p>${CLIENT_URL}</p>`
-
-      
-      
-      
-  
     }
 
     
@@ -141,8 +136,8 @@ exports.customerRegister = (async (req, res) => {
     return res.status(200).json({
         token,
         user: {
-        id: savedCustomer.id,
-       
+        _id: savedCustomer.id,
+        name: savedCustomer.name,
         email: savedCustomer.email,
         
       },

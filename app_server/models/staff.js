@@ -24,9 +24,10 @@ var staffSchema = new Schema({
         type: String,
         required: true
     },
-    // picture: {
-    //     type: Buffer,
-    // },
+    image: {
+        data: Buffer,
+        contentType: String
+    },
     register_date: {
         type: Date,
         default: Date.now

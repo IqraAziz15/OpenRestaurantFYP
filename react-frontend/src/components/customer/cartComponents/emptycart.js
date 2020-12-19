@@ -1,20 +1,26 @@
 import React from 'react';
-import {Card} from 'antd';
+import { Result, Button } from 'antd';
 import "antd/dist/antd.css";
-
-export default class EmptyCart extends React.Component
+import { Link } from 'react-router-dom';
+export default class NoOrder extends React.Component
 {
     render()
     {
         return(
             <div>
                 <br/><br/>
-                <Card>
-                    <h4>YOUR CART IS EMPTY!</h4>
-                </Card>
+                <Result
+                    status="404"
+                    title="404"
+                    subTitle="YOUR CART IS EMPTY!"
+                    extra={
+                        <Link to={`/home`}><Button type="primary">Order Something!</Button></Link>}
+                />,
             </div>
         )
     }
     
 }
+
+
 

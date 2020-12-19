@@ -15,7 +15,7 @@ import CallViewOrder from "../../customer/cartComponents/callViewOrder";
 import Successmsg from "../../customer/cartComponents/successmsg";
 // import OrderHistory from "../../customer/cartComponents/vieworder";
 import "../../customer/customer.css";
-import { message, Card, Col, Row, Divider, Input, Badge, Button } from "antd";
+import { Avatar, message, Card, Col, Row, Divider, Input, Badge, Button } from "antd";
 import { ShoppingCartOutlined, UserOutlined, SearchOutlined } from "@ant-design/icons";
 // import Slider from "react-slick";
 import { Spin } from "antd";
@@ -30,12 +30,19 @@ import EmptyCart from '../../customer/cartComponents/emptycart';
 import CurrentOrders from '../../customer/cartComponents/currentorders';
 import OrdersHistory from '../../customer/cartComponents/ordershistory';
 import PaymentGateway from "../../payment_gateways/call_payment_methods";
+import ViewPreviousOrder from '../../customer/cartComponents/callViewPreviousOrder';
+import ViewCurrentOrder from '../../customer/cartComponents/callViewCurrentOrder';
+import Profile from '../../customer/profile/customerprofile';
 import LoginForm from '../../userProfile/customer/loginform'
+import SignupForm from '../../userProfile/customer/signupform';
 import Logout from '../../userProfile/customer/logout';
 import Mobile from "./mobileNav";
 import Tablet from "./tabletNav";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Faq from '../../customer/complainComponents/faq';
+import Contactus from '../../customer/complainComponents/complaintform';
+import Aboutus from '../../customer/complainComponents/aboutus';
 import {
   Link,
   // Redirect,
@@ -46,6 +53,8 @@ import {
   useParams,
   useRouteMatch,
 } from "react-router-dom";
+import Chatbot from '../../mychatbot/chatbot';
+import OrdersStringsList from "../../customer/cartComponents/funfacts";
 const { Meta } = Card;
 const { Search } = Input;
 
@@ -58,12 +67,12 @@ class CLayout extends React.Component {
     loading: true
   };
 
-  
+
   static propTypes = {
-    auth : PropTypes.object.isRequired,
-    isAuthenticated : PropTypes.bool,
+    auth: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool,
     // error : PropTypes.object.isRequired
-}
+  }
 
 
   async componentDidMount() {
@@ -71,29 +80,29 @@ class CLayout extends React.Component {
     window.addEventListener("resize", this.updateWindowDimensions());
     // console.log(this.state.user)
     this.id = setTimeout(() => {
-      if(!this.props.auth.isLoading) {
-        this.setState({ loading: false }) 
+      if (!this.props.auth.isLoading) {
+        this.setState({ loading: false })
         this.setCartLength();
       }
     }, 3000)
-    if(!this.state.loading) await this.setCartLength();
+    if (!this.state.loading) await this.setCartLength();
   }
 
-  componentDidUpdate(prevProps){
-      if(this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer){
-         this.setState({
-            loading: false
-         })
-         if(!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
-      }
-   }
+  componentDidUpdate(prevProps) {
+    if (this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer) {
+      this.setState({
+        loading: false
+      })
+      if (!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
+    }
+  }
 
 
 
   // async isLoading(){
   //   while(this.props.auth.isLoading){}
   // }
-  
+
   // componentDidUpdate(){
   //   if(this.props.auth.user){
   //     this.setCartLength();
@@ -111,23 +120,25 @@ class CLayout extends React.Component {
 
   setCartLength = () => {
     var count = 0;
-    if(this.props.isAuthenticated){
-      if (this.props.auth.cart.length > 0) {
-        this.props.auth.cart.forEach((rest) => {
+    if (this.props.auth.isAuthenticated) {
+      if (this.props.auth.user.cart.length > 0) {
+        this.props.auth.user.cart.forEach((rest) => {
           count = count + rest.rest.length;
         });
-        this.setState({ cart_length: count, user: this.props.auth.user });
+        this.setState({ cart_length: count })
+        return count;
       }
-      console.log(this.state.cart_length);
-      console.log(this.state.user)
+      console.log(count)
+      return 0;
     }
+    return 0;
   };
 
   render() {
-    const { isAuthenticated } = this.props;
+    const { isAuthenticated, user } = this.props;
     const enterButton = (
       <Button
-        style={{ backgroundColor: '#667777', border: '1px solid #667777', borderRadius: '1pxm', margin: '0' }}
+        style={{ backgroundColor: '#bb8c63', border: '1px solid #bb8c63', borderRadius: '1pxm', margin: '0' }}
         icon={<SearchOutlined
           style={{
             color: '#fff',
@@ -158,8 +169,10 @@ class CLayout extends React.Component {
             />
           </center>
         ) :
+        <div>
+          <Router>
           <div className="app-container" style={{ height: "max-content" }}>
-            <Router>
+            
               <Container
                 style={{
                   marginRight: "0em",
@@ -183,26 +196,26 @@ class CLayout extends React.Component {
                     borderBottom: "4px solid #bb8c63"
                   }}
                 >
-                  <Navbar.Brand href="">Open Restaurant</Navbar.Brand>
+                  <Navbar.Brand href="" style={{ fontFamily: 'serif', color: '#bb8c63', fontSize: 26 }}>Open Restaurant</Navbar.Brand>
                   <br />
 
                   <Nav className="ml-auto">
-                    <Nav.Link href="" style={{ paddingRight: "4em" }}>
+                    <Nav.Link href="" style={{ paddingRight: "3em" }}>
                       <Link className="link" to="/home">
                         Home
                   </Link>
                     </Nav.Link>
-                    <Nav.Link href="" style={{ paddingRight: "4em" }}>
+                    <Nav.Link href="" style={{ paddingRight: "3em" }}>
                       <Link className="link" to="/allrestaurants">
-                        Restaurants
+                        Restaurant
                   </Link>
 
                     </Nav.Link>
                     {/* <Nav.Link href="" style={{paddingRight:'5em'}}>Menu</Nav.Link> */}
                     <NavDropdown
-                      title="Menu"
+                      title="Menu" color='#bb8c63'
                       id="collasible-nav-dropdown"
-                      style={{ paddingRight: "2em" }}
+                      style={{ paddingRight: "2em", color: '#bb8c63' }}
                     >
                       <NavDropdown.Item href="">
                         <Link className="link" to="/allfoods">
@@ -218,9 +231,9 @@ class CLayout extends React.Component {
                     </NavDropdown>
                     <NavDropdown
                       title="Orders"
-                      id="collasible-nav-dropdown"
+                      id={this.props.auth.isAuthenticated ? "collasible-nav-dropdown" : "collasible-nav-dropdown disabled"}
                       style={{ paddingRight: "2em" }}
-                      disabled={this.props.auth.isAuthenticated ? false: true }
+                      disabled={this.props.auth.isAuthenticated ? false : true}
                     >
                       <NavDropdown.Item href="">
                         <Link className="link" to="/currentorders">
@@ -238,7 +251,7 @@ class CLayout extends React.Component {
                   {/* <Form inline>
                             <i class="material-icons" style={{paddingRight:'2.5em'}}> <Link className="link" to="/cart" >shopping_cart</Link></i>
                         </Form> */}
-                  <Search style={{ width: '30%', border: '0.5px solid #667777', borderRight: '0px', borderRadius: '2px', padding: '0', marginRight: "2em" }}
+                  <Search style={{ width: '30%', border: '0.5px solid #bb8c63', borderRight: '0px', borderRadius: '2px', padding: '0', marginRight: "2em" }}
                     className="search-box"
                     size='medium'
                     placeholder="Search here"
@@ -246,64 +259,151 @@ class CLayout extends React.Component {
                     onSearch={(value) => console.log(value)}
 
                   />
-                  <Nav key="user" style={{ paddingBottom: 3, paddingRight: "1.5em" }}>
-                    <Link className="link"
-                      to='/login'
-                      style={{ color: "#667777" }}
-                    >
-                      <UserOutlined
-                        type="customer"
-                        style={{ fontSize: 25, marginBottom: 3 }}
-                      ><Logout /></UserOutlined>
+                  <Nav key="user" style={{ padding: 0, margin: 0, paddingRight: "0.5em" }}>
+                    {this.props.auth.isAuthenticated ?
+                      <NavDropdown
+                        title={<Avatar
+                          style={{
+                            backgroundColor: '#bb8c63',
+                            verticalAlign: 'middle',
+                          }}
+                          size={30}
+                          gap={4}
+                        >
+                          {this.props.auth.user.name.split(" ").map((n, i, a) => i === 0 || i + 1 === a.length ? n[0] : null).join("").toUpperCase()}
+                        </Avatar>}
+                        drop='left' color='#bb8c63'
+                        id="collasible-nav-dropleft"
+                        style={{ padding: 0, paddingRight: "0.5em", margin: 0, left: '-1' }}
+                      >
+                        <NavDropdown.Item>
+                          Logged In as <br />
+                          <strong>{this.props.auth.user.name}</strong>
+                        </NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item>
+                          <Link className="link" to="/profile">
+                            Profile
                     </Link>
+                        </NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item>
+                          <Link className="link" to="/logout">
+                            <Logout />
+                          </Link>
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                      :
+                      <Link className="link"
+                        to='/login'
+                        style={{ color: "#bb8c63" }}
+                      >
+                        <UserOutlined
+                          type="customer"
+                          style={{ fontSize: 25, marginBottom: 3, paddingRight: "0.8em" }}
+                        ></UserOutlined>
+                      </Link>
+                    }
                   </Nav>
-                  <Nav key="cart" style={{ paddingBottom: 3, paddingRight: "1.5em" }}>
-                    <Badge count={this.state.user && this.state.cart_length}>
+                  <Nav key="cart" style={{ paddingBottom: 0, paddingRight: "1.5em" }}>
+                    <Badge count={this.state.cart_length}>
                       <Link className="link"
                         to="/cart"
-                        style={{ marginRight: -22, color: "#667777" }}
+                        style={{ marginRight: -22, color: "#bb8c63" }}
                       >
                         <ShoppingCartOutlined
-                          type="shopping-cart"
-                          style={{ fontSize: 25, marginBottom: 3 }}
+                          type="shopping-cart" color='#bb8c63'
+                          style={{ fontSize: 28, fontWeight: 500, marginBottom: 0 }}
                         />
                       </Link>
                     </Badge>
                   </Nav>
                   <br />
                 </Navbar>
+
               </Container>
+
               <Container
                 className="App-intro"
-                style={{ marginRight: "1em", marginLeft: "1em" }}
+                style={{ marginRight: "1em", marginLeft: "1em" , paddingBottom: '4em'}}
               >
-              {/* <Redirect push to='/'/> */}
+                {/* <Redirect push to='/'/> */}
                 <Switch>
                   <Route exact path="/" component={Home} />
+                  <Route path="/restaurantview/:id" component={ViewRest} />
+                  <Route path="/view/:id" component={CallViewItem} />
+                  <Route path="/viewdeal/:id" component={CallViewDeals} />
+                  <Route path="/ordershistory/order/:id" component={ViewPreviousOrder} />
+                  <Route path="/myorders/order/:id" component={ViewCurrentOrder} />
+                  <Route path="/pending/order/:orderId" component={CallViewOrder} />
                   <Route path="/home" component={Home} />
                   <Route path="/allrestaurants" component={AllRestaurantsCard} />
                   <Route path="/allfoods" component={AllItemsCard} />
                   <Route path="/alldeals" component={AllDealsCard} />
                   <Route path="/cart" component={Cart} />
                   <Route path="/order/checkout" component={Checkout} />
-                  <Route path="/restaurantview/:id" component={ViewRest} />
-                  <Route path="/view/:id" component={CallViewItem} />
-                  <Route path="/viewdeal/:id" component={CallViewDeals} />
-                  <Route path="/pending/order/:orderId" component={CallViewOrder} />
                   <Route path="/currentorders" component={CurrentOrders} />
                   <Route path="/ordershistory" component={OrdersHistory} />
                   {/* <Route path="/place/order/:orderId" component={Successmsg} /> */}
                   {/* <Route path='/emptycart' component={EmptyCart} /> */}
-                  <Route path='/login' component={LoginForm}/>
+                  <Route path='/login' component={LoginForm} />
+                  <Route path='/signup' component={SignupForm} />
+                  <Route path='/profile' component={Profile} />
+                  <Route path='/logout' component={Logout} />
+                  <Route path='/faq' component={ Faq }/>
+                  <Route path='/contactus' component={Contactus}/>
+                  <Route path='/aboutus' component={Aboutus}/>
+                  <Route path="/funfacts" component={OrdersStringsList} />
                   {/* <Route
                     path="/order/payment/:orderId"
                     component={PaymentGateway}
                   /> */}
                 </Switch>
               </Container>
-            </Router>
+            
+            
           </div>
+        <Chatbot />
+        <div style={{ paddingLeft: '2em', paddingRight: '2em', borderTop: '4px solid #bb8c63' }}>
+          <Navbar
+            sticky="bottom"
+            style={{
+              display: 'flex',
+            }} >
+
+            <Nav style={{ flex: '50%', padding: '2em', display: 'block', fontSize: '0.8em', color: 'var(--color3)', fontWeight: '600' }}>
+              <span style={{ fontSize: '1.4em' }}>About Us</span><br />
+            <Link className="link" to="/aboutus">Our Story</Link><br/>
+            <Link className="link" to="/faq">FAQs</Link><br/>
+            <Link className="link" to="/contactus">Contact Us</Link><br/>
+            </Nav>
+
+            <Nav style={{ flex: '50%', padding: '2em', display: 'block', fontSize: '0.8em', color: 'var(--color3)', fontWeight: '600' }}>
+              <span style={{ fontSize: '1.4em' }}>Explore Food World</span><br />
+            <Link className="link" to="/allrestaurants">Visit Restaurants</Link><br/>
+            <Link className="link" to="/allfoods">Visit Food Menu</Link><br/>
+            <Link className="link" to="/alldeals">Visit Deals</Link><br/>
+            </Nav>
+
+          </Navbar>
+          <div style={{ flex: '100%' }}>
+            <p
+              style={{
+                padding: '3em',
+                paddingTop: '0',
+                paddingBottom: '1em',
+                fontSize: '0.8em',
+                color: 'var(--color3)'
+              }}
+            >
+              <center>&copy; Copyrights 2020 || <b>Open Restaurant</b></center></p>
+          </div>
+        </div>
+        </Router>
+        </div>
         }
+
+
       </div>
     );
   }
@@ -312,4 +412,4 @@ class CLayout extends React.Component {
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
-export default connect(mapStateToProps, null) (CLayout);
+export default connect(mapStateToProps, null)(CLayout);

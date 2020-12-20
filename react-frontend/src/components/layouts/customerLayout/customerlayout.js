@@ -67,12 +67,12 @@ class CLayout extends React.Component {
     loading: true
   };
 
-
+  
   static propTypes = {
-    auth: PropTypes.object.isRequired,
-    isAuthenticated: PropTypes.bool,
+    auth : PropTypes.object.isRequired,
+    isAuthenticated : PropTypes.bool,
     // error : PropTypes.object.isRequired
-  }
+}
 
 
   async componentDidMount() {
@@ -80,29 +80,29 @@ class CLayout extends React.Component {
     window.addEventListener("resize", this.updateWindowDimensions());
     // console.log(this.state.user)
     this.id = setTimeout(() => {
-      if (!this.props.auth.isLoading) {
-        this.setState({ loading: false })
+      if(!this.props.auth.isLoading) {
+        this.setState({ loading: false }) 
         this.setCartLength();
       }
     }, 3000)
-    if (!this.state.loading) await this.setCartLength();
+    if(!this.state.loading) await this.setCartLength();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer) {
-      this.setState({
-        loading: false
-      })
-      if (!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
-    }
-  }
+  componentDidUpdate(prevProps){
+      if(this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer){
+         this.setState({
+            loading: false
+         })
+         if(!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
+      }
+   }
 
 
 
   // async isLoading(){
   //   while(this.props.auth.isLoading){}
   // }
-
+  
   // componentDidUpdate(){
   //   if(this.props.auth.user){
   //     this.setCartLength();
@@ -327,7 +327,7 @@ class CLayout extends React.Component {
                 className="App-intro"
                 style={{ marginRight: "1em", marginLeft: "1em" , paddingBottom: '4em'}}
               >
-                {/* <Redirect push to='/'/> */}
+              {/* <Redirect push to='/'/> */}
                 <Switch>
                   <Route exact path="/" component={Home} />
                   <Route path="/restaurantview/:id" component={ViewRest} />
@@ -412,4 +412,4 @@ class CLayout extends React.Component {
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
-export default connect(mapStateToProps, null)(CLayout);
+export default connect(mapStateToProps, null) (CLayout);

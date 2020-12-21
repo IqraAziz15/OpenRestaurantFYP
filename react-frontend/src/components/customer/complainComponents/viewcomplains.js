@@ -32,7 +32,6 @@ class ViewComplain extends React.Component
                 <div>
                     <Card>
                         <div>
-                            <h6>Complain of CustomerId {c.customerid}</h6>
                             <div>
                                 <b>Name</b> <p style={{display:'inline', paddingLeft:'3.75em'}}>{c.name}</p>
                             </div>

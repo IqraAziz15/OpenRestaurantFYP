@@ -6,8 +6,9 @@ var Customer = require('../../models/customer')
 const sgMail =require('@sendgrid/mail');
 const JWT_SECRET = config.get('jwtSecret');
 const CLIENT_URL = config.get('client_url'); 
-sgMail.setApiKey('secret key')
+sgMail.setApiKey('sgmailkey')
 
+// sgMail.setApiKey('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')
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,9 +109,10 @@ exports.customerRegister = (async (req, res) => {
       email: savedCustomer.email,
     }
   });
-
+      // from:  "contactrabeeta@gmail.com",
+// from:  "openrestaurantfyp@gmail.com",
     const emailData={
-      from:  "contactemail@gmail.com",
+      from:  "email",
       to: email,
       subject:"Account activation link",
       html:`<h1> click to activate </h1>

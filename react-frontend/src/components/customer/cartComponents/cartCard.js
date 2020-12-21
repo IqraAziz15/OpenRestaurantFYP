@@ -155,6 +155,25 @@ class Cart extends Component {
     this.setState({showTotal: true})
 }
 
+success = (content) => {
+  message.success({
+    content: content,
+    className: 'custom-class',
+    style: {
+      marginTop: '10vh',
+    },
+  });
+};
+
+error = (content) => {
+  message.error({
+    content: content,
+    className: 'custom-class',
+    style: {
+      marginTop: '10vh',
+    },
+  });
+};
 
 removeFromCartNew = async (restId,productId) => {
   // var response = await this.removeCartItem(productId)
@@ -169,8 +188,13 @@ removeFromCartNew = async (restId,productId) => {
             var user = this.state.user;
             this.props.auth.user.cart = response.data.cart;
             this.setState({user: this.props.auth.user});
+            this.success('Removed From Cart')
             this.cartDisplay();
           } 
+          else
+          {
+            this.error('Error while removing your item.Try again later.')
+          }
       });
 }
 
@@ -190,11 +214,11 @@ addToCart = async(rest_id, item_id, quantity_new, quantity_old) => {
     var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
     )
     if (res.status == 200){
-        message.success('Added to cart')
+        this.success('Item Quantity Is Updated')
         this.props.auth.user.cart = res.data;
         this.cartDisplay();
       } 
-    else  message.error('Try Again')
+    else  this.error('Try Again')
     // this.setState({addCart: true});
   }
 };

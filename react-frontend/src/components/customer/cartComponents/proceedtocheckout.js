@@ -145,7 +145,25 @@ class Proceedtocheckout extends React.Component {
     this.setState({ Total: total })
     this.setState({ showTotal: true })
   }
+  success = (content) => {
+    message.success({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
 
+  error = (content) => {
+    message.error({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
 
   placeOrder = () => {
     var pointerToThis = this;
@@ -184,7 +202,7 @@ class Proceedtocheckout extends React.Component {
     axios.post('http://localhost:4000/customer/order/addOrder', body, config)
       .then(res => {
         // pointerToThis.setState({ subid: res.data._id });
-        alert('Order Added Successfully')
+        this.success('Order Placed Successfully')
         this.emptyCart();
         this.setState({ redirect: true, orderId: body.orderid });
         console.log(res)
@@ -206,7 +224,6 @@ class Proceedtocheckout extends React.Component {
     axios.post('http://localhost:4000/customer/cart/emptycart', body, config)
       .then(res => {
         // pointerToThis.setState({ subid: res.data._id });
-        alert('Cart Empty Successfully')
         console.log(res)
         this.props.auth.user.cart = []
       })
@@ -339,13 +356,13 @@ class Proceedtocheckout extends React.Component {
             type="phonenumber"
             name="phonenumber"
           />
-          <br /><br />
+          {/* <br /><br />
           <h6>Gift Card or Discount Coupon</h6>
           <Input
             placeholder="Gift Card or Discount Coupon"
             type="text"
             name="giftcard"
-          />
+          /> */}
           <br /><br />
           <h6>Payment</h6>
           <Radio.Group onChange={this.onChange} value={this.state.value}>

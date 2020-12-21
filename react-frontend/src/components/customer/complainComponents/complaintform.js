@@ -4,6 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from "react-router-dom";
+import {message} from 'antd';
 
 class ComplainForm extends React.Component {
     state = {
@@ -25,12 +26,31 @@ class ComplainForm extends React.Component {
         this.setState({redirect: true})
     }
 
+    success = (content) => {
+        message.success({
+          content: content,
+          className: 'custom-class',
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      };
+    
+      error = (content) => {
+        message.error({
+          content: content,
+          className: 'custom-class',
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      };
+
     registerComplain = async () => {
         if(this.props.auth.user){
             const { name, email, subject, complain } = this.state
-            var customerid = this.props.auth.user._id;
         var data = {
-            name, email, subject, complain, customerid
+            name, email, subject, complain, customerid: this.props.auth.user._id
         }
         await axios
             .post('http://localhost:4000/customer/complain/registercomplaint', data, {
@@ -38,9 +58,16 @@ class ComplainForm extends React.Component {
                     "content-type": "application/json"
                 }
             }).then(res => {
-                console.log(res);
-                alert('Complaint Registered')
-                document.getElementById("form").reset();
+                if(res.status==200)
+                {
+                    console.log(res);
+                    this.success('Feedback/Compalaint Registered')
+                    document.getElementById("form").reset();
+                }
+                else{
+                    this.error('Feedback/Compalaint didnot send. Try Again.')
+                }
+               
             })
             .catch(err => console.log(err))
           }
@@ -68,16 +95,16 @@ class ComplainForm extends React.Component {
             <div>
                 <div className="container">
                     <form id="form">
-                        <center><h4 style={{ paddingBottom: '0', paddingTop: '3em', color:'var(--color4)' }}>COMPLAINT FORM</h4></center>
+                        <center><h4 style={{ paddingBottom: '0', paddingTop: '3em', color:'var(--color4)' }}>COMPLAINT/FEEDBACK FORM</h4></center>
                         <div className="row pt-3 mx-auto">
                             <div className="col-8 form-group mx-auto">
                                 <input type="text" className="form-control" 
                                 onChange={this.onChange} placeholder="Name" 
-                                name="name" defaultValue={this.props.auth.isAuthenticated ? `${this.props.auth.user.name}` : ''}/>
+                                name="name"/>
                             </div>
                             <div className="col-8 form-group pt-2 mx-auto">
                                 <input type="email" className="form-control" onChange={this.onChange} 
-                                placeholder= "Email Address" name="email" defaultValue={this.props.auth.isAuthenticated ? `${this.props.auth.user.email}` : ''}/>
+                                placeholder= "Email Address" name="email" />
                             </div>
                             <div className="col-8 form-group pt-2 mx-auto">
                                 <input type="text" className="form-control" 

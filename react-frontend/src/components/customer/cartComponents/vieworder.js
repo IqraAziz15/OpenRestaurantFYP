@@ -135,7 +135,7 @@ class Orderhistory extends React.Component {
         var pointerToThis = this; var ordersNotExist = true;
         await axios.post('http://localhost:4000/customer/order/viewordercustomer', body, config)
             .then((res) => {
-                if(res.data.length > 1) pointerToThis.setState({ orders: res.data});
+                if(res.data.length > 0) pointerToThis.setState({ orders: res.data});
                 else pointerToThis.setState({redirect1: true});
                 // alert(' Order Viewed')
                 console.log(res)
@@ -226,11 +226,11 @@ class Orderhistory extends React.Component {
                         <h5 style={{float: 'left'}}>Sub Total</h5>
                         <h5 className='price' style={{float: 'right'}}>PKR. {this.state.Total}</h5>
                     </p>
-                    <hr/>
+                    {/* <hr/>
                     <p style={{overflow: "hidden"}}>
                         <h6 style={{float: 'left'}}>Discount</h6>
                         <h6 className='price' style={{float: 'right'}}>PKR. 0</h6>
-                    </p>
+                    </p> */}
                     <hr/>
                     <p style={{overflow: "hidden"}}>
                         <h4 style={{float: 'left'}}>Total</h4>

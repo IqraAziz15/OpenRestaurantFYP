@@ -11,7 +11,7 @@ import Orderhistory from './components/customer/cartComponents/vieworder';
 // import MainPageLayout from './components/layouts/userProfileLayout/restaurantadmin';
 // import MainPageLayout from './components/layouts/userProfileLayout/superadmin';
 // import MainPageLayout from './components/layouts/userProfileLayout/waiter';
-// import MainPageLayout from './components/layouts/userProfileLayout/staff';
+import MainPageLayout from './components/layouts/userProfileLayout/staff';
 // import MainPageLayout from './components/layouts/userProfileLayout/customer';
 import SProfile from './components/staff/sprofile';
 import SSettings from './components/staff/ssettings';
@@ -22,8 +22,8 @@ import signin from './components/userProfile/staff/signin';
 import { Provider } from 'react-redux';
 // import store from './flux/store/store_restaurant_admin';
 // import store from './flux/store/store_super_admin';
-// import store from './flux/store/store_staff';
-import store from './flux/store/store_customer';
+import store from './flux/store/store_staff';
+// import store from './flux/store/store_customer';
 // import store from './flux/store/store_waiter';
 // import Graph from './components/restaurantAdmin/restaurantStatistics/itemstats';
 import Graph from './components/restaurantAdmin/restaurantStatistics/paymentstats';
@@ -32,8 +32,8 @@ import Faq from './components/customer/complainComponents/faq';
 import EditItem from './components/restaurantAdmin/item/edititem';
 // import { loadUser } from './flux/actions/restaurantAdmin/authActions';
 // import { loadUser } from './flux/actions/superAdmin/authActions';
-// import { loadUser } from './flux/actions/staff/authActions';
-import { loadUser } from './flux/actions/customer/authActions';
+import { loadUser } from './flux/actions/staff/authActions';
+// import { loadUser } from './flux/actions/customer/authActions';
 // import { loadUser } from './flux/actions/waiter/authActions';
 import { Link, BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Signupra from './components/layouts/superAdminLayout/restaurantadmin';
@@ -73,11 +73,11 @@ class App extends React.Component {
         {/* <Faq/> */}
         {/* <ComplainForm/> */}
         {/* <P2Layout/> */}
-        <Elements stripe={stripePromise}>
+        {/* <Elements stripe={stripePromise}>
           <Provider store={store}>
             <CLayout />
           </Provider>
-        </Elements> 
+        </Elements>  */}
         {/* <CLayout/> */}
         {/* <RaLayout/> */}
         {/* <CartLayout/> */}
@@ -130,12 +130,11 @@ class App extends React.Component {
       
       </Router>  */}
 
-       {/* <Provider store={store} >
+       <Provider store={store} >
           <div>
-          {/* <MainPageLayout/> */}
-          {/* <Graph/>  
+          <MainPageLayout/>
           </div>
-        </Provider> */}
+        </Provider>
 
         {/* <Router>
     <Switch>

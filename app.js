@@ -44,6 +44,7 @@ var reviewsRouter = require('./app_server/routes/reviews/reviews')
 var ratingsRouter = require('./app_server/routes/ratings/ratings')
 var criticalReviewsRouter = require('./app_server/routes/reviews/criticalReviews')
 var positiveReviewsRouter = require('./app_server/routes/reviews/positiveReviews')
+var chatRouter = require('./app_server/routes/customer/chat')
 
 var app = express();
 
@@ -111,6 +112,7 @@ app.use('/api/reviews', reviewsRouter);
 app.use('/api/ratings', ratingsRouter);
 app.use('/api/criticalreviews', criticalReviewsRouter);
 app.use('/api/positivereviews', positiveReviewsRouter);
+app.use('/customer/chat',chatRouter)
 
 
 // catch 404 and forward to error handler

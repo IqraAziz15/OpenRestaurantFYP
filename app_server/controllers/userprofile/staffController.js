@@ -125,7 +125,12 @@ exports.staffLogin = (async (req, res) => {
           token,
           user: {
           id: user._id,
-          email: user.email
+          email: user.email,
+          is_customer_support: user.is_customer_support,
+          rest_id: user.rest_id,
+          username : user.username,
+          email: user.email,
+          phonenumber: user.phonenumber,
         }
       });
     } catch (e) {
@@ -184,6 +189,7 @@ exports.staffRegister = (upload.single('image'),async (req, res) => {
           phonenumber: savedStaff.phonenumber,
           rest_id: savedStaff.rest_id,
           image: savedStaff.image,
+          is_customer_support: savedStaff.is_customer_support,
         }
       });
     } catch (e) {

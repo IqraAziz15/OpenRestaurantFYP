@@ -15,7 +15,7 @@ class ViewItems extends React.Component
 {
   
     state = {
-        rest: '',
+        rest: this.props.rest,
         user: this.props.user,
         submenu: [],
         items: [],
@@ -50,6 +50,7 @@ class ViewItems extends React.Component
       })
         .then(response => response.json())
         .then(data => pointerToThis.setState({ rest: data}));
+        console.log('rest'+this.state.rest)
       }
     
       componentWillUnmount() {
@@ -131,7 +132,7 @@ class ViewItems extends React.Component
         </div>
         <hr></hr>
         <div class="list-group">
-        {this.state.rest.menu.submenus.map(submenu =>
+        {this.props.rest.menu.submenus.map(submenu =>
         
               <a href="#" class="list-group-item list-group-item-action">
                 

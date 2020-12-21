@@ -147,7 +147,7 @@ class Logincustomer extends Component {
                     },
                   ]}
                   >
-                    <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Enter Password" className="input-with-icon-grid1" name="password" type="text" onChange={this.onChange} />
+                    <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Enter Password" className="input-with-icon-grid1" name="password" type="password" onChange={this.onChange} />
                   </Form.Item>
                 </Form.Item>
                 <input className="butn" type="submit" value="Sign in" onClick={this.onSubmit}></input>

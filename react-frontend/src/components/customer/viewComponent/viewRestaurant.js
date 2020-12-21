@@ -1,7 +1,8 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { message, Card } from "antd";
+import { message, Button, Card, Spin } from "antd";
+import { WechatOutlined } from "@ant-design/icons";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Link } from "react-router-dom";
@@ -22,6 +23,25 @@ class P2Layout extends React.Component {
     isAuthenticated : PropTypes.bool,
     // error : PropTypes.object.isRequired
 }
+
+success = (content) => {
+  message.success({
+    content: content,
+    className: 'custom-class',
+    style: {
+      marginTop: '10vh',
+    },
+  });
+};
+error = (content) => {
+  message.error({
+    content: content,
+    className: 'custom-class',
+    style: {
+      marginTop: '10vh',
+    },
+  });
+};
 
   componentDidMount = () => {
     var body = JSON.stringify({ id: this.state.rest_id });
@@ -54,10 +74,10 @@ class P2Layout extends React.Component {
       var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
       )
       if (res.status == 200){
-        message.success('Added to cart')
+        this.success('Added to cart')
         this.props.auth.user.cart = res.data;
       } 
-      else  message.error('Try Again')
+      else  this.error('Try Again')
       this.setState({addCart: true});
     }
     else await this.setState({redirect: true});
@@ -92,7 +112,13 @@ class P2Layout extends React.Component {
     return (
       <div style={{ padding: "1.5em 1.5em" }}>
         {this.state.loading ? (
-          ""
+          <center>
+          <Spin
+            className="spinner"
+            tip="Loading...Please Wait"
+            size="large"
+          />
+        </center>
         ) : (
           <div style={{paddingTop:"3em", justifyContent:'center'}}>
             <div href="#" class="list-group-item list-group-item-action">
@@ -217,6 +243,10 @@ class P2Layout extends React.Component {
               </div>
             </div>
             : ''}
+            {this.props.auth.isAuthenticated ?
+             <Link style={{ cursor:"pointer" }} to={`/chat/${this.state.rest_id}/${this.props.auth.user._id}`}>
+            <Button  className='app-chatbox-button' type='primary' icon={<WechatOutlined id='chat-icon' color='#fff' height='4em' width='4em'/>}></Button></Link>
+          : ''}
           </div>
         )}
       </div>

@@ -4,7 +4,7 @@ var Deal = require('../../models/deal');
 const Pusher = require("pusher");
 const { Parser } = require('json2csv');
 const pusher = new Pusher({
-    appId: "appid",
+    appId: "appId",
     key: "key",
     secret: "secret",
     cluster: "ap2",

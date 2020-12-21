@@ -60,6 +60,8 @@ class Home extends React.Component {
       lazyLoad: true,
       centerPadding: "80px",
       slidesToShow: 5,
+      autoplay: true,
+      speed: 500,
       swipeToSlide: true,
       responsive: [
         {
@@ -94,6 +96,8 @@ class Home extends React.Component {
       lazyLoad: true,
       centerPadding: "80px",
       slidesToShow: 3,
+      autoplay: true,
+      speed: 500,
       swipeToSlide: true,
       responsive: [
         {

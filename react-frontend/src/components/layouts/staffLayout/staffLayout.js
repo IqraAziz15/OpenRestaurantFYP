@@ -7,6 +7,7 @@ import {
     FormOutlined,
     TeamOutlined,
     UserOutlined,
+    WechatOutlined,
     DatabaseOutlined,
     AppstoreOutlined,
     ProfileOutlined,
@@ -44,6 +45,8 @@ import {Spin} from 'antd';
 // import { Button } from 'reactstrap';
 // import logo from '../assets/images/logo.png';
 // import Title from 'antd/lib/skeleton/Title';
+import Chat from '../../staff/chat';
+import zIndex from '@material-ui/core/styles/zIndex';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 // const { Text } = Typography;
@@ -119,19 +122,27 @@ class WaiterLayout extends React.Component
                   </center>
                 ) :
               <div>
-                <Header> 
+                <Header style={{ position: 'fixed', top:0, zIndex: 9999, width: '100%' }}> 
                 <h2 style={{color: 'white'}}>Open Restaurant</h2>
                 {/* <img src= { logo } height = "45" width = "45"></img> */}
                 {/* <h5>{this.state.user ? `Welcome ${this.state.user.name}  ${this.state.rest.name}` : ''}</h5>    */}
                 {/* <h3>{this.state.user ? `Welcome ${this.state.user.name} ${this.state.user.id}` : ''}</h3>     */}
                 </Header>
-                <div className="clear-div"></div>
+                <div className="clear-div"></div><br/>
                 <Router>
                 <Layout style={{ minHeight: '100vh' }} >
-                    <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                    <Sider style={{
+                        overflow: 'auto',
+                        height: '100vh',
+                        position: 'fixed',
+                        left: 0,
+                      }} 
+                      width="250" 
+                      collapsible collapsed={this.state.collapsed} 
+                      onCollapse={this.onCollapse}>
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
-                        
+                        <Menu.Item/>
                         <Menu.Item key="1" icon={<UserOutlined />}><Link className="link" to="/staff/staffprofile">
                             User Profile</Link></Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Order">
@@ -150,20 +161,21 @@ class WaiterLayout extends React.Component
                                 <Link className="link" to="/staff/staffallorders">All Orders</Link>
                                 </Menu.Item>
                         </SubMenu>
-            
-                        <Menu.Item key="6" icon={<SettingOutlined />}><Link className="link" to="/staff/staffsettings">
+                        <Menu.Item key="6" icon={<WechatOutlined />}><Link className="link" to="/staff/chat">
+                            Customer Support Chat</Link></Menu.Item>
+                        <Menu.Item key="7" icon={<SettingOutlined />}><Link className="link" to="/staff/staffsettings">
                             Settings</Link></Menu.Item>
-                        <Menu.Item key="7" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
+                        <Menu.Item key="8" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
                         
                         
                         
                     </Menu>
                     </Sider>
-                    <Layout className="site-layout">
+                    <Layout className="site-layout" style={{ marginLeft: '19vw' }} >
                     {/* <Header className="site-layout-background" style={{ padding: 0 }} >
 
                     </Header> */}
-                    <Content style={{ margin: '0 16px' }}>
+                    <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
                         
                         <Switch>
                           <Route path="/staff/staffprofile" render={(props) => ( <SProfile {...props} user={this.state.user} />)}>
@@ -178,6 +190,9 @@ class WaiterLayout extends React.Component
                           </Route>
                           <Route path="/staff/staffcompleteorders" render={(props) => ( <CompleteOrders {...props} user={this.state.user} />)}>
                           </Route>
+                          <Route path="/staff/chat" render={(props) => ( <Chat {...props} user={this.state.user} />)}>
+                          </Route>
+
                         </Switch>
                         
                     </Content>

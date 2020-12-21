@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { ListItem } from "@material-ui/core";
 import {Dropdown} from 'react-bootstrap';
-
+import { pusher } from '../pusher';
 class Allorders extends React.Component {
   state = {
     user: this.props.user,
@@ -108,10 +108,6 @@ class Allorders extends React.Component {
     const { user } = this.props.auth;
     this.id = setTimeout(() => this.setState({ loading: false }), 2000)
     Pusher.logToConsole = true;
-
-    var pusher = new Pusher('id', {
-      cluster: 'ap2'
-    });
     console.log(this.props.user)
     var chan = `${this.state.user.rest_id}`;
     var channel = pusher.subscribe(chan);

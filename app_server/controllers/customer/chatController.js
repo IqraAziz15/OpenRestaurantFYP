@@ -8,12 +8,13 @@ var mongoose = require('mongoose')
 const Pusher = require("pusher");
 
 const pusher = new Pusher({
-    appId: "appid",
+    appId: "appId",
     key: "key",
     secret: "secret",
     cluster: "ap2",
     useTLS: true
 });
+
 // Get messages from conversation
 // based on to & from
 exports.conversationquery = (req, res, next) => {

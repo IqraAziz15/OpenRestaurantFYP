@@ -269,7 +269,7 @@ class Graph extends React.Component {
                 options={linechartOptions}
               />
               <br /><br />
-              <GraphPay/>
+              <GraphPay restid={this.props.restid}/>
               
             </div>
           )}

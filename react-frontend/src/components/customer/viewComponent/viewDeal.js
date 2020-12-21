@@ -67,6 +67,25 @@ class ViewDeals extends Component {
         .then((data) => pointerToThis.setState({ rest: data, loading: false }));
   }
 
+  success = (content) => {
+    message.success({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
+
+  error = (content) => {
+    message.error({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
 
 addToCart = async() => {
   if(this.props.auth.user){
@@ -84,10 +103,10 @@ addToCart = async() => {
     var res = await axios.post(`http://localhost:4000/customer/cart/addCart`, body, header
     )
     if (res.status == 200){
-        message.success('Added to cart')
+        this.success('Added to cart')
         this.props.auth.user.cart = res.data;
       } 
-    else  message.error('Try Again')
+    else  this.error('Try Again')
     this.setState({addCart: true});
   }
   else await this.setState({redirect: true});

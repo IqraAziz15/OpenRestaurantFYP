@@ -184,6 +184,7 @@ class CurrentOrders extends React.Component
                     <h4 style={{paddingTop:'2em', }}>CURRENT ORDERS</h4>
                     <br/>
                     {this.state.orders.map(order =>
+                     (order.total_bill ?
                     <div style={{paddingRight: '30em'}}>
                         <Card >
                         <Card.Grid hoverable={false} style={gridStyle}>
@@ -206,6 +207,7 @@ class CurrentOrders extends React.Component
                         </Card>
                       <br/>
                       </div>
+                     : '')
                     )}
                 </div>
                 }

@@ -1,6 +1,6 @@
 var Complain = require('../../models/complain')
 const sgMail =require('@sendgrid/mail');
-sgMail.setApiKey('secret key')
+sgMail.setApiKey('sgmailkey')
 
 exports.complainRegister = (async (req, res) => {
     const { name, email, subject, complain, customerid} = req.body;
@@ -18,18 +18,18 @@ exports.complainRegister = (async (req, res) => {
       const savedComplain = await newComplain.save();
       if (!savedComplain) throw Error('Something went wrong saving the user');
       
-      res.status(200).json({
-        user: {
-        customerid: savedComplain.customerid,
-        name: savedComplain.name,
-        email: savedComplain.email,
-        subject: savedComplain.subject,
-        complain: savedComplain.complain
-      }
-    });
+    //   res.status(200).json({
+    //     user: {
+    //     customerid: savedComplain.customerid,
+    //     name: savedComplain.name,
+    //     email: savedComplain.email,
+    //     subject: savedComplain.subject,
+    //     complain: savedComplain.complain
+    //   }
+    // });
   
       const emailData={
-        from:  "myemail@gmail.com",
+        from:  "email",
   
         to: email,
         subject:"Your Complaint Feedback",
@@ -41,17 +41,7 @@ exports.complainRegister = (async (req, res) => {
   
       
       sgMail.send(emailData).then(sent=> {
-        return res.json({
-          message:'YOUR COMPLAIN HAS BEEN REGISTERED. CHECK YOUR EMAIL.'
-  
-        })
-        
-      }).catch((e)=>{
-        res.status(400).json({ error: e.message });
-        })
-      
-  
-      return res.status(200).json({
+        return res.status(200).json({
           user: {
             customerid: savedComplain.customerid,
             name: savedComplain.name,
@@ -62,6 +52,13 @@ exports.complainRegister = (async (req, res) => {
         message:'YOUR COMPLAIN HAS BEEN REGISTERED. CHECK YOUR EMAIL.'
   
       });
+        
+      }).catch((e)=>{
+        res.status(400).json({ error: e.message });
+        })
+      
+  
+      
     } catch (e) {
       res.status(400).json({ error: e.message });
     }

@@ -26,8 +26,6 @@ router.post('/getallrestorderscomplete', orderController.viewAllRestOrdersComple
 
 router.post('/setstatus', orderController.setStatus);
 
-router.post('/extractstringsfromorders', orderController.extractWordsOrder);
-
 router.post('/waiterreadyorders', orderController.waiterReadyOrders);
 
 router.post('/waitercompleteorders', orderController.waiterCompleteOrders);

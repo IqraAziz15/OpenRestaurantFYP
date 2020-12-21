@@ -10,6 +10,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
+    "@pusher/push-notifications-web": "^1.1.0",
     "@sendgrid/mail": "^7.4.0",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",

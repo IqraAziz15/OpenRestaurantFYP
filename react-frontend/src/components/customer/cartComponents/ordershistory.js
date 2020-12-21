@@ -94,7 +94,7 @@ class OrdersHistory extends React.Component
       })
       var new_array = []
       var orders = this.state.orders
-      await orders.forEach((order, o) => {
+      await orders.forEach(async(order, o) => {
         var new_order = { 
             orderid: order.orderid,
             giftcoupon: order.giftcoupon,
@@ -111,14 +111,14 @@ class OrdersHistory extends React.Component
             payment_method: order.payment_method,
             ordertime: order.ordertime,
           }
-        orders = this.arrayRemove(orders, order)
-        orders.forEach((ord, i) => {
+        orders = await this.arrayRemove(orders, order)
+        orders.forEach(async(ord, i) => {
           if(i != o && order.orderid == ord.orderid){
             new_order.rest_ids.push(ord.rest_id)
             new_order.ordered_food= new_order.ordered_food.concat(ord.ordered_food)
             new_order.comments= new_order.comments.concat(ord.comments)
             new_order.total_bill = new_array.total_bill + ord.total_bill
-            orders = this.arrayRemove(orders, ord)
+            orders = await this.arrayRemove(orders, ord)
           }
         })
         new_array.push(new_order)
@@ -184,6 +184,7 @@ class OrdersHistory extends React.Component
                     <h4 style={{paddingTop:'2em', }}>ORDERS HISTORY</h4>
                     <br/>
                     {this.state.orders.map(order =>
+                    (order.total_bill ?
                     <div style={{paddingRight: '30em'}}>
                         <Card >
                         <Card.Grid hoverable={false} style={gridStyle}>
@@ -206,6 +207,7 @@ class OrdersHistory extends React.Component
                         </Card>
                       <br/>
                       </div>
+                      : '')
                     )}
                 </div>
                 }

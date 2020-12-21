@@ -265,7 +265,6 @@ class SSettings extends React.Component {
                             <div style={{alignContent: 'space-between' }} class="d-flex w-55">
                                 <div>
                                     <p><b>Name: </b>{this.state.user.name}  </p>
-                                    <p>jsdjkhj: {this.state.user._id} </p>
                                 </div>
                             </div>
                         </div>

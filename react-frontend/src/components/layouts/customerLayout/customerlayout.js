@@ -43,6 +43,7 @@ import PropTypes from 'prop-types';
 import Faq from '../../customer/complainComponents/faq';
 import Contactus from '../../customer/complainComponents/complaintform';
 import Aboutus from '../../customer/complainComponents/aboutus';
+import ChatBox from '../../customer/viewComponent/chat';
 import {
   Link,
   // Redirect,
@@ -67,12 +68,12 @@ class CLayout extends React.Component {
     loading: true
   };
 
-  
+
   static propTypes = {
-    auth : PropTypes.object.isRequired,
-    isAuthenticated : PropTypes.bool,
+    auth: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool,
     // error : PropTypes.object.isRequired
-}
+  }
 
 
   async componentDidMount() {
@@ -80,29 +81,29 @@ class CLayout extends React.Component {
     window.addEventListener("resize", this.updateWindowDimensions());
     // console.log(this.state.user)
     this.id = setTimeout(() => {
-      if(!this.props.auth.isLoading) {
-        this.setState({ loading: false }) 
+      if (!this.props.auth.isLoading) {
+        this.setState({ loading: false })
         this.setCartLength();
       }
     }, 3000)
-    if(!this.state.loading) await this.setCartLength();
+    if (!this.state.loading) await this.setCartLength();
   }
 
-  componentDidUpdate(prevProps){
-      if(this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer){
-         this.setState({
-            loading: false
-         })
-         if(!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
-      }
-   }
+  componentDidUpdate(prevProps) {
+    if (this.props.yourUpdatedReducer !== prevProps.yourUpdatedReducer) {
+      this.setState({
+        loading: false
+      })
+      if (!this.props.auth.isLoading && this.props.auth.user) this.setCartLength()
+    }
+  }
 
 
 
   // async isLoading(){
   //   while(this.props.auth.isLoading){}
   // }
-  
+
   // componentDidUpdate(){
   //   if(this.props.auth.user){
   //     this.setCartLength();
@@ -278,6 +279,7 @@ class CLayout extends React.Component {
                       >
                         <NavDropdown.Item>
                           Logged In as <br />
+                          <NavDropdown.Divider />
                           <strong>{this.props.auth.user.name}</strong>
                         </NavDropdown.Item>
                         <NavDropdown.Divider />
@@ -300,7 +302,7 @@ class CLayout extends React.Component {
                       >
                         <UserOutlined
                           type="customer"
-                          style={{ fontSize: 25, marginBottom: 3, paddingRight: "0.8em" }}
+                          style={{ fontSize: 25, marginTop: 3, paddingRight: "0.8em" }}
                         ></UserOutlined>
                       </Link>
                     }
@@ -313,7 +315,7 @@ class CLayout extends React.Component {
                       >
                         <ShoppingCartOutlined
                           type="shopping-cart" color='#bb8c63'
-                          style={{ fontSize: 28, fontWeight: 500, marginBottom: 0 }}
+                          style={{ fontSize: 28, fontWeight: 500, marginTop: 3 }}
                         />
                       </Link>
                     </Badge>
@@ -327,7 +329,7 @@ class CLayout extends React.Component {
                 className="App-intro"
                 style={{ marginRight: "1em", marginLeft: "1em" , paddingBottom: '4em'}}
               >
-              {/* <Redirect push to='/'/> */}
+                {/* <Redirect push to='/'/> */}
                 <Switch>
                   <Route exact path="/" component={Home} />
                   <Route path="/restaurantview/:id" component={ViewRest} />
@@ -354,6 +356,7 @@ class CLayout extends React.Component {
                   <Route path='/contactus' component={Contactus}/>
                   <Route path='/aboutus' component={Aboutus}/>
                   <Route path="/funfacts" component={OrdersStringsList} />
+                  <Route path='/chat/:id/:id1' component={ChatBox}/>
                   {/* <Route
                     path="/order/payment/:orderId"
                     component={PaymentGateway}
@@ -412,4 +415,4 @@ class CLayout extends React.Component {
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
-export default connect(mapStateToProps, null) (CLayout);
+export default connect(mapStateToProps, null)(CLayout);

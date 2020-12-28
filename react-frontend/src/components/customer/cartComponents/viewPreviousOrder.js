@@ -46,6 +46,26 @@ class ViewPreviousOrder extends React.Component {
         if(this.props.auth.isAuthenticated) await this.getOrderCustomer();
     };
 
+    success = (content) => {
+    message.success({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
+
+  error = (content) => {
+    message.error({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
+
     date = (ordertime) => {
         // const a = Date.now();
         // console.log(a)
@@ -60,29 +80,21 @@ class ViewPreviousOrder extends React.Component {
         var pointerToThis = this;
         let cartItems = [];
         let userCart = [];
-        // message.info('we are inside')
         this.state.orders.forEach(rest => {
-            // console.log('c')
             rest.ordered_food.forEach(item => {
                 cartItems.push(item.id);
                 userCart.push({ id: item.id, quantity: item.quantity })
             })
 
         });
-        // console.log('d')
         await this.getItems(cartItems, userCart)
-        // console.log('e')
         if (this.state.itemsDetails) {
-            // console.log('f')
             console.log(this.state.itemsDetails)
             if (this.state.itemsDetails.length > 0) {
-                // console.log('g')
                 pointerToThis.calculateTotal(this.state.itemsDetails)
-                // console.log('h')
             }
         }
 
-        // message.success('wooooohoooooo, we are out')
     }
 
     getItems = async (cartItems, userCart) => {
@@ -96,9 +108,6 @@ class ViewPreviousOrder extends React.Component {
             .then(response => {
                 console.log(response.data)
                 console.log(response)
-
-                //Make CartDetail inside Redux Store 
-                // We need to add quantity data to Product Information that come from Product Collection. 
 
                 userCart.forEach(cartItem => {
                     response.data.items.forEach((productDetail, i) => {
@@ -143,8 +152,14 @@ class ViewPreviousOrder extends React.Component {
         };
         var pointerToThis = this; var ordersNotExist = true;
         await axios.post('http://localhost:4000/customer/order/viewordercustomer', body, config)
-            .then((res) => {
-                if(res.data.length > 0) pointerToThis.setState({ orders: res.data});
+            .then(async(res) => {
+                if(res.data.length > 0){ 
+                    pointerToThis.setState({ orders: res.data});
+                    await res.data.forEach(o=>{
+                        if(this.props.current == true && o.status == 'Completed') return (<Redirect push to={`/ordershistory/order/${this.props.orderid}`}/>)
+                        else if(this.props.current == false && (o.status == 'Pending' || o.status == 'Ready')) return (<Redirect push to={`/myorders/order/${this.props.orderid}`}/>)
+                    })
+                }
                 else pointerToThis.setState({redirect1: true});
                 // alert(' Order Viewed')
                 console.log(res)
@@ -157,18 +172,41 @@ class ViewPreviousOrder extends React.Component {
 
     addReviewRating = async() => {
         if(this.state.review){
-            const review_body = {
-                customer: this.props.auth.user._id,
-                item: this.state.item_id,
-                description: this.state.review
-            }
-            await axios.post('http://localhost:4000/api/reviews/addreview', review_body)
-            .then((res) => {
+            var body = { 
+                review: this.state.review
+            };
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            await axios.post('https://reviews-classifier.herokuapp.com/predict', body, config)
+            .then(async(res) => {
                 console.log(res)
-                message.success('Your review is saved.')
-                this.setState({review: '', updated: true})
+                var review_body = {
+                    customer: this.props.auth.user._id,
+                    item: this.state.item_id,
+                    description: this.state.review,
+                    c_name: this.props.auth.user.name,
+                    good_review: -1
+                }
+                if (res.data == 1){
+                    review_body.good_review = 1
+
+                }
+                else {
+                    review_body.good_review = 0
+                }
+                
+                 axios.post('http://localhost:4000/api/reviews/addreview', review_body)
+                .then((res) => {
+                    console.log(res) 
+                    this.setState({review: '', updated: true})
             })
-            .catch(err => console.log(err))
+            .catch(err => this.error('Error while saving Review'))
+            })
+            .catch(err => this.error('Error while classifying review'))
+            
         }
         if(this.state.rating){
             const rate_body = {
@@ -179,10 +217,10 @@ class ViewPreviousOrder extends React.Component {
             await axios.post('http://localhost:4000/api/ratings/rate', rate_body)
             .then((res) => {
                 console.log(res)
-                message.success('Your rating is saved.')
+                this.success('Your rating or/and reviews are saved.')
                 this.setState({rating: 0, updated: true})
             })
-            .catch(err => console.log(err))
+            .catch(err => this.error('Error while saving Rating'))
         }
         if(this.state.updated) await this.cartDisplay();
     }

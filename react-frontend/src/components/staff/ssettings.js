@@ -294,7 +294,7 @@ class SSettings extends React.Component {
                                 </div>
                             </div>
                             <form class = "form-group" id="form">
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="email" name="email" placeholder="Enter new email here" id="email"/>
+                                <input class="form-control" style = {{marginBottom:'0.5em'}} type='email' ref="email" name="email" placeholder="Enter new email here" id="email"/>
                                 <button type="submit" class="btn btn-dark" onClick={()=>this.changeEmail(this.props.user.id)}>Save Changes</button>
                             </form> 
                         </div>
@@ -309,7 +309,7 @@ class SSettings extends React.Component {
                                 </div>
                             </div>
                             <form class = "form-group" id="form">
-                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="phonenumber" name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
+                                <input class="form-control" style = {{marginBottom:'0.5em'}} type="number" ref="phonenumber" min='11' max='13' name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
                                 <button type="submit" class="btn btn-dark"  onClick={()=>this.changePhoneNumber(this.props.user.id)}>Save Changes</button>
                             </form> 
                         </div>
@@ -349,9 +349,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, null)(SSettings);
-
-
-
-
-                            
-                            

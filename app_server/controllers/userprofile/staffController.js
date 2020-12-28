@@ -169,7 +169,7 @@ exports.staffRegister = (upload.single('image'),async (req, res) => {
         phonenumber,
         password: hash,
         rest_id,
-        image
+        image, 
       });
   
       const savedStaff = await newStaff.save();
@@ -213,7 +213,9 @@ exports.staffProfile = async (req, res) => {
           username : user.username,
           email: user.email,
           phonenumber: user.phonenumber,
-          rest_id: user.rest_id
+          rest_id: user.rest_id,
+          image: user.image,
+          is_customer_support: user.is_customer_support,
         }));
     }
     catch (e) {

@@ -1,6 +1,6 @@
 var Complain = require('../../models/complain')
 const sgMail =require('@sendgrid/mail');
-sgMail.setApiKey('sgmailkey')
+sgMail.setApiKey('key')
 
 exports.complainRegister = (async (req, res) => {
     const { name, email, subject, complain, customerid} = req.body;

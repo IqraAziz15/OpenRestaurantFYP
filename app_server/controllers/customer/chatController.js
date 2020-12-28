@@ -11,7 +11,7 @@ const pusher = new Pusher({
     appId: "appId",
     key: "key",
     secret: "secret",
-    cluster: "ap2",
+    cluster: "cluster",
     useTLS: true
 });
 

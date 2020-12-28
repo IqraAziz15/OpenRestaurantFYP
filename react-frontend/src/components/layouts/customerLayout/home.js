@@ -5,15 +5,17 @@ import RestaurantCard from "../../customer/viewComponent/restaurantCard";
 import ItemCard from "../../customer/viewComponent/itemCard";
 import AllItemsCard from "../../customer/viewComponent/allItemsCard";
 import DealCard from "../../customer/viewComponent/dealCard";
+import SuggestionCard from "../../customer/viewComponent/suggestionCard";
 import AllRestaurantsCard from "../../customer/viewComponent/allRestaurantsCard";
 import "../../customer/customer.css";
 import { message, Card, Col, Row, Divider, Input } from "antd";
 import Slider from "react-slick";
 import { Spin } from "antd";
 import CallViewItem from "../../customer/viewComponent/callViewItem";
-// import P2Layout from "../../customer/viewComponent/viewRestaurant";
 import ViewRest from "../../customer/viewComponent/callViewRest";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 const { Meta } = Card;
 const { Search } = Input;
 
@@ -28,11 +30,11 @@ class Home extends React.Component {
     viewItem: false,
     viewRest: false,
     loading: true,
-    
+    suggestions: []
   };
 
 
-  componentWillMount = () => {
+  componentWillMount = async() => {
     const pointerToThis = this;
     fetch("http://localhost:4000/customer/restaurant/viewrestaurant/", {
       method: "GET",
@@ -51,6 +53,22 @@ class Home extends React.Component {
     })
       .then((response) => response.json())
       .then((data) => pointerToThis.setState({ items: data.items, deals: data.deals }));
+    
+    if(!this.props.auth.isLoading && this.props.auth.isAuthenticated){
+      await fetch("http://localhost:4000/api/ratings/suggestions/", {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: this.props.auth.user._id
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          pointerToThis.setState({ suggestions: data.items });
+        })
+    }
   }
 
   render() {
@@ -133,7 +151,45 @@ class Home extends React.Component {
           </center>
         ) : (
           <div className="rest-card App-intro">
-            {/* <Divider className="divider" orientation="left" /> */}
+            {this.props.auth.isAuthenticated && this.state.suggestions ?
+             <Card
+              className="all-rest-card"
+              title="You May Like"
+            >
+            {this.state.suggestions.length > 3 ?
+              <Slider {...settings1}>
+                {this.state.suggestions.map((item) => (
+                  <Link style={{ cursor:"pointer" }} to={item.price ? `/view/${item._id}` : `/viewdeal/${item._id}`} key={item._id}>
+                    <SuggestionCard style={{ cursor:"pointer" }}
+                      name={item.name}
+                      description={item.description}
+                      price={item.price}
+                      ratings={item.avg_rating}
+                      count={item.count}
+                      img_url={item._id}
+                      isItem={item.price ? true : false}
+                    />
+                  </Link>
+                ))}
+              </Slider>
+              :
+              <div style={{overflow: 'hidden'}}>
+               {this.state.suggestions.map((item) => (
+                  <Link style={{ cursor:"pointer", float: 'left', marginRight: '4em' }} to={item.price ? `/view/${item._id}` : `/viewdeal/${item._id}`} key={item._id}>
+                    <SuggestionCard style={{ cursor:"pointer" }}
+                      name={item.name}
+                      description={item.description}
+                      price={item.price}
+                      ratings={item.avg_rating}
+                      count={item.count}
+                      img_url={item._id}
+                      isItem={item.price ? true : false}
+                    />
+                  </Link>
+                  
+                ))}</div>}
+            </Card>
+            : ''}
             <Card
               className="all-rest-card"
               title="All Restaurants"
@@ -215,4 +271,9 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, null) (Home);

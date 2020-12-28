@@ -22,6 +22,7 @@ class AppNavbar extends Component{
     }
 
     componentDidMount() {
+        const { user } = this.props.auth;
         this.id = setTimeout(() => this.setState({ loading: false }), 2000)
       }
     

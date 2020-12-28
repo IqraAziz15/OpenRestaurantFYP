@@ -1,13 +1,14 @@
 var Order = require('../../models/order');
 var Item = require('../../models/item');
 var Deal = require('../../models/deal');
+var Restaurant=require('../../models/restaurant');
 const Pusher = require("pusher");
 const { Parser } = require('json2csv');
 const pusher = new Pusher({
     appId: "appId",
-    key: "key",
+    key: "Key",
     secret: "secret",
-    cluster: "ap2",
+    cluster: "cluster",
     useTLS: true
 });
 
@@ -51,6 +52,9 @@ exports.addOrder = (async (req, res, next) => {
                 pusher.trigger(`${order.rest_id}`, "orders", {
                     order
                 });
+                // pusher.trigger(`${req.body.customer_id}`, "notification", {
+                //     msg:`Your order ${req.body.orderid} from restaurant ${rest_id} is completed. Pick your order or wait for waiter if it was cod`
+                // });
                 console.log('Order has been Added ', order);
             }, (err) => next(err))
             .catch((err) => next(err));
@@ -133,6 +137,7 @@ exports.viewAllRestOrdersComplete = (function (req, res, next) {
             return next(error);
         }
         // Respond with valid data
+
         res.json(results);
     });
 });
@@ -181,6 +186,78 @@ exports.extractWordsOrder = (function (req, res, next) {
     });
 });
 
+exports.search = async(req, res, next)=> {
+    
+    var items = await Item.find({name: req.body.name}).select('_id name description')
+    var deals = await Deal.find({name: req.body.name}).select('_id name description')
+    var restaurants = await Restaurant.find({name: req.body.name}).select('_id name')
+    var list = items.concat(deals);
+    list = list.concat(restaurants);
+    console.log('a'+list)
+    var StringsList = []
+        var list1 =[]
+        list.forEach(async(item) => {
+            list1=[]
+            list1.push(item._id)
+            console.log( 'aa'+list1)
+            list1.push(item.name)
+            console.log('aaa'+list1)
+            item.name = item.name.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase()
+            console.log('aaaa'+item.name)
+            if(item.description){
+                item.description = item.description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase()
+                list1.concat(item.description.split(' '));
+            }
+            list1.concat(item.name.split(' '))
+            console.log('b'+list1)
+            StringsList = StringsList.push(list1)
+            console.log('ab'+list1)
+            console.log('abc'+StringsList)
+        })
+        res.json(StringsList);
+};
+
+exports.searchFileContentHandler = async (req, res) => {
+    const request = req.body;
+    await Deal.find({$or: [ {$text: { $search: request.searchtext }}, {metadata: request.meta}]},
+        { score: { $meta: "textScore" } }, (findErr, findRes) => {
+    if (findErr) {
+    //log error here
+    res.status(500).send({
+    message: 'Failed: to search via index',
+    success: true,
+    result: findErr
+    });
+    }
+    else {
+    res.send(findRes);
+    }
+    }).sort({ score: { $meta: "textScore" } });
+};
+
+exports.partialsearch=(function(req, res)
+{
+    var name1 = req.body.name;
+    // Item.find({
+    //     $text:{
+    //         $search:name1
+    //     }},
+    //     {
+    //         __v:0
+    //     },
+    //     function(err,data)
+    //     {
+    //         res.json(data)
+    //     })
+    Item.find({name:{ $regex: new RegExp(name1)}},{
+        _id:0,
+        __v:0,
+    }, function(err,data)
+    {
+        res.json(data)
+    }).limit(10)
+})
+
 exports.getAllOrders = (function (req, res) {
     var order = Order.find()
         .then((order) => {
@@ -198,6 +275,9 @@ exports.setStatus = (function (req, res, next) {
         if (error) {
             return next(error);
         }
+        // if (req.body.status){
+
+        // }
         // Respond with valid data
         res.json(results);
     });
@@ -573,45 +653,4 @@ exports.viewAllCustomerOrdersPending = (function(req, res, next) {
 });
 
 
-
-
-
-
-//first you will get all orders
-//next you will remove ordered_food array from orders and concat it to new array of items
-//from the remaining ordered array, you will retrieve info like, how many orders were cod one and how many where paid by card
-//And you will count unique orderids, and note it down that all the orders that you are retrieving are completed one, ok?
-//also you can retreive no of orders on a spacific data, or specific interval of days
-//Now its time for items, yoohooo
-//for items, you will first get all items and deals present in that restaurant
-//Then, you will use a loop and add all the quantities of an items frm orgered list and save it in the item you fetched just now
-//then you will have, item id, name, total quantity/amount of that item ordered so far, price per unit, and blah blah
-//now you know which item was the most selling item, and which one was waste of space in menu
-//now multiply the quantity with price, and you will get to know that which item saved you the most and showered you with money
-//note that price for deals and items has different names, so first, before doing all this work, merge deals and items in one array, with same name for same attribute.
-//I think thats enough for now
-//Au revior
-
-
-// exports.getOrdersJSON = (function (res, req, next) {
-//     Order.find({ rest_id: req.body.restid, status: "Complete" }).exec(function (error, results) {
-//         if (error) {
-//             return next(error);
-//         }
-
-//         var ordersarray = [], itemsarray = []
-//         results.forEach(async (order) => {
-//             var o={}
-//             o.payment_method = order.payment_method
-//             o.ordertime = order.ordertime
-//             o.total_bill = order.total_bill
-//             o.orderid = order.orderid
-//             ordersarray.push(o)
-//             itemsarray = itemsarray.concat(order.ordered_food)
-//             console.log('ordersarray' + ordersarray)
-//         })
-//         return res.status(200).json({ data: ordersarray });
-
-//     })
-// })
 

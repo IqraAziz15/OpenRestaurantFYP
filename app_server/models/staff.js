@@ -43,6 +43,10 @@ var staffSchema = new Schema({
             
         }
     ], 
+    is_customer_support: {
+        type: Boolean,
+        default: false
+    }
 });
 
 module.exports = mongoose.model('Staff', staffSchema)

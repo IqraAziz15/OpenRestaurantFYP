@@ -402,8 +402,8 @@ class RaSetting extends React.Component {
         })
         .then(function(response) {
           if (response.ok) {
-            message.success('Email Updated Successfully')
-            document.getElementById("form").reset()
+            // message.success('Email Updated Successfully')
+            // document.getElementById("form").reset()
             
                 } else {
             var error = new Error(response.statusText)
@@ -428,8 +428,8 @@ class RaSetting extends React.Component {
           })
           .then(function(response) {
             if (response.ok) {
-                message.success('PhoneNumber Updated Successfully')
-                document.getElementById("form").reset()
+                // message.success('PhoneNumber Updated Successfully')
+                // document.getElementById("form").reset()
                   } else {
               var error = new Error(response.statusText)
               error.response = response
@@ -572,7 +572,7 @@ class RaSetting extends React.Component {
                             </div>
                             <form id="form">
                                 <div class = "form-group">
-                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="email" name="email" placeholder="Enter new email here" id="email"/>
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="email" ref="email" name="email" placeholder="Enter new email here" id="email"/>
                                     <button type="submit" class="btn btn-dark" onClick={()=>this.changeEmail(this.props.user.id)}>Save Changes</button>
                                 </div> 
                             </form>
@@ -589,7 +589,7 @@ class RaSetting extends React.Component {
                             </div>
                             <form id="form">
                                 <div class = "form-group">
-                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="text" ref="phonenumber" name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
+                                    <input class="form-control" style = {{marginBottom:'0.5em'}} type="number" ref="phonenumber" min='11' name="phonenumber" placeholder="Enter new phonenumber here" id="phonenumber"/>
                                     <button type="submit" class="btn btn-dark" onClick={()=>this.changePhoneNumber(this.props.user.id)}>Save Changes</button>
                                 </div> 
 

@@ -2,13 +2,19 @@
     
     border-radius: 10px;
     margin: 100px;
-
+  display: flex;
+  flex-wrap: wrap;
     padding:0;
     align-items: center;
     text-align: center;
     
     
 } 
+
+.mcard
+{
+  flex: 25%;
+}
 
 .App-namee {
     margin-top: 15px;
@@ -33,5 +39,7 @@
       
       
     }
+
+
 
    

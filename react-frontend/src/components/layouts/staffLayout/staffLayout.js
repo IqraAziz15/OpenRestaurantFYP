@@ -47,6 +47,7 @@ import {Spin} from 'antd';
 // import Title from 'antd/lib/skeleton/Title';
 import Chat from '../../staff/chat';
 import zIndex from '@material-ui/core/styles/zIndex';
+import '../../staff/sstyle.css';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 // const { Text } = Typography;
@@ -71,7 +72,7 @@ class WaiterLayout extends React.Component
     
 
     componentDidMount = async () => {
-        var body = JSON.stringify({rid : this.state.user.id});
+        var body = JSON.stringify({sid : this.props.user.id});
         const pointerToThis = this;
         await fetch("http://localhost:4000/staff/restaurant/findstaff/",  {
         method:'POST',
@@ -84,6 +85,7 @@ class WaiterLayout extends React.Component
         .then(data => pointerToThis.setState({ rest: data}));
         const { user } = this.props.auth;
         this.id = setTimeout(() => this.setState({ loading: false }), 2000)
+        console.log(this.props.user)
 
 
     //     var body1 = JSON.stringify({id : this.state.rest_id});
@@ -122,27 +124,23 @@ class WaiterLayout extends React.Component
                   </center>
                 ) :
               <div>
-                <Header style={{ position: 'fixed', top:0, zIndex: 9999, width: '100%' }}> 
+                <Header> 
                 <h2 style={{color: 'white'}}>Open Restaurant</h2>
                 {/* <img src= { logo } height = "45" width = "45"></img> */}
                 {/* <h5>{this.state.user ? `Welcome ${this.state.user.name}  ${this.state.rest.name}` : ''}</h5>    */}
                 {/* <h3>{this.state.user ? `Welcome ${this.state.user.name} ${this.state.user.id}` : ''}</h3>     */}
                 </Header>
-                <div className="clear-div"></div><br/>
+                <div className="clear-div"></div>
                 <Router>
                 <Layout style={{ minHeight: '100vh' }} >
-                    <Sider style={{
-                        overflow: 'auto',
-                        height: '100vh',
-                        position: 'fixed',
-                        left: 0,
-                      }} 
+                    <Sider
                       width="250" 
                       collapsible collapsed={this.state.collapsed} 
-                      onCollapse={this.onCollapse}>
+                      onCollapse={this.onCollapse}
+                      >
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
-                        <Menu.Item/>
+                        
                         <Menu.Item key="1" icon={<UserOutlined />}><Link className="link" to="/staff/staffprofile">
                             User Profile</Link></Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Order">
@@ -158,11 +156,13 @@ class WaiterLayout extends React.Component
                                 <Link className="link" to="/staff/staffcompleteorders">Complete Orders</Link>
                                 </Menu.Item>
                                 <Menu.Item key="5" icon={<ContainerOutlined />}>
-                                <Link className="link" to="/staff/staffallorders">All Orders</Link>
+                                <Link className="link" to="/staff/staffallorders">All Orders
+                                </Link>
                                 </Menu.Item>
                         </SubMenu>
+                        {this.props.user.is_customer_support == true ? 
                         <Menu.Item key="6" icon={<WechatOutlined />}><Link className="link" to="/staff/chat">
-                            Customer Support Chat</Link></Menu.Item>
+                            Customer Support Chat</Link></Menu.Item> : ''}
                         <Menu.Item key="7" icon={<SettingOutlined />}><Link className="link" to="/staff/staffsettings">
                             Settings</Link></Menu.Item>
                         <Menu.Item key="8" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
@@ -171,11 +171,11 @@ class WaiterLayout extends React.Component
                         
                     </Menu>
                     </Sider>
-                    <Layout className="site-layout" style={{ marginLeft: '19vw' }} >
+                    <Layout className="site-layout" >
                     {/* <Header className="site-layout-background" style={{ padding: 0 }} >
 
                     </Header> */}
-                    <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+                    <Content style={{ margin: '0 16px' }} className='contentclass'>
                         
                         <Switch>
                           <Route path="/staff/staffprofile" render={(props) => ( <SProfile {...props} user={this.state.user} />)}>
@@ -196,7 +196,7 @@ class WaiterLayout extends React.Component
                         </Switch>
                         
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                    <Footer style={{ textAlign: 'center' }}>©Copyrights 2020 || <b>Open Restaurant</b></Footer>
                     </Layout>
                 </Layout>
                 </Router>

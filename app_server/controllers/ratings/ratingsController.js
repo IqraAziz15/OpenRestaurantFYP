@@ -4,7 +4,7 @@ var Rating = require('../../models/rating');
 var Review = require('../../models/review');
 var Item = require('../../models/item');
 var Deal = require('../../models/deal');
-
+var Order = require('../../models/order');
 /* post ratings */
 exports.rate = ( async(req, res, next) => {
     var rating = await Rating.findOneAndUpdate({customer: req.body.customer, item: req.body.item}, {stars: req.body.stars},{
@@ -251,10 +251,12 @@ exports.getRatingsPlusReviewsItem = ( async(req, res, next) => {
                 if(!review.good_review) review.good_review = -1
                 ireviews.push({
                     _id:review._id,
+                    c_name:review.customer_name,
                     review:review.description,
                     likes:review.thumbsup,
                     dislikes:review.thumbsdown,
-                    good_review: review.good_review
+                    good_review: review.good_review,
+                    date_time: review.date_time
                 });
             }
         })
@@ -265,3 +267,76 @@ exports.getRatingsPlusReviewsItem = ( async(req, res, next) => {
     }
     return null;
 });
+
+exports.Suggest = async (req,res,next) => {
+    var orders = await Order.find({customer_id: req.body.user_id}).select('ordered_food')
+    var rated = await Rating.find({customer: req.body.user_id, stars: {$in : [4,4.5,5] }}).select('item')
+    var reviews = await Review.find({customer: req.body.user_id, good_review: 1}).select('item')
+    var items= []
+    var suggestions = []
+    await orders.forEach(order => {
+        order.ordered_food.forEach(o => {
+            items.push(o.id)
+        })
+    })
+    items = items.concat(reviews)
+    items = items.concat(rated)
+    var counts = {}
+    for (var i = 0; i < items.length; i++) {
+        var num = items[i];
+        counts[num] = counts[num] ? counts[num] + 1 : 1;
+        if(counts[num]> 3) suggestions.push(items[i])
+    }
+    var ratings = await Rating.find({item: {$in: suggestions}});
+    var items = await Item.find({_id:  {$in: suggestions}}).select('-image');
+    var deals = await Deal.find({_id:  {$in: suggestions}}).select('-image');
+    var count = 0;
+    var avg_rating = 0;
+    var it={}
+    await items.forEach((item, i) => {
+        count = 0; 
+        avg_rating = 0;
+        it={}
+        it._id = item._id;
+        it.name = item.name;
+        it.description = item.description;
+        it.price = item.price;
+        it.avg_rating = 0;
+        it.count = 0;
+        ratings.forEach((rating) => {
+            if(rating.item == item._id) {
+                avg_rating = avg_rating + rating.stars
+                count = count + 1
+            }
+        })
+        if(count) avg_rating = avg_rating/count;
+        it.avg_rating = avg_rating;
+        it.count = count;
+        items[i] = it;
+    })
+    await deals.forEach(async(item, i) => {
+        count = 0; 
+        avg_rating = 0;
+        it={}
+        it._id = item._id;
+        it.name = item.name;
+        it.description = item.description;
+        it.total_bill = item.total_bill;
+        it.avg_rating = 0;
+        it.count = 0;
+        ratings.forEach((rating) => {
+            if(rating.item == item._id) {
+                avg_rating = avg_rating + rating.stars
+                count = count + 1
+            }
+        })
+        if(count) avg_rating = avg_rating/count;
+        it.avg_rating = avg_rating;
+        it.count = count;
+        deals[i] = it;
+    })
+    items = await items.concat(deals)
+    await res.json({
+        items
+    })
+}

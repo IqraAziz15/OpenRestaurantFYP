@@ -4,8 +4,10 @@ import {CardElement, Elements, useStripe, useElements} from '@stripe/react-strip
 import {loadStripe} from '@stripe/stripe-js';
 // import "antd/dist/antd.css";
 import { Redirect } from 'react-router';
-import { Form, Input, Button, Checkbox, Alert } from "antd";
+import { Form, Input, message, Button, Checkbox, Alert } from "antd";
+import axios from 'axios';
 import "./checkoutForm.css";
+import SuccessMsg from '../customer/cartComponents/successmsg';
 const CARD_OPTIONS = {
   iconStyle: 'solid',
   style: {
@@ -58,6 +60,27 @@ const ResetButton = ({onClick}) => (
     Reset
   </button>
 );
+
+const success = (content) => {
+    message.success({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
+
+ const error = (content) => {
+    message.error({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
+
 const CheckoutForm = (props) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -100,6 +123,19 @@ const CheckoutForm = (props) => {
       setError(payload.error);
     } else {
       console.log(payload);
+      var body = {
+        orderid: props.orderId,
+        id: payload.paymentMethod.id,
+        name: AmountDetails.name
+      }
+      await axios.post('http://localhost:4000/api/transaction/savetransactions/all', body, {
+            headers: {
+                "content-type": "application/json"
+            }
+        }).then(res => {
+            success('Transaction Successfully saved')
+        })
+            .catch(err => error('Error, something went wrong'))
       // fetch('/pay/checkoutViaCard', params: { user: AmountDetails, payload}, )
       setPaymentMethod(payload.paymentMethod);
     }
@@ -112,17 +148,12 @@ const CheckoutForm = (props) => {
   };
 
   return paymentMethod ? (
-    <div className="Result">
-      {/* <div className="ResultTitle" role="alert">
-        Payment successful
-      </div>
-      <div className="ResultMessage">
-        Order Payment Done
-      </div>
-      <ResetButton onClick={reset} /> */}
-      <Redirect push to={`/place/order/${props.orderId}`} />;
-    </div>
+    <SuccessMsg orderid={props.orderId}/>
   ) : (
+    <div className="App-intro form-containter">
+        <div className="checkout-form-container">
+    <h3 className='payment-heading'><center>Checkout Form</center></h3>
+    <br /><br />
     <Form className="pay-Form Form" onSubmit={handleSubmit}>
       <fieldset className="FormGroup">
         <div className="FormRow">
@@ -171,6 +202,7 @@ const CheckoutForm = (props) => {
         Pay
       </SubmitButton>
     </Form>
+    </div></div>
   );
 };
 

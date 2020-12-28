@@ -4,6 +4,6 @@ const restaurantController = require('../../controllers/staff/restaurantControll
 
 /////////////////////////////////////////////        POST OPERATIONS        //////////////////////////////////////////////
 
-router.post('/findstaff/', restaurantController.findStaff);
+router.post('/findstaff', restaurantController.findStaff);
 
 module.exports = router;

@@ -135,11 +135,9 @@ class Proceedtocheckout extends React.Component {
 
   calculateTotal = (cartDetail) => {
     let total = 0;
-    console.log(cartDetail)
     cartDetail.map(item => {
       var itemprice = item.price ? item.price : item.total_bill
       total += parseInt(itemprice, 10) * item.quantity
-      console.log('totalllll ' + total)
     });
 
     this.setState({ Total: total })
@@ -175,16 +173,12 @@ class Proceedtocheckout extends React.Component {
         this.state.itemsDetails.forEach(cart_item => {
           if (item.id == cart_item._id) {
             var itemprice = cart_item.price ? cart_item.price : cart_item.total_bill
-            console.log(itemprice)
             total += parseInt(itemprice, 10) * cart_item.quantity
-            console.log(total)
           }
         })
 
       })
       cart[i].sub_total = total;
-      console.log(total);
-      console.log(cart[i].sub_total)
       total = 0; price = 0;
     })
     console.log(cart);
@@ -200,12 +194,11 @@ class Proceedtocheckout extends React.Component {
       }
     };
     axios.post('http://localhost:4000/customer/order/addOrder', body, config)
-      .then(res => {
+      .then(async(res) => {
         // pointerToThis.setState({ subid: res.data._id });
         this.success('Order Placed Successfully')
         this.emptyCart();
-        this.setState({ redirect: true, orderId: body.orderid });
-        console.log(res)
+        await this.setState({ redirect: true, orderId: body.orderid });
       })
       .catch(err => console.log(err))
         
@@ -224,7 +217,6 @@ class Proceedtocheckout extends React.Component {
     axios.post('http://localhost:4000/customer/cart/emptycart', body, config)
       .then(res => {
         // pointerToThis.setState({ subid: res.data._id });
-        console.log(res)
         this.props.auth.user.cart = []
       })
       .catch(err => console.log(err))
@@ -265,7 +257,7 @@ class Proceedtocheckout extends React.Component {
       return <EmptyCart/>
     }
     if (this.state.redirect && this.state.value == 1) {
-      return <CheckOut orderid={this.state.orderId}/>;
+      return <CheckOut orderId={this.state.orderId}/>;
     }
     else if (this.state.redirect && this.state.value == 2) {
       return <SuccessMsg orderid={this.state.orderId}/>;

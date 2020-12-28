@@ -5,6 +5,7 @@ const ratingsController = require("../../controllers/ratings/ratingsController")
   // /api/ratings/
   router.get("/allratings",ratingsController.getRatings);
   router.get("/allratingswithitems",ratingsController.getRatingsAll);
+  router.post("/suggestions",ratingsController.Suggest);
   router.post("/allcustomerratings",ratingsController.getRatingsCustomer);
   router.post("/allitemratings",ratingsController.getRatingsItem);
   router.post("/get-item-ratings-reviews-customer-order",ratingsController.getRatingsPlusReviewsCustomerOrder);

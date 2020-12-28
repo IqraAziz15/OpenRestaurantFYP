@@ -52,3 +52,16 @@ Button, Input:hover {
     font-weight: 600;
     padding: 0%;
   }
+
+  @media screen and (max-width: 652px) 
+  {
+      .login-div
+      {
+        margin: 1em;
+        margin-left:2em;
+        margin-top:10em;
+      }
+      .login-form{
+        width:50px
+      }
+  }

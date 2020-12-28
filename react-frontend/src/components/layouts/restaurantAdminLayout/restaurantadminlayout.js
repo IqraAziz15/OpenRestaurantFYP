@@ -11,6 +11,9 @@ import {
     AppstoreOutlined,
     ProfileOutlined,
     LineChartOutlined,
+    TransactionOutlined,
+    MoneyCollectOutlined,
+    KeyOutlined,
     ContainerOutlined,
     AppstoreAddOutlined,
     FileAddOutlined,
@@ -39,6 +42,8 @@ import Logout from '../../userProfile/restaurantAdmin/logout';
 import SalesStats from '../../restaurantAdmin/restaurantStatistics/itemstats'
 import { Button } from 'reactstrap';
 import {Spin} from 'antd';
+import SetTransactionKeys from '../../payment_gateways/setKeyTransaction';
+import ViewTransactions from '../../payment_gateways/viewTransactions';
 // import logo from '../assets/images/logo.png';
 // import Title from 'antd/lib/skeleton/Title';
 const { Header, Content, Footer, Sider } = Layout;
@@ -128,7 +133,7 @@ class RaLayout extends React.Component
                 </Header>
                 <div className="clear-div"></div>
                 <Router>
-                <Layout style={{ minHeight: '100vh' }} >
+                <Layout style={{ minHeight: '100vh', backgroundColor: 'white' }} >
                     <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
@@ -194,12 +199,20 @@ class RaLayout extends React.Component
                                 </Menu.Item>
                             </SubMenu>
                         </SubMenu>
-                        
-                        <Menu.Item key="12" icon={<SettingOutlined />}><Link className="link" to="/usersettings" >Settings</Link></Menu.Item>
+                        <SubMenu key="sub8" icon={<TransactionOutlined />} title="Transactions">
+                            <Menu.Item key="12" title="View Transactions" icon={<MoneyCollectOutlined />}>
+                                <Link className="link" to="/viewtransactions">View Transactions
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="13" title="Transaction Keys Setting"  icon={<KeyOutlined />}>
+                                <Link className="link" to="/keysettings">Transaction Keys Setting</Link>
+                            </Menu.Item>
+                        </SubMenu>
+                        <Menu.Item key="14" icon={<SettingOutlined />}><Link className="link" to="/usersettings" >Settings</Link></Menu.Item>
                         {/* <Menu.Item key="13" icon={<LineChartOutlined />}>
                             <Link className="link" to="/adminstatistics" >Statistics</Link>
                             </Menu.Item> */}
-                        <Menu.Item key="14" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
+                        <Menu.Item key="15" icon={<LogoutOutlined />}>Logout<Logout/></Menu.Item>
                         
                         
                         
@@ -234,6 +247,10 @@ class RaLayout extends React.Component
                             </Route>
                             <Route path="/dashboard" render={(props) => ( <SalesStats {...props} user={this.state.user} restid={this.state.rest_id} />)}>
                             </Route>
+                            <Route path="/viewtransactions" render={(props) => ( <ViewTransactions {...props} restid={this.state.rest_id} />)}>
+                            </Route>
+                            <Route path="/keysettings" render={(props) => ( <SetTransactionKeys {...props} user={this.state.user.id} />)}>
+                            </Route>
                         </Switch>
                         
                         {/* <Breadcrumb style={{ margin: '16px 0' }}>
@@ -244,7 +261,7 @@ class RaLayout extends React.Component
                         Bill is a cat.
                         </div> */}
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                    <Footer style={{ textAlign: 'center' }}>©Copyrights 2020 || <b>Open Restaurant</b></Footer>
                     </Layout>
                 </Layout>
                 </Router>

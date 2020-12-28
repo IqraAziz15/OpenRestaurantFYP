@@ -10,6 +10,7 @@ import { Redirect } from 'react-router';
 import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Signin from './loginform';
 import { clearErrors } from '../../../flux/actions/customer/errorActions';
  
 class SignupCustomer extends Component{
@@ -19,7 +20,8 @@ class SignupCustomer extends Component{
         email : '',
         password : '',
         msg : null,
-        redirect: false
+        redirect: false,
+        visible:false,
     }
 
   static propTypes = {
@@ -83,7 +85,10 @@ class SignupCustomer extends Component{
 
 render(){
   const { isAuthenticated } = this.props;
-    if (isAuthenticated){
+  if (this.state.visible) {
+    return <Signin/>
+  }
+    else if (isAuthenticated){
       return (<Redirect push to='/'/>)
     }
     else if (this.state.redirect){

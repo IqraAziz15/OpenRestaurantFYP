@@ -8,6 +8,7 @@ import 'material-design-icons/iconfont/material-icons.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import '../restaurantAdmin/profile/raprofile.css';
+import './sstyle.css';
 
 class SProfile extends React.Component {
 
@@ -68,7 +69,7 @@ class SProfile extends React.Component {
                     <div>
                         {this.state.user ?
                             <center>
-                                <div style={{ padding: '1.5em' }}>
+                                <div style={{ padding: '1.5em' }} >
                                     <div href="#" class="list-group-item list-group-item-action">
                                         <div>
                                             {photoUrl ?

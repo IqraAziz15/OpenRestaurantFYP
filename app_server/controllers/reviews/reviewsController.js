@@ -2,15 +2,41 @@ var express = require('express');
 var router = express.Router();
 var Review = require('../../models/review');
 var LikedReview = require('../../models/liked_review');
+const Pusher = require("pusher");
+const pusher = new Pusher({
+  appId: "1114675",
+  key: "98bd0af8e51670d6785d",
+  secret: "e3f7e65a4e8e33458696",
+  cluster: "ap2",
+  useTLS: true
+});
+
 
 /* post reviews */
 exports.addReview = ( async(req, res, next) => {
-    var review = await Review.findOneAndUpdate({customer: req.body.customer, item: req.body.item}, {description: req.body.description},{
+    var review = await Review.findOneAndUpdate({customer: req.body.customer, item: req.body.item},
+     {date_time: Date.now(), good_review: req.body.good_review, customer_name: req.body.c_name, description: req.body.description},
+     {
         new: true,
         upsert: true 
         });
-        
-        res.json(review)
+    if (review){
+        pusher.trigger(`${req.body.item}`, "reviews", {
+            review
+        });
+        // if(req.body.good_review == 1){
+        //     pusher.trigger(`${req.body.item}`, "bad_reviews", {
+        //         review
+        //     });
+        // }
+        // else {
+        //     pusher.trigger(`${req.body.item}`, "good_reviews", {
+        //         review
+        //     });
+        // }
+    }
+    res.json(review)
+    
 });
 
 /* update reviews */
@@ -102,6 +128,9 @@ exports.thumbsUp = ( function(req, res, next) {
     }
     LikedReview.create(likedreview).then((liked) => {
             console.log('Liked has been Added ', liked);
+            pusher.trigger(`${req.body.itemid}`, 'like_dislike', {
+                liked
+            });
             res.json(results);
         }, (err) => next(err))
         .catch((err) => next(err));
@@ -116,11 +145,17 @@ exports.decThumbsUp = ( function(req, res, next) {
     return next(error);
     }
     // Respond with valid data
+    var reviewliked = LikedReview.findOne({customer: req.body.cid, item: req.body.itemid, review:req.body._id})
     LikedReview.deleteOne({customer: req.body.cid, item: req.body.itemid, review:req.body._id}).exec(function(error, rest) {
     if (error) {
     return next(error);
     }
-    console.log('Liked has been Deleted', rest);
+    console.log('Liked has been Deleted', reviewliked);
+
+     pusher.trigger(`${req.body.itemid}`, 'undo_like_dislike', {
+        rest
+        
+    });
     res.json(results);
     })
     
@@ -142,6 +177,9 @@ exports.thumbsDown = ( function(req, res, next) {
     }
     LikedReview.create(likedreview).then((liked) => {
             console.log('Liked has been Added ', liked);
+            pusher.trigger(`${req.body.itemid}`, 'like_dislike', {
+               liked
+            });
             res.json(results);
         }, (err) => next(err))
         .catch((err) => next(err));
@@ -154,11 +192,17 @@ exports.decThumbsDown = ( function(req, res, next) {
     if (error) {
     return next(error);
     }
+    var reviewliked = LikedReview.findOne({customer: req.body.cid, item: req.body.itemid, review:req.body._id})
     LikedReview.deleteOne({customer: req.body.cid, item: req.body.itemid, review:req.body._id}).exec(function(error, rest) {
     if (error) {
     return next(error);
     }
-    console.log('Liked has been Deleted', rest);
+    console.log('Liked has been Deleted', reviewliked);
+
+     pusher.trigger(`${req.body.itemid}`, 'undo_like_dislike', {
+        rest
+        
+    });
     res.json(results);
     })
     // Respond with valid data

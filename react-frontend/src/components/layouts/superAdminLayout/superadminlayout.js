@@ -81,7 +81,7 @@ class SaLayout extends React.Component
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
                         
-                        <Menu.Item key="1" icon={<UserOutlined />}>User Profile</Menu.Item>
+                        {/* <Menu.Item key="1" icon={<UserOutlined />}>User Profile</Menu.Item> */}
                         
                         <Menu.Item key="2" icon={<FileAddOutlined />}><Link className="link" to="/signup" >Add Restaurant</Link></Menu.Item>
                         <Menu.Item key="3"icon={<ContainerOutlined />}><Link className="link" to="/viewanddeleterestaurant" >View Restaurants</Link></Menu.Item>

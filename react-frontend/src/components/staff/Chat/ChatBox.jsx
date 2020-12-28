@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import {SendOutlined as SendIcon} from "@ant-design/icons";
 import List from "@material-ui/core/List";
+import {message} from 'antd';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -131,7 +132,25 @@ const ChatBox = (props) => {
   };
 
   useEffect(scrollToBottom, [messages]);
+  const success = (content) => {
+    message.success({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
 
+  const error = (content) => {
+    message.error({
+      content: content,
+      className: 'custom-class',
+      style: {
+        marginTop: '10vh',
+      },
+    });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const message = {
@@ -150,7 +169,15 @@ const ChatBox = (props) => {
         },
       })
       .then((response) => {response.json()
-       window.alert("message sent.") });
+       if (response.status==200)
+      {
+        success('Message sent')
+      } 
+      else
+      {
+        error('Try again')
+      }
+    });
       //console.log(props.user)
       var m = messages
       m.push(message)

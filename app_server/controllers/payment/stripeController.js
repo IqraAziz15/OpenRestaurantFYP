@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Stripe = require('stripe');
-const stripe = new Stripe('sk_test_51HEBkBAA6YnKro0mR80F1sCx6qkQVOqammjT1FeD18AXU1poschqKn81JORbLTjoEAhgYLxSOfllYmfR5BOBG4GX00C2OgOUhO', {
+const stripe = new Stripe('stripe key', {
   apiVersion: '2020-03-02',
 });
 // const uuid =  require("uuid"); 

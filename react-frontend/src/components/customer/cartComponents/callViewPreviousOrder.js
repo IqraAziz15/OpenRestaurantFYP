@@ -10,7 +10,7 @@ function CallViewOrder() {
 
     return (
         <div>
-            <OrderView id={id} />
+            <OrderView id={id} current={false}/>
         </div>
     );
 }

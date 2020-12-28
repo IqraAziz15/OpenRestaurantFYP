@@ -11,6 +11,8 @@ import ReviewComponent from "../reviewRatingComponents/reviewComponent";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from "react-router-dom";
+import Pusher from 'pusher-js';
+import { pusher } from '../../pusher';
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
@@ -21,8 +23,8 @@ class ViewItem extends Component {
     item: "",
     loading: true,
     addCart: true,
-    user: '',
     quantity:1,
+    update: true,
     redirect: false,
     likedreviews: [],
     isauth: true
@@ -121,12 +123,107 @@ class ViewItem extends Component {
             })
               .then((response) => response.json())
               .then((data) => {
-                if(data) pointerToThis.setState({ review_like: data.like_dislike, likedreviews: data, loading: false });
+                if(data) pointerToThis.setState({  likedreviews: data, loading: false });
               });
     }
-    else pointerToThis.setState({ review_like: 0, loading: false });
-  }
+    else pointerToThis.setState({ loading: false });
+    var chan = `${this.state.itemId}`; 
+      var channel = pusher.subscribe(chan);
+      channel.bind('reviews', async(data) => {
+            await fetch(
+          `http://localhost:4000/api/ratings/getratings-reviews-item`,
+          {
+            method: "POST",
+            body: JSON.stringify({ item: this.state.itemId}),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then(async(data) => {
+            await pointerToThis.setState({update: false })
+            await pointerToThis.setState({ item: data, update:true });
+          })
+      })
+       channel.bind('like_dislike', async(data) => {
+         await fetch(
+          `http://localhost:4000/api/ratings/getratings-reviews-item`,
+          {
+            method: "POST",
+            body: JSON.stringify({ item: this.state.itemId}),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then(async(data) => {
+            await pointerToThis.setState({update: false })
+            await pointerToThis.setState({ item: data, update:true });
+          })
+          if(this.props.auth.isAuthenticated){
+            await fetch("http://localhost:4000/api/reviews/review-liked-customer-item", {
+                method: "POST",
+                body:JSON.stringify({ 
+                  cid: this.props.auth.user._id, 
+                  _id: this.state.item._id 
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => response.json())
+                .then(async(data) => {
+                  await pointerToThis.setState({update: false })
+                  if(data) pointerToThis.setState({ review_like: data.like_dislike, likedreviews: data, update:true });
+                  else pointerToThis.setState({ review_like: [], likedreviews: [], update:true });
+                });
+          }else pointerToThis.setState({ loading: false });
+      })
 
+      channel.bind('undo_like_dislike', async(data) => {
+        await fetch(
+          `http://localhost:4000/api/ratings/getratings-reviews-item`,
+          {
+            method: "POST",
+            body: JSON.stringify({ item: this.state.itemId}),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then(async(data) => {
+            await pointerToThis.setState({update: false })
+            await pointerToThis.setState({ item: data, update:true });
+          })
+          if(this.props.auth.isAuthenticated){
+            await fetch("http://localhost:4000/api/reviews/review-liked-customer-item", {
+                method: "POST",
+                body:JSON.stringify({ 
+                  cid: this.props.auth.user._id, 
+                  _id: this.state.item._id 
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => response.json())
+                .then(async(data) => {
+                  await pointerToThis.setState({update: false })
+                  if(data) pointerToThis.setState({ review_like: data.like_dislike, likedreviews: data, update:true });
+                  else pointerToThis.setState({ review_like: [], likedreviews: [], update:true });
+                });
+          }else pointerToThis.setState({ loading: false });
+      })
+      
+  }
+  wasInLiked = async(_id) => {
+    await this.state.item.reviews.find(review => {
+        return review._id === _id
+    })
+  }
   render() {
     const {isAuthenticated, user} = this.props.auth;
     const gridStyle = {
@@ -210,46 +307,58 @@ class ViewItem extends Component {
             <Divider/>
             <Card>
             <Tabs className='review-tabs' defaultActiveKey="1">
-              <TabPane tab="Top Reviews" key="1">
+              <TabPane tab="All Reviews" key="1">
               {this.state.item.reviews.map(review =>
+              (this.state.update ?
               (this.state.likedreviews.length>0 ? 
-              <>
+              <div>
                 {this.state.likedreviews.map(review_id => 
                   review_id.review == review._id ?
                   <ReviewComponent 
                   likes={review.likes} 
                   review_id={review._id} 
+                  c_name={review.c_name}
+                  date={review.date_time}
                   primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
                   disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
                   dislikes={review.dislikes} review={review.review} 
                   item_id={this.state.item._id}
                   />
                   :
+                  this.state.likedreviews.some(x => x.review === review._id) ?  "" :
                   <ReviewComponent 
                   likes={review.likes} 
-                  review_id={review._id} 
+                  review_id={review._id}
+                  c_name={review.c_name}
+                  date={review.date_time} 
                   primary='false'
                   disprimary='false' 
                   dislikes={review.dislikes} review={review.review} 
                   item_id={this.state.item._id}
                   />)
+                
                 }
-                </>
+                </div>
                 :
                 <ReviewComponent 
                   likes={review.likes} 
                   review_id={review._id} 
+                  c_name={review.c_name}
+                  date={review.date_time}
                   primary='false'
                   disprimary='false' 
                   dislikes={review.dislikes} review={review.review} 
                   item_id={this.state.item._id}
                   />
               )
+              : ''
+              )
               )}
               </TabPane>
               <TabPane tab="Positive Reviews" key="2">
                 {this.state.item.reviews.map(review =>
-                review.good_review == 1 ?
+                (this.state.update ?
+                (review.good_review == 1 ?
                 <>
                 {this.state.likedreviews.length>0 ?
                 this.state.likedreviews.map(review_id => 
@@ -257,25 +366,32 @@ class ViewItem extends Component {
                   <ReviewComponent 
                   likes={review.likes} 
                   review_id={review._id} 
+                  c_name={review.c_name}
+                  date={review.date_time}
                   primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
                   disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
                   dislikes={review.dislikes} review={review.review} 
                   item_id={this.state.item._id}
                   />
                   :
+                  this.state.likedreviews.some(x => x.review === review._id) ?  "" :
                   <ReviewComponent 
                   likes={review.likes} 
-                  review_id={review._id} 
+                  review_id={review._id}
+                  c_name={review.c_name}
+                  date={review.date_time} 
                   primary='false'
                   disprimary='false' 
                   dislikes={review.dislikes} review={review.review} 
                   item_id={this.state.item._id}
-                  />)
-                
+                  />
+                )
                 :
                 <ReviewComponent 
                   likes={review.likes} 
-                  review_id={review._id} 
+                  review_id={review._id}
+                  c_name={review.c_name}
+                  date={review.date_time} 
                   primary='false'
                   disprimary='false' 
                   dislikes={review.dislikes} review={review.review} 
@@ -283,38 +399,47 @@ class ViewItem extends Component {
                   />
                 }
                 </>
-                : ''
+                : '')
+                :"")
               )}
               </TabPane>
-              <TabPane tab="Negative Reviews" key="3">
+              <TabPane tab="Critical Reviews" key="3">
                 {this.state.item.reviews.map(review =>
-                review.good_review == 0 ?
+                (this.state.update ?
+                (review.good_review != 1 ?
                 <>
-                  {this.state.likedreviews.length>0 ?
-                    this.state.likedreviews.map(review_id => 
+                {this.state.likedreviews.length>0 ?
+                this.state.likedreviews.map(review_id => 
                   review_id.review == review._id ?
                   <ReviewComponent 
                   likes={review.likes} 
                   review_id={review._id} 
+                  c_name={review.c_name}
+                  date={review.date_time}
                   primary={review_id.like_dislike == 1 ? 'primary' : 'false'} 
                   disprimary={review_id.like_dislike == -1 ? 'primary' : 'false'} 
                   dislikes={review.dislikes} review={review.review} 
                   item_id={this.state.item._id}
                   />
                   :
+                  this.state.likedreviews.some(x => x.review === review._id) ?  "" :
                   <ReviewComponent 
                   likes={review.likes} 
-                  review_id={review._id} 
+                  review_id={review._id}
+                  c_name={review.c_name}
+                  date={review.date_time} 
                   primary='false'
                   disprimary='false' 
                   dislikes={review.dislikes} review={review.review} 
                   item_id={this.state.item._id}
-                  />)
-                
+                  />
+                )
                 :
                 <ReviewComponent 
                   likes={review.likes} 
-                  review_id={review._id} 
+                  review_id={review._id}
+                  c_name={review.c_name}
+                  date={review.date_time} 
                   primary='false'
                   disprimary='false' 
                   dislikes={review.dislikes} review={review.review} 
@@ -322,7 +447,8 @@ class ViewItem extends Component {
                   />
                 }
                 </>
-                : ''
+                : '')
+                :"")
               )}
               </TabPane>
             </Tabs>

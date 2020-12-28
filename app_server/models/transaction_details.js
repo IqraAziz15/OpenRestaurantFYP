@@ -5,17 +5,19 @@ var TransactionSchema = new Schema({
         type: String,
         required:true
     },
-    customer: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Customer',
+    order_id: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
         required: true
     },
     rest_id: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Restaurant',
+        type: String,
         required: true
     },
-    Amount: {
+    amount: {
         type: Number,
         required: true
     },

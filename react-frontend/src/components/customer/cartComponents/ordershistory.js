@@ -6,6 +6,7 @@ import axios from "axios";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, Redirect } from "react-router-dom";
+import moment from 'moment';
 
 class OrdersHistory extends React.Component
 {
@@ -45,8 +46,6 @@ class OrdersHistory extends React.Component
                 pointerToThis.setState({redirect1: true});
               }
               // alert(' Order Viewed')
-              console.log(res)
-              console.log(res.data)
             })
             .catch(err => console.log(err))
         }
@@ -73,9 +72,7 @@ class OrdersHistory extends React.Component
           .then(res => {
             pointerToThis.setState({ items: res.data, loading: false });
             // alert(' Order Viewed')
-            console.log(res)
-            console.log(res.data)
-            console.log(this.state.items)
+
             this.mergeData();
           })
     
@@ -94,44 +91,34 @@ class OrdersHistory extends React.Component
       })
       var new_array = []
       var orders = this.state.orders
-      await orders.forEach(async(order, o) => {
-        var new_order = { 
+      for (let o=0; o<orders.length;o++) {
+        let order = orders[o]
+        console.log('o '+o)
+        if(order.orderid !='0'){
+          var new_order = { 
             orderid: order.orderid,
-            giftcoupon: order.giftcoupon,
-            rest_ids: [
-              order.rest_id,
-            ],
             ordered_food: 
               order.ordered_food
             ,
             total_bill: order.total_bill,
-            comments: [
-              order.comments
-            ],
-            payment_method: order.payment_method,
             ordertime: order.ordertime,
           }
-        orders = await this.arrayRemove(orders, order)
-        orders.forEach(async(ord, i) => {
-          if(i != o && order.orderid == ord.orderid){
-            new_order.rest_ids.push(ord.rest_id)
+        }
+        orders.splice(o,1);
+        for (let i=0; i<orders.length;i++) {
+          let ord=orders[i]
+          if(order._id != ord._id && new_order.orderid == ord.orderid){
             new_order.ordered_food= new_order.ordered_food.concat(ord.ordered_food)
-            new_order.comments= new_order.comments.concat(ord.comments)
-            new_order.total_bill = new_array.total_bill + ord.total_bill
-            orders = await this.arrayRemove(orders, ord)
+            new_order.total_bill += ord.total_bill
+            orders.splice(i,1);
+            i=i-1;
           }
-        })
+        }
         new_array.push(new_order)
-      })
-      console.log(new_array)
+      }
       await this.setState({orders: new_array})
     }
-    arrayRemove(arr, value) { 
     
-        return arr.filter(function(ele){ 
-            return ele != value; 
-        });
-    }
     render()
     {
       const gridStyle = {
@@ -184,12 +171,11 @@ class OrdersHistory extends React.Component
                     <h4 style={{paddingTop:'2em', }}>ORDERS HISTORY</h4>
                     <br/>
                     {this.state.orders.map(order =>
-                    (order.total_bill ?
                     <div style={{paddingRight: '30em'}}>
                         <Card >
                         <Card.Grid hoverable={false} style={gridStyle}>
                         <p>Order Id: <strong>{order.orderid}</strong></p>
-                        <p>Order Time: <strong>{order.ordertime}</strong> </p>
+                        <p>Order Time: <strong>{moment(order.ordertime).fromNow()}</strong> </p>
                         </Card.Grid>
                         <Card.Grid hoverable={false} style={gridStyle1}>
                           <center><h3><span style={{fontWeight: '100'}}>Total: &nbsp;</span> {order.total_bill}</h3></center>
@@ -207,7 +193,6 @@ class OrdersHistory extends React.Component
                         </Card>
                       <br/>
                       </div>
-                      : '')
                     )}
                 </div>
                 }

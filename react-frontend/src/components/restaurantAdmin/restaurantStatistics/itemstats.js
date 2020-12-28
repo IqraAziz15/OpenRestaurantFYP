@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { Spin, DatePicker, Space } from 'antd';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import { Spin, DatePicker, Card } from 'antd';
 import { Bar, Pie, Line, Line as LineChart} from 'react-chartjs-2';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import GraphPay from './paymentstats';
+import '../rastyle.css';
 const { RangePicker } = DatePicker
 
 class Graph extends React.Component {
@@ -116,7 +118,7 @@ class Graph extends React.Component {
       title: {
         display: true,
         text: 'Sale Bar Chart',
-        fontSize: 25
+        fontSize: 17
       },
 
       legend: {
@@ -170,7 +172,7 @@ class Graph extends React.Component {
       title: {
         display: true,
         text: 'Payment Pie Chart',
-        fontSize: 25
+        fontSize: 17
       },
 
       legend: {
@@ -214,7 +216,7 @@ class Graph extends React.Component {
       title: {
         display: true,
         text: 'Quantity Chart',
-        fontSize: 25
+        fontSize: 17
       },
 
       legend: {
@@ -238,8 +240,6 @@ class Graph extends React.Component {
       }
     }
 
-   
-
     return (
       <div>
         {this.state.loading ? (
@@ -253,23 +253,41 @@ class Graph extends React.Component {
         ) : (
             <div>
               {/* <h2>Sales Graph</h2> */}
-              <Bar
-                data={data}
-                width="400" height="150"
-                options={chartOptions}
-              />
+              <div className="flex-container">
+                <div className="flex-item-left">
+                <Card style={{boxShadow:'10px 10px 5px grey'}}>
+                <Bar
+                  data={data}
+                  width="400" height="250"
+                  options={chartOptions}
+                />
+                </Card>
+                </div>
               <br /><br />
+              <div className="flex-item-right">
+              <Card style={{boxShadow:'10px 10px 5px grey'}}>
               <Pie
                 data={datapie}
+                height="180"
                 options={piechartOptions}
               />
-              <br /><br />
+              </Card>
+              </div>
+              </div>
+              <div className="flex-container2" >
+              <div className='flex-item-left2'>
+              <Card style={{boxShadow:'10px 10px 5px grey'}}>
               <Line
                 data={dataline}
+                height="200"
                 options={linechartOptions}
               />
+              </Card>
+              </div>
               <br /><br />
-              <GraphPay restid={this.props.restid}/>
+              <div className='flex-item-right2' >
+              <GraphPay restid={this.props.restid}/></div>
+              </div>
               
             </div>
           )}

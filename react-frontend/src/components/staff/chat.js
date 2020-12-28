@@ -74,7 +74,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 
 import Avatar from "@material-ui/core/Avatar";
 import socketIOClient from "socket.io-client";
-
+import './sstyle.css';
 import commonUtilites from "./Utilities/common";
 
 
@@ -113,7 +113,8 @@ export default class Chat extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Grid container>
+        <div className='staffchat'>
+        <Grid container style={{paddingTop:'2em'}} >
           <Grid item md={4}>
             <Paper square elevation={5}>
               <Paper square>
@@ -166,13 +167,14 @@ export default class Chat extends React.Component {
 
             </Paper>
           </Grid>
-          <Grid item md={8}>
+          <Grid item md={8} style={{paddingTop:'2em'}}>
             {this.state.scope!=="Global Chat" &&
             <ChatBox scope={this.state.scope} user={this.state.user} res={this.state.res_id}/>
             }
           
         </Grid>
         </Grid>
+        </div>
       </React.Fragment>
     );
   }

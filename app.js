@@ -107,7 +107,7 @@ app.use('/customer/restaurant', customerRestaurantRouter);
 app.use('/customer/cart', customerCartRouter);
 app.use('/customer/order', customerOrderRouter);
 app.use('/customer/complain', customerComplainRouter);
-app.use('/api/transactions', transactionRouter);
+app.use('/api/transaction', transactionRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/ratings', ratingsRouter);
 app.use('/api/criticalreviews', criticalReviewsRouter);

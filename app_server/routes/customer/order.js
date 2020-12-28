@@ -44,4 +44,11 @@ router.post('/viewallcustomerorders/complete', orderController.viewAllCustomerOr
 
 router.post('/viewallcustomerorders/pending', orderController.viewAllCustomerOrdersPending);
 
+router.post('/search', orderController.search)
+
+router.post('/searchp', orderController.partialsearch)
+
+router.post('/searchh', orderController.searchFileContentHandler)
+
+
 module.exports = router;

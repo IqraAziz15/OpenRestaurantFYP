@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import {Spin, DatePicker, Button} from 'antd';
+import {Spin, DatePicker, Button, Card} from 'antd';
+import { LineChartOutlined } from '@ant-design/icons';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -84,7 +85,7 @@ class Graph extends React.Component
       title: {
           display: true,
           text: 'Line Chart For Retail Price And Total Sales',
-          fontSize:25
+          fontSize: 17
       },
   
       legend: {
@@ -102,7 +103,7 @@ class Graph extends React.Component
             ticks: {
                 beginAtZero:true,
                 min: 0,
-                max: 10000  
+                max: 20000  
             }
           }]
        }
@@ -121,13 +122,17 @@ class Graph extends React.Component
                 </center>
                 ) : (
           <div>
-              <h4>Get Stats Of Any Time Period</h4>
+              <h6>Get Stats Of Any Time Period</h6>
             <RangePicker onCalendarChange={(value)=> console.log(value)} onChange={(value)=> console.log( this.state.d1 = moment(value[0]._d).format(), this.state.d2=moment(value[1]._d).format())}/>
             <Button type="primary" onClick={()=>this.ordersbydate()}>Get Graph</Button>
+            <br/><br/>
+            <Card style={{boxShadow:'10px 10px 5px grey'}}>
             <Line
                 data={dataline}
+                height='190'
                 options={linechartOptions}
                 />
+              </Card>
             </div>
                 )}
         </div>

@@ -27,6 +27,7 @@ import ViewRest from "../../customer/viewComponent/callViewRest";
 import CallViewItem from "../../customer/viewComponent/callViewItem";
 import CallViewDeals from "../../customer/viewComponent/callViewDeals";
 import EmptyCart from '../../customer/cartComponents/emptycart';
+import NotFound from '../../customer/viewComponent/notfound';
 import CurrentOrders from '../../customer/cartComponents/currentorders';
 import OrdersHistory from '../../customer/cartComponents/ordershistory';
 import PaymentGateway from "../../payment_gateways/call_payment_methods";
@@ -44,6 +45,7 @@ import Faq from '../../customer/complainComponents/faq';
 import Contactus from '../../customer/complainComponents/complaintform';
 import Aboutus from '../../customer/complainComponents/aboutus';
 import ChatBox from '../../customer/viewComponent/chat';
+import Activate from '../../userProfile/customer/Activate';
 import {
   Link,
   // Redirect,
@@ -252,14 +254,14 @@ class CLayout extends React.Component {
                   {/* <Form inline>
                             <i class="material-icons" style={{paddingRight:'2.5em'}}> <Link className="link" to="/cart" >shopping_cart</Link></i>
                         </Form> */}
-                  <Search style={{ width: '30%', border: '0.5px solid #bb8c63', borderRight: '0px', borderRadius: '2px', padding: '0', marginRight: "2em" }}
+                  {/* <Search style={{ width: '30%', border: '0.5px solid #bb8c63', borderRight: '0px', borderRadius: '2px', padding: '0', marginRight: "2em" }}
                     className="search-box"
                     size='medium'
                     placeholder="Search here"
                     enterButton={enterButton}
                     onSearch={(value) => console.log(value)}
 
-                  />
+                  /> */}
                   <Nav key="user" style={{ padding: 0, margin: 0, paddingRight: "0.5em" }}>
                     {this.props.auth.isAuthenticated ?
                       <NavDropdown
@@ -332,31 +334,34 @@ class CLayout extends React.Component {
                 {/* <Redirect push to='/'/> */}
                 <Switch>
                   <Route exact path="/" component={Home} />
-                  <Route path="/restaurantview/:id" component={ViewRest} />
-                  <Route path="/view/:id" component={CallViewItem} />
-                  <Route path="/viewdeal/:id" component={CallViewDeals} />
-                  <Route path="/ordershistory/order/:id" component={ViewPreviousOrder} />
-                  <Route path="/myorders/order/:id" component={ViewCurrentOrder} />
-                  <Route path="/pending/order/:orderId" component={CallViewOrder} />
-                  <Route path="/home" component={Home} />
-                  <Route path="/allrestaurants" component={AllRestaurantsCard} />
-                  <Route path="/allfoods" component={AllItemsCard} />
-                  <Route path="/alldeals" component={AllDealsCard} />
-                  <Route path="/cart" component={Cart} />
-                  <Route path="/order/checkout" component={Checkout} />
-                  <Route path="/currentorders" component={CurrentOrders} />
-                  <Route path="/ordershistory" component={OrdersHistory} />
+                  <Route exact path={`/user/customer/activate-account/:token`} component={Activate}/>
+                  <Route exact path="/restaurantview/:id" component={ViewRest} />
+                  <Route exact path="/view/:id" component={CallViewItem} />
+                  <Route exact path="/viewdeal/:id" component={CallViewDeals} />
+                  <Route exact path="/ordershistory/order/:id" component={ViewPreviousOrder} />
+                  <Route exact path="/myorders/order/:id" component={ViewCurrentOrder} />
+                  <Route exact path="/pending/order/:orderId" component={CallViewOrder} />
+                  <Route exact path="/home" component={Home} />
+                  <Route exact path="/allrestaurants" component={AllRestaurantsCard} />
+                  <Route exact path="/allfoods" component={AllItemsCard} />
+                  <Route exact path="/allfoods" component={AllItemsCard} />
+                  <Route exact path="/alldeals" component={AllDealsCard} />
+                  <Route exact path="/cart" component={Cart} />
+                  <Route exact path="/order/checkout" component={Checkout} />
+                  <Route exact path="/currentorders" component={CurrentOrders} />
+                  <Route exact path="/ordershistory" component={OrdersHistory} />
                   {/* <Route path="/place/order/:orderId" component={Successmsg} /> */}
                   {/* <Route path='/emptycart' component={EmptyCart} /> */}
-                  <Route path='/login' component={LoginForm} />
-                  <Route path='/signup' component={SignupForm} />
-                  <Route path='/profile' component={Profile} />
-                  <Route path='/logout' component={Logout} />
-                  <Route path='/faq' component={ Faq }/>
-                  <Route path='/contactus' component={Contactus}/>
-                  <Route path='/aboutus' component={Aboutus}/>
-                  <Route path="/funfacts" component={OrdersStringsList} />
-                  <Route path='/chat/:id/:id1' component={ChatBox}/>
+                  <Route exact path='/login' component={LoginForm} />
+                  <Route exact path='/signup' component={SignupForm} />
+                  <Route exact path='/profile' component={Profile} />
+                  <Route exact path='/logout' component={Logout} />
+                  <Route exact path='/faq' component={ Faq }/>
+                  <Route exact path='/contactus' component={Contactus}/>
+                  <Route exact path='/aboutus' component={Aboutus}/>
+                  {/* <Route exact path="/funfacts" component={OrdersStringsList} /> */}
+                  <Route exact path='/chat/:id/:id1' component={ChatBox}/>
+                  <Route path='*' exact={true} component={NotFound} />
                   {/* <Route
                     path="/order/payment/:orderId"
                     component={PaymentGateway}

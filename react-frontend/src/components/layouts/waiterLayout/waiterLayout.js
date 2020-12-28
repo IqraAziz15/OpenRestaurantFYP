@@ -32,7 +32,6 @@ import { Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 // import './restaurantadminlayout.css';
 import WProfile from '../../waiter/wprofile';
 import WSettings from '../../waiter/wsettings';
-import Allorders from '../../waiter/wallorders';
 import ReadyOrders from '../../waiter/wpendingorders';
 import CompleteOrders from '../../waiter/wcompleteorders';
 import './waiterLayout.css';
@@ -91,10 +90,13 @@ class WaiterLayout extends React.Component
                 <div className="clear-div"></div>
                 <Router>
                 <Layout style={{ minHeight: '100vh' }} >
-                    <Sider width="250" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                    <Sider 
+                      width="250" 
+                      collapsible collapsed={this.state.collapsed} 
+                      onCollapse={this.onCollapse}>
                     <div className="logo" />
                     <Menu  theme="dark" defaultSelectedKeys={['1']} mode="inline" defaultOpenKeys={['1']}>
-                        
+                  
                         <Menu.Item key="1" icon={<UserOutlined />}><Link className="link" to="/waiterprofile">
                             User Profile</Link></Menu.Item>
                         <SubMenu key="sub2" icon={<TeamOutlined />} title="Order">
@@ -123,7 +125,7 @@ class WaiterLayout extends React.Component
                     {/* <Header className="site-layout-background" style={{ padding: 0 }} >
 
                     </Header> */}
-                    <Content style={{ margin: '0 16px' }}>
+                    <Content style={{ margin: '0px 16px'}}>
                         
                         <Switch>
                           <Route path="/waiterprofile" render={(props) => ( <WProfile {...props} user={this.state.user} />)}>
@@ -139,7 +141,7 @@ class WaiterLayout extends React.Component
                         </Switch>
                         
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                    <Footer style={{ textAlign: 'center' }}>©Copyrights 2020 || <b>Open Restaurant</b></Footer>
                     </Layout>
                 </Layout>
                 </Router>

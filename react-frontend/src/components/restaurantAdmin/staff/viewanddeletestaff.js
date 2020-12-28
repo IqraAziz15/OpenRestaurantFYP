@@ -10,6 +10,7 @@ import {Button, ButtonToolbar} from 'react-bootstrap';
 import { Spin } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import '../rastyle.css'
 
 const API = 'http://localhost:4000/restaurantadmin/staff/viewstaff';
 const API1 = 'http://localhost:4000/restaurantadmin/staff/removestaff/';
@@ -79,10 +80,10 @@ class ViewStaff extends React.Component {
                     </center>
                 ) :
       
-      <div style={{marginTop:"50px", marginBottom:"50px"}}>
+      <div style={{marginTop:"50px", marginBottom:"50px"}} className='tablediv'>
         <center>
-         <TableContainer component={Paper} style={{width:"50%", border:"1"}}>
-      <Table aria-label="simple table">
+         <TableContainer component={Paper} style={{width:"90%", border:"1"}}>
+      <Table aria-label="simple table" className='table'>
         <TableHead>
           <TableRow>
             <TableCell align="none"><b>USERNAME</b></TableCell>

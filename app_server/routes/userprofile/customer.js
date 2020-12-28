@@ -9,6 +9,8 @@ router.post("/logincustomer", customerController.customerLogin);
 
 router.get("/getcustomer", auth, customerController.getCustomer);
 
+router.post("/activationcustomer",  customerController.customerActivation);
+
 
  
 
